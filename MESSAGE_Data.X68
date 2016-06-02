@@ -52,12 +52,12 @@ MULS_MESSAGE    DC.B 'MULS.',0
 AND_MESSAGE     DC.B 'AND.',0
 ADD_MESSAGE     DC.B 'ADD.',0
 ADDA_MESSAGE    DC.B 'ADDA.',0
-LSL_MESSAGE     DC.B 'LSL.',0 *//
-ASL_MESSAGE     DC.B 'ASL.',0
-ROL_MESSAGE     DC.B 'ROL.',0
-LSR_MESSAGE     DC.B 'LSR.',0 *//
-ASR_MESSAGE     DC.B 'ASR.',0
-ROR_MESSAGE     DC.B 'ROR.',0
+LSL_MESSAGE     DC.B 'LSL',0 *//
+ASL_MESSAGE     DC.B 'ASL',0
+ROL_MESSAGE     DC.B 'ROL',0
+LSR_MESSAGE     DC.B 'LSR',0 *//
+ASR_MESSAGE     DC.B 'ASR',0
+ROR_MESSAGE     DC.B 'ROR',0
 SIZE_B_PRINT    DC.B 'B    ',0
 SIZE_W_PRINT    DC.B 'W    ',0
 SIZE_L_PRINT    DC.B 'L    ',0
@@ -82,6 +82,11 @@ A_PI_END        DC.B ')+',0
 A_PD_START      DC.B '-(A',0
 A_PD_END        DC.B ')',0
 COMMA           DC.B ', ',0
+
+
+ASK_TO_CONTINUE_M     DC.B    'do you want to continue? (y/n)', 0
+
+TERMINATED          DC.B    'PROGRAM TERMINATED',0
 
 
 

@@ -11,6 +11,8 @@ SUB
                  MOVE.B   #14,            D0
                  TRAP #15
                  
+                 JSR    GET_SIZE_PURPLE
+                 
                  JSR     PRINTOUT_SIZE_PURPLE
                  
                  
@@ -21,12 +23,26 @@ SUB
                  
                  MOVE.W  (A5),D0     *D0 is the binary value to decode
                  
-                 BTST    #8, D0
+                 * check the bit at 7
+                 MOVE.B  #7,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+
+                 LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+                 
+                 MOVE.B  #15,D1          *14 bits is the number of times to shift to hold the mode number
+
+                 LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+                 
+                 CMP.B   #0, D0
+
+                 
+              *   BTST    #8, D0
                  
                  BEQ     SUB_FIRST_EA
                  
                  * for the first Dn 
                  JSR     GET_Data_Register
+                 
+                 CLR.L   D6
                  
                  MOVE.B  #%000, D6 * for mode
                  
@@ -38,7 +54,7 @@ SUB
                  
                  JSR     PRINT_EA *by using jmp table
                  
-*                 JMP     NEXT
+                 JMP     PARSE_MEMORY
                  
 SUB_FIRST_EA
                  JSR     Set_Ea
@@ -50,11 +66,15 @@ SUB_FIRST_EA
                   * for the first Dn 
                  JSR     GET_Data_Register
                  
+                 CLR.L   D6
+                 
                  MOVE.B  #%000, D6 * for mode
 
                  JSR     PRINT_EA *by using jmp table
                  
-*                 JMP     NEXT
+                 JMP     PARSE_MEMORY
+
+
 
 
 

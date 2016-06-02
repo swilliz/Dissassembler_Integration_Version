@@ -34,15 +34,21 @@ ADDA_CODE
                  
                  TRAP #15
                  
-                 CLR.L   D5         * clear for the size since this is not for the size purple
+                 CLR.L D5         * clear for the size since this is not for the size purple
                  
                  CLR.L D0                *clear D0
                  
                  CLR.L D1                *clear D1
                  
-                 MOVE.W  (A0),D0     *D0 is the binary value to decode
+                 MOVE.W  (A5),D0     *D0 is the binary value to decode
                  
-                 BTST    #8, D0
+                 LSL.W   #7, D0
+
+                 MOVE.B  #13,D1           *8 bits is the number of times to shift to the
+
+                 LSR.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+                 
+                 CMP.B   #%011, D0
                  
                  BEQ     PRINTOUT_SIZE_W
                  
@@ -58,8 +64,6 @@ FINISH_PRINTING_SIZE
                  
                   * for the first Dn 
                  JSR     GET_Data_Register
-                 
-                 CLR.L   D6
                  
                  MOVE.B  #%001, D6 * for mode
 
@@ -105,12 +109,26 @@ ADD_CODE
                  
                  MOVE.W  (A5),D0     *D0 is the binary value to decode
                  
-                 BTST    #8, D0
+                 * check the bit at 7
+                 MOVE.B  #7,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+
+                 LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+                 
+                 MOVE.B  #15,D1          *14 bits is the number of times to shift to hold the mode number
+
+                 LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+                 
+                 CMP.B   #0, D0
+                 
+               *  BTST    #8, D0 * if the bit at 8 is 1, the ccr of z is set to 0
+                 
                  
                  BEQ     ADD_FIRST_EA
                  
                  * for the first Dn 
                  JSR     GET_Data_Register
+                 
+                 CLR.L   D6
                  
                  MOVE.B  #%000, D6 * for mode
                  
@@ -134,11 +152,13 @@ ADD_FIRST_EA
                   * for the first Dn 
                  JSR     GET_Data_Register
                  
+                 CLR.L   D6
+                 
                  MOVE.B  #%000, D6 * for mode
 
                  JSR     PRINT_EA *by using jmp table
                  
-*                JMP     PARSE_MEMORY
+                 JMP     PARSE_MEMORY
                  
 GET_SIZE_PURPLE * get the op-code 
 
@@ -155,6 +175,8 @@ GET_SIZE_PURPLE * get the op-code
                  MOVE.B  #14,D1          *14 bits is the number of times to shift to hold the mode number
 
                  LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+                 
+                 CLR.L   D5
                  
                  MOVE.B  D0, D5          *push the size to the Data register 5 for the future use
                  
@@ -200,12 +222,11 @@ PRINT_L
                  JMP    DONE_PRINTING
                  
 PRINT_COMMA
-
                  LEA COMMA, A1
                  MOVE.B #14, D0
                  TRAP #15
                  
-                 RTS
+                 JMP    DONE_PRINTING
                  
 GET_Data_Register
                  CLR.L D0                *clear D0
@@ -237,9 +258,9 @@ Set_Ea
 
                  LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
 
-                 MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
-
                  LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+                 
+                 CLR.L D7                *clear D7 
 
                  MOVE.B  D0, D7          *put D0 to data register into D7 for future printing
                  
@@ -257,12 +278,28 @@ Set_Ea
                  MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
 
                  LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+                 
+                 CLR.L D6                *clear D6
 
                  MOVE.B  D0, D6          *put D0 to data register into D7 for future printing
                  
                  RTS
                  
                 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

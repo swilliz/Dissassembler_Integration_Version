@@ -18,7 +18,7 @@ PARSE_MEMORY
         
 PARSE_MEMORY_FIRST    
                 CMPA.L   ENDING_ADDR, A5
-                BEQ      STOP
+                BEQ      ASK_TO_CONTINUE
                 MOVE.W   (A6)+, D0
                 
                 CMPA.L   #outputCountMax, A3
@@ -72,9 +72,56 @@ PRESS_ENTER_CONTINUE
 
                  JMP CONTINUE_PARSE
                 
+ASK_TO_CONTINUE
+    LEA         ASK_TO_CONTINUE_M, A1
+    
+    MOVE.B      #14, D0
+
+    TRAP #15
+    
+    MOVEA.W     $100, A1
+    
+    MOVE.B      #2, D0
+
+    TRAP #15
+
+    * VALIDATE THE INPUT
+
+    CLR         D0
+
+    MOVE.B      (A1), D0  
+
+    CMP.B       #$59, D0
+
+    BEQ         RESTART
+
+    CMP.B       #$79, D0
+
+    BEQ         RESTART
+
+    CMP.B       #$4E, D0
+
+    BEQ         STOP
+
+    CMP.B       #$6E, D0
+
+    BEQ         STOP
+
+    BRA         ASK_TO_CONTINUE   
+    
+RESTART
+    BRA         START_OF_PROGRAM   
+
                
-                
 STOP
+
+    LEA         TERMINATED, A1
+    
+    MOVE.B      #14, D0
+    
+    TRAP #15
+
+
 
 
 

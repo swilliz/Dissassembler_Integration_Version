@@ -11,6 +11,8 @@ CMP
                  MOVE.B   #14,            D0
                  TRAP #15
                  
+                 JSR GET_SIZE_PURPLE
+                 
                  JSR     PRINTOUT_SIZE_PURPLE
                  
 * print out after the opcode
@@ -24,11 +26,18 @@ CMP
                   * for the first Dn 
                  JSR     GET_Data_Register
                  
+                 CLR.L   D6
+                 
                  MOVE.B  #%000, D6 * for mode
 
                  JSR     PRINT_EA *by using jmp table
                  
+                 JMP     PARSE_MEMORY
+
+                 
  *                JMP     NEXT
+
+
 
 
 

@@ -5,7 +5,7 @@
 * Description: 
 *-----------------------------------------------------------
     * I/O 
-    
+START_OF_PROGRAM    
     * Welcome message
         LEA WELCOME_MESSAGE, A1
         MOVE.B #14, D0
@@ -132,6 +132,7 @@ ENDCONV * Next instruction starts
        * MOVE.L D4, STARTING_ADDR 
         
 GO_THROUGH_MEMORY
+
 
 
 
