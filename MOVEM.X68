@@ -14,6 +14,8 @@
 MOVEM_OPCODE
 
    CLR.L       D0               *Zero it
+   
+   CLR.L       D6
 
    MOVE.W      (A5), D0     *We'll play with it here
 
@@ -62,7 +64,23 @@ DR_FIELD
   MOVE.B #15, D4
 
 Regitset_Memory
-    MOVE.W      (A5)+, D3
+    MOVE.W      (A6)+, D3
+    
+    * CHECK IF PRE DECREMEMNT
+    MOVE.W (A5), D0
+    
+    MOVE.B      #10, D1
+    
+    LSL.W       D1, D0
+
+    MOVE.B      #13, D1
+
+    LSR.W       D1, D0
+
+    CMP.B       #%100, D0
+
+    BEQ         OPPOSITE_LOOP 
+    * NOW IT CAN BE IN REGULAR ORDER
     
     MOVE.B      #15, D4
     
@@ -79,7 +97,7 @@ Regitset_Memory
     BRA PARSE_MEMORY
 
 PRINT_ADDRESS 
-    MOVE.W      #example, D0
+    MOVE.W      (A5), D0
 
     MOVE.B      #10, D1
     
@@ -91,11 +109,13 @@ PRINT_ADDRESS
     
     MOVE.B      D0, D6
     
-    MOVE.L      #example, D0
+    MOVE.W      (A5), D0
     
     LSL.W       D1, D0
     
     LSR.W       D1, D0
+    
+    CLR.L       D7
     
     MOVE.B      D0, D7
     
@@ -104,6 +124,8 @@ PRINT_ADDRESS
     RTS
 
 Memory_Register
+    MOVE.W (A6)+, D3
+    
     JSR         PRINT_ADDRESS
     
     LEA         COMMA, A1
@@ -111,23 +133,8 @@ Memory_Register
     MOVE.B      #14, D0
     
     TRAP #15
-    
-* CHECK IF PRE DECREMEMNT
-    MOVE.L #example, D0
-    
-    MOVE.B      #10, D1
-    
-    LSL.W       D1, D0
-
-    MOVE.B      #13, D1
-
-    LSR.W       D1, D0
-
-    CMP.B       #%100, D0
-
-    BEQ         OPPOSITE_LOOP 
-    
-    MOVE.W      (A5)+, D3
+        
+    *MOVE.W      (A6)+, D3
     
     MOVE.B      #15, D4
     
@@ -141,11 +148,22 @@ Memory_Register
 OPPOSITE_LOOP
     CLR         D1
 
-    MOVE.W      (A5)+, D3
+    *MOVE.W      (A6)+, D3
     
     MOVE.B      #15, D4
     
     JSR OPPOSITE_LOOP_MOVEM
+    
+    LEA COMMA, A1
+    
+    MOVE.B      #14, D0
+    
+    TRAP #15
+    
+    JSR PRINT_ADDRESS
+    
+    BRA PARSE_MEMORY
+
         
 OPPOSITE_LOOP_MOVEM
         
@@ -156,9 +174,9 @@ OPPOSITE_LOOP_MOVEM
     SUB.B       #1, D4
     
 OPPOSITE_CHECK
-    CMP.B       #0,  D4
+    CMP.B       #-1,  D4
 
-    BEQ         PARSE_MEMORY
+    BEQ         DONE
 
     BRA         OPPOSITE_LOOP_MOVEM
     
@@ -170,9 +188,9 @@ OPPOSITE_LOOP_MOVEM_SECOND               * FOR ALL REGISTERS PRINTED AFTER THE F
     SUB.B       #1, D4
     
 OPPOSITE_CHECK_SECOND
-    CMP.B       #0,  D4
+    CMP.B       #-1,  D4
 
-    BEQ         PARSE_MEMORY
+    BEQ         DONE
 
     BRA         OPPOSITE_LOOP_MOVEM_SECOND
 
@@ -390,9 +408,9 @@ LOOP_MOVEM
     SUB.B       #1, D4
     
 CHECK
-    CMP.B       #0,  D4
+    CMP.B       #-1,  D4
 
-    BEQ         PARSE_MEMORY
+    BEQ         DONE
 
     BRA         LOOP_MOVEM
     
@@ -404,9 +422,9 @@ LOOP_MOVEM_SECOND               * FOR ALL REGISTERS PRINTED AFTER THE FIRST
     SUB.B       #1, D4
     
 CHECK_SECOND
-    CMP.B       #0,  D4
+    CMP.B       #-1,  D4
 
-    BEQ         PARSE_MEMORY
+    BEQ         DONE
 
     BRA         LOOP_MOVEM_SECOND
 
@@ -480,7 +498,7 @@ bit1    * D1
 
     JSR        PRINT_EA
 
-RTS    
+    RTS    
 
 bit2    * D2
     MOVE.B    #%010, D7    * REGISTER
@@ -501,7 +519,7 @@ bit3    * D3
     RTS    
 
 bit4    * D4
-    MOVE.B    #%111, D7    * REGISTER
+    MOVE.B    #%100, D7    * REGISTER
 
     MOVE.B    #%000, D6    * MODE
 
@@ -624,6 +642,7 @@ DONE_MOVEM_LOOP
 * Put variables and constants here
 
    * END    START        ; last line of source
+
 
 
 

@@ -18,7 +18,7 @@ STARTING_MESSAGE
         TRAP #15
     
     * Code for input
-        MOVEA.L #$2000, A1 *we have to change this addr later
+        MOVEA.L #$200, A1 *we have to change this addr later
         MOVE.B #2, D0
         TRAP #15
         MOVE.B #MAX_USER_INPUT, D2
@@ -41,7 +41,7 @@ ENDING_MESSAGE
         MOVE.B #14, D0
         TRAP #15
     * read user input
-        MOVEA.L #$2000, A1 *we have to change this addr later
+        MOVEA.L #$200, A1 *we have to change this addr later
         MOVE.B #2, D0   
         TRAP #15
     * counter for loop
@@ -132,6 +132,7 @@ ENDCONV * Next instruction starts
        * MOVE.L D4, STARTING_ADDR 
         
 GO_THROUGH_MEMORY
+
 
 
 

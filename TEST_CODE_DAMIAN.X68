@@ -7,35 +7,13 @@
     ORG    $7000
  BEGIN:                  ; first instruction of program
 
-  *  MOVE.B    #3, D2
-    
-    *NOP  
-    
-		MOVEM.L D0-D7,(A0)
-		MOVEM.L A0-A7,(A0)
-		MOVEM.L A0-A3/D0-D7,(A0)
-		MOVEM.L A0-A3/D0-D2,(A0)
-		MOVEM.L A4-A7/D0-D1,(A0)
-		MOVEM.L A0/A3/D2/D5,(A0)
-		MOVEM.L D1/D5/D7,(A0)	
-    
-    CLR.B D0
-    CLR.W D0
-    CLR.L D0
-
-    CLR.B D1
-    CLR.W D1
-    CLR.L D1
-    
-    CLR.B (A0)
-    CLR.W (A0)
-    CLR.L (A0)
-
-    CLR.B (A0)+
-    CLR.W (A0)+
-    CLR.L (A0)+    
-    *JSR JSR_TEST    
-    *RTS
+		LEA	(A0),A1
+		LEA	(A2),A3
+		LEA	$00006500,A4
+		LEA	$1010,A5
+		LEA	$0000AA02,A6
+		LEA	$FFFF2102,A7
+				
     
 *JSR_TEST
     
@@ -47,6 +25,13 @@
 * Put variables and constants here
 
     END    BEGIN        ; last line of source
+
+
+
+
+
+
+
 
 
 

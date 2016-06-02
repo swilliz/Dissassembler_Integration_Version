@@ -39,13 +39,13 @@ SUB_CMP
                                             
     CMP.B    #$2, D0        *if D0 holds 3, size is L
     
-    JMP      SUB_CMP_L
+    BEQ      SUB_CMP_L
                  
     CMP.B    #$1, D0        *if D0 holds 3, size is W
                                  
-    JMP      SUB_CMP_W
+    BEQ      SUB_CMP_W
 
-    JMP      SUB_CMP_B
+    BRA      SUB_CMP_B
 
 SUB_CMP_B  *Print B
 
@@ -100,7 +100,13 @@ PRINT_SUB_CMP
     MOVE.W D0, D7 *D6 holds Dn
     
     JSR PRINT_EA
-    
+
+    LEA COMMA, A1
+
+    MOVE.B #14, D0
+                 
+    TRAP #15
+        
     CLR.L D6
     
     CLR.L D7
@@ -152,15 +158,15 @@ ADDQ
 
     LSR.W   D1,D0  *DO now holds size
                                             
-    CMP.B    #$2, D0        *if D0 holds 3, size is L
+    CMP.B    #$2, D0        *if D0 holds 2, size is L
     
-    JMP      ADDQL
+    BEQ      ADDQL
                  
-    CMP.B    #$1, D0        *if D0 holds 3, size is W
+    CMP.B    #$1, D0        *if D0 holds 1, size is W
                                  
-    JMP      ADDQW
+    BEQ      ADDQW
 
-    JMP      ADDQB
+    BRA      ADDQB
 
 ADDQB  *Print B
 
@@ -179,7 +185,7 @@ ADDQW  *Print W
     LEA SIZE_W_PRINT, A1  *print W
                  
     MOVE.B #14, D0
-                 
+                                  
     TRAP #15
     
     MOVE.B #%01, D5
@@ -200,11 +206,35 @@ ADDQL   *Print L
     
 PRINTADDQ
 
-    MOVE.W #$111, D6
+    LEA POUND_SIGN, A1  *print W
+                 
+    MOVE.B #14, D0
+                                  
+    TRAP #15
     
-    MOVE.W #$100, D7
+    MOVE.W (A5), D0
 
-    JSR PRINT_EA
+    MOVE.B  #4,D1     
+
+    LSL.W   D1,D0
+                 
+    MOVE.B  #13,D1
+
+    LSR.W   D1,D0  *D0 now holds Dn
+    
+    CLR.L D1
+                                            
+    MOVE.W D0, D1 *D6 holds Dn   
+
+    MOVE.B #3, D0
+               
+    TRAP #15
+    
+    LEA COMMA, A1  *print W
+                 
+    MOVE.B #14, D0
+                                  
+    TRAP #15
     
     CLR.L D6
     
@@ -222,6 +252,10 @@ PRINTADDQ
                                             
     MOVE.W D0, D6 *D6 holds mode
     
+    CLR.L D1
+    
+    CLR.L D0
+    
     MOVE.W (A5), D0
 
     MOVE.B  #13,D1     
@@ -235,10 +269,15 @@ PRINTADDQ
     MOVE.W D0, D7 *D6 holds Register   
     
     JSR PRINT_EA
-
+    
     BRA PARSE_MEMORY
 
     
+
+
+
+
+
 
 
 

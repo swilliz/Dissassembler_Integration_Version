@@ -59,9 +59,9 @@ code0011       STOP        #$2700 * BRA         MOVEL
 
 code0100       BRA         GROUP_0100_CODE
 
-code0101       BRA         BRA ADDQ         ADDQ * we don't have it now
+code0101       BRA         ADDQ
 
-code0110       STOP        #$2700 * BRA         BCC * we don't have it now
+code0110       BRA         BCC * we don't have it now
 
 code0111       STOP        #$2700 * BRA         MOVEQ
 
@@ -80,6 +80,7 @@ code1101       STOP        #$2700 * BRA         ADD_ADDA
 code1110       STOP        #$2700 * BRA        SHIFTS
 
 code1111       STOP        #$2700 * It's gonna be error
+
 
 
 

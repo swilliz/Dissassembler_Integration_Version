@@ -19,7 +19,64 @@
     
   *  BEQ         RTS_OPCODE
    *BRA CLR_OPCODE  
+LEA_OPCODE
+    
+    LEA         LEA_MESSAGE, A1     * print out message for 'NOP'
+    
+    MOVE.B      #14, D0
+    
+    TRAP #15  
+    
+    MOVE.W  (A5),D0     *D0 is the binary value to decode
+    
+    MOVE.B  #13,D1     
 
+    LSL.W   D1,D0
+                 
+    MOVE.B  #13,D1
+
+    LSR.W   D1,D0  *D0 now holds Register
+                                            
+    MOVE.W D0, D7 *D7 holds Register  
+
+    MOVE.W  (A5),D0     *D0 is the binary value to decode
+
+    MOVE.B  #10,D1     
+
+    LSL.W   D1,D0
+                 
+    MOVE.B  #13,D1
+
+    LSR.W   D1,D0  *D0 now holds MODE
+                                            
+    MOVE.W D0, D6 *D6 holds MODE  
+    
+    JSR PRINT_EA
+
+    LEA         COMMA, A1     * print out message for 'NOP'
+    
+    MOVE.B      #14, D0
+    
+    TRAP #15 
+                                  
+    MOVE.W  (A5),D0     *D0 is the binary value to decode 
+
+    MOVE.L #%001, D6
+
+    MOVE.B  #4,D1     
+
+    LSL.W   D1,D0
+                 
+    MOVE.B  #13,D1
+
+    LSR.W   D1,D0  
+                                            
+    MOVE.W D0, D7 
+    
+    JSR PRINT_EA
+    
+    JMP     PARSE_MEMORY       
+          
 NOP_OPCODE
     LEA         NOP_MESSAGE, A1     * print out message for 'NOP'
     
@@ -178,6 +235,8 @@ SIZE_L
 * Put variables and constants here
 
  *   END    START        ; last line of source
+
+
 
 
 

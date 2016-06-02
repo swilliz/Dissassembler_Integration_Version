@@ -1,6 +1,6 @@
 *-----------------------------------------------------------
 * Title      : Bcc
-* Written by : Ko Fukushima
+* Written by : SAM WILLIAMS
 * Date       : 5/20/2016
 * Description:
 *-----------------------------------------------------------
@@ -8,17 +8,16 @@
 
 *example          EQU     %0110001111111111 * %0110001100000000 * %0110001101000110
 *eightbitaddr     EQU     $3445
-*sixteenbitaddr   EQU     $12345678
-
-* START:                  ; first instruction of program 
+*sixteenbitaddr   EQU     $12345678 
 
 *               MOVE.L      #sixteenbitaddr , (A5)
+BCC           
+               CLR       D0              *Zero it
 
-               LEA         jmp_table_bcc,A0    *Index into the table
-
-               CLR.L       D0              *Zero it
-
-               MOVE.W      #example,D0     *We'll play with it here
+               MOVE.W      (A5),D0     *We'll play with it here
+               
+               CLR       D1
+
                
                MOVE.B      #4, D1
                
@@ -26,49 +25,22 @@
 
                MOVE.B      #12,D1       *Shift 12 bits to the right  
 
-               LSR.W       D1,D0           *Move the bits
-           
-               MULU        #6,D0       *Form offset     
-
-               JMP         0(A0,D0)   *Jump indirect with index
+               LSR.W       D1,D0           *Move the bi
+               
+               CMP.B       #%0100, D0
+               
+               BEQ         CC
+               
+               CMP.B       #%1110, D0
+               
+               BEQ         GT
+               
+               CMP.B       #%1111, D0
+               
+               BEQ         LE
+               
 
                     
-jmp_table_bcc  JMP         NOT_EXIST
-
-               JMP         NOT_EXIST
-
-               JMP         HI
-
-               JMP         LS
-
-               JMP         CC
-
-               JMP         CS
-
-               JMP         NE
-
-               JMP         EQ
-
-               JMP         VC
-
-               JMP         VS
-
-               JMP         PL
-               
-               JMP         MI
-
-               JMP         GE
-
-               JMP         LT
-
-               JMP         GT
-
-               JMP         LE
-
-        
-NOT_EXIST      STOP        #$2700
-
-* NOT_EXIST      STOP        #$2700 
 
 HI             BRA         PRINT_BHI 
 
@@ -212,7 +184,15 @@ PRINT_BLE
                  
                TRAP #15
                
-DISPLACEMENT   LEA     POUND_SIGN, A1
+DISPLACEMENT   
+
+               LEA     SPACE, A1
+
+               MOVE.B #14, D0
+
+               TRAP #15 
+
+               LEA     POUND_SIGN, A1
             
                MOVE.B  #14, D0
             
@@ -224,7 +204,7 @@ DISPLACEMENT   LEA     POUND_SIGN, A1
 
                CLR.L       D0              *Zero it
 
-               MOVE.W      #example,D0     *We'll play with it here
+               MOVE.W      (A5),D0     *We'll play with it here
                
                MOVE.B      #8, D1
                
@@ -271,7 +251,8 @@ a_32_BIT
         JSR  HEX_TO_ASCII
         
         JMP PARSE_MEMORY
-                 
+          
+
 
 
 

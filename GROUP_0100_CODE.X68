@@ -58,10 +58,29 @@ GROUP_0100_CODE          *at this point we know the first 4 bits are 0100 -> NOP
                  
                  BEQ      JSR_OPCODE       *Branch to NOP_CODE if the opcode is CLR
                  
+                 CLR.L D0                *clear D0
+                 
+                 CLR.L D1                *clear D1
+                 
+                 MOVE.W  (A5),D0     *D0 is the binary value to decode
+
+                 MOVE.B  #7,D1 
+
+                 LSL.W   D1,D0 
+                 
+                 MOVE.B  #13,D1 
+
+                 LSR.W   D1,D0     
+                 
+                 CMP.W    #%111, D0  
+                 
+                 BEQ LEA_OPCODE
                  
                  BRA      MOVEM_OPCODE     *else it is a MOVEM
 
     
+
+
 
 
 

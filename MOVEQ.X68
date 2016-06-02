@@ -1,6 +1,7 @@
 *-----------------------------------------------------------
 * Title      : MOVEQ 
 * Written by : Ko Fukushima
+* Written by : Samuel Williams
 * Date       : 5/28/2016
 * Description:
 *-----------------------------------------------------------
@@ -28,11 +29,10 @@ MOVEQ
                 LEA     HEX_SIGN, A1
             
                 TRAP #15
-
-                 
+                
                 CLR.L       D0              *Zero it
 
-                MOVE.W      #example,D0     *We'll play with it here
+                MOVE.W      (A5),D0     *We'll play with it here
                
                 MOVE.B      #8, D1
                
@@ -40,23 +40,31 @@ MOVEQ
 
                 MOVE.B      #8,D1       *Shift 12 bits to the right  
 
-                LSR.W       D1,D0           *Move the bits
-
+                LSR.W       D1,D0           *Move the bits -> D0 holds DATA
+                    
                 CLR.L D5
                
                 MOVE.W D0, D5      
         
                 JSR         HEX_TO_ASCII
-
+                
+                LEA      COMMA,    A1
+                MOVE.B   #14,            D0
+                TRAP #15
                  
                 * for the first Dn 
                 CLR.L D6
+                
                 JSR     GET_Data_Register
+                
                 MOVE.B  #%000, D6 * for mode
                  
                 JSR     PRINT_EA *by using jmp table
                  
+                BRA PARSE_MEMORY
         
+
+
 
 
 

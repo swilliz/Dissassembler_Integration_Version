@@ -1,0 +1,93 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/2/16 2:30:36 AM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : MOVEQ 
+00000000                             3  * Written by : Ko Fukushima
+00000000                             4  * Written by : Samuel Williams
+00000000                             5  * Date       : 5/28/2016
+00000000                             6  * Description:
+00000000                             7  *-----------------------------------------------------------
+00000000                             8  
+00000000                             9  MOVEQ 
+00000000                            10  
+00000000                            11                   * ADD message
+Line 12 ERROR: Undefined symbol
+00000000  43F9 004DBB8E             12                   LEA      MOVEQ_MESSAGE,    A1
+00000006  103C 000E                 13                   MOVE.B   #14,            D0
+0000000A  4E4F                      14                   TRAP #15
+0000000C                            15                   
+0000000C                            16                   * print out size L
+Line 17 ERROR: Undefined symbol
+0000000C  43F9 004DBB8E             17                   LEA      SIZE_L_PRINT,    A1
+00000012  103C 000E                 18                   MOVE.B   #14,             D0          
+00000016  4E4F                      19                   TRAP #15   
+00000018                            20                   
+00000018                            21                   * print out immediate Data
+00000018                            22                   
+Line 23 ERROR: Undefined symbol
+00000018  43F9 004DBB8E             23                  LEA     POUND_SIGN, A1
+0000001E                            24              
+0000001E  103C 000E                 25                  MOVE.B  #14, D0
+00000022                            26              
+00000022  4E4F                      27                  TRAP #15
+00000024                            28              
+Line 29 ERROR: Undefined symbol
+00000024  43F9 004DBB8E             29                  LEA     HEX_SIGN, A1
+0000002A                            30              
+0000002A  4E4F                      31                  TRAP #15
+0000002C                            32  
+0000002C                            33                   
+0000002C  4280                      34                  CLR.L       D0              *Zero it
+0000002E                            35  
+0000002E  3015                      36                  MOVE.W      (A5),D0     *We'll play with it here
+00000030                            37                 
+00000030  123C 0008                 38                  MOVE.B      #8, D1
+00000034                            39                 
+00000034  E368                      40                  LSL.W       D1, D0
+00000036                            41  
+00000036  123C 0008                 42                  MOVE.B      #8,D1       *Shift 12 bits to the right  
+0000003A                            43  
+0000003A  E268                      44                  LSR.W       D1,D0           *Move the bits -> D0 holds DATA
+0000003C                            45  
+0000003C  4285                      46                  CLR.L D5
+0000003E                            47                 
+0000003E  3A00                      48                  MOVE.W D0, D5      
+00000040                            49          
+Line 50 ERROR: Undefined symbol
+00000040  4EB9 004DBB8E             50                  JSR         HEX_TO_ASCII
+00000046                            51  
+00000046                            52                   
+00000046                            53                  * for the first Dn 
+00000046  4286                      54                  CLR.L D6
+Line 55 ERROR: Undefined symbol
+00000048  4EB9 004DBB8E             55                  JSR     GET_Data_Register
+0000004E  1C3C 0000                 56                  MOVE.B  #%000, D6 * for mode
+00000052                            57                   
+Line 58 ERROR: Undefined symbol
+00000052  4EB9 004DBB8E             58                  JSR     PRINT_EA *by using jmp table
+00000058                            59                   
+Line 60 ERROR: Undefined symbol
+00000058  6000 BB34                 60                  BRA PARSE_MEMORY
+0000005C                            61          
+0000005C                            62  
+0000005C                            63  
+0000005C                            64  
+0000005C                            65  
+0000005C                            66  
+0000005C                            67  
+0000005C                            68  
+0000005C                            69  
+0000005C                            70  
+0000005C                            71  
+Line 72 WARNING: END directive missing, starting address not set
+
+8 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+MOVEQ               0

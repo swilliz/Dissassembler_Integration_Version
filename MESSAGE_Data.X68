@@ -25,6 +25,8 @@ JSR_MESSAGE     DC.B 'JSR',0
 RTS_MESSAGE     DC.B 'RTS',0
 CLR_MESSAGE     DC.B 'CLR',0
 ADDQ_MESSAGE    DC.B 'ADDQ.',0
+LEA_MESSAGE     DC.B 'LEA',0
+
 
 BCC_MESSAGE     DC.B 'BCC',0   *//
 BEQ_MESSAGE     DC.B 'BEQ',0   *//
@@ -80,6 +82,7 @@ A_PI_END        DC.B ')+',0
 A_PD_START      DC.B '-(A',0
 A_PD_END        DC.B ')',0
 COMMA           DC.B ', ',0
+
 
 
 

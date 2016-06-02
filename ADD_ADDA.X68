@@ -59,6 +59,8 @@ FINISH_PRINTING_SIZE
                   * for the first Dn 
                  JSR     GET_Data_Register
                  
+                 CLR.L   D6
+                 
                  MOVE.B  #%001, D6 * for mode
 
                  JSR     PRINT_EA *by using jmp table
@@ -261,6 +263,7 @@ Set_Ea
                  RTS
                  
                 
+
 
 
 

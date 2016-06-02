@@ -87,7 +87,7 @@ code0101       BRA         ADDQ   * Subroutine for ADDQ
 
 code0110       STOP        #$2700
 
-code0111       STOP        #$2700
+code0111       BRA         MOVEQ
 
 code1000       STOP        #$2700
 
@@ -124,6 +124,7 @@ code1111       STOP        #$2700
 *            *INCLUDE 'MESSAGE_Data.X68'
 *            INCLUDE 'JUMPTABLE EA.X68'
 *               END   $400 
+
 
 
 
