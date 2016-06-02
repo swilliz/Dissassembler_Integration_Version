@@ -36,8 +36,11 @@ CONTINUE_PARSE
                     
 NEXT_INSTRUCTION
                 INCLUDE 'JUMPTABLE DAMIAN-V1.X68'
+                INCLUDE 'ADD_ADDA.X68'
                 INCLUDE 'ADDI.X68'
                 INCLUDE 'ADDQ.X68'
+                INCLUDE 'CMP.X68'
+                INCLUDE 'SUB.X68'
                 INCLUDE 'TRYING_NOP.X68'
                 INCLUDE 'DIVU_OR.X68'
                 INCLUDE 'GROUP_0100_CODE.X68'
@@ -45,7 +48,6 @@ NEXT_INSTRUCTION
                 INCLUDE 'MOVEM.X68'
                 INCLUDE 'MOVEQ.X68'
                 INCLUDE 'DAMIAN_OP_CODE.X68'
-                INCLUDE 'ADD_ADDA.X68'
                 INCLUDE 'BCC.X68'
                 INCLUDE 'HEX_TO_ASCII_V1.X68'
                 INCLUDE 'JUMPTABLE-EA.X68'
@@ -73,6 +75,8 @@ PRESS_ENTER_CONTINUE
                
                 
 STOP
+
+
 
 
 
