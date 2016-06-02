@@ -11,6 +11,14 @@
     
     *NOP  
     
+		MOVEM.L D0-D7,(A0)
+		MOVEM.L A0-A7,(A0)
+		MOVEM.L A0-A3/D0-D7,(A0)
+		MOVEM.L A0-A3/D0-D2,(A0)
+		MOVEM.L A4-A7/D0-D1,(A0)
+		MOVEM.L A0/A3/D2/D5,(A0)
+		MOVEM.L D1/D5/D7,(A0)	
+    
     CLR.B D0
     CLR.W D0
     CLR.L D0
@@ -39,6 +47,7 @@
 * Put variables and constants here
 
     END    BEGIN        ; last line of source
+
 
 
 

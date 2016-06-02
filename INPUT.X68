@@ -79,11 +79,12 @@ CONVERT_STRING
         CMP.B #$39, D1
         BLE NUMBER
         
-        CMP.B #$41, D1
+        CMP.B #$3A, D1
         BGE CHAR   
     
     * Convert Ascii numbers to hex
-NUMBER  CMP.B #$2F, D1
+NUMBER  
+        CMP.B #$2F, D1
     * Number is out of range
         BLE ERROR       
         SUB.B #48, D1
@@ -92,7 +93,12 @@ NUMBER  CMP.B #$2F, D1
         BRA STORE_ADDR    
     
     * Convert Ascii charaters to hex
-CHAR    CMP #$5B, D1
+CHAR    
+        CMP #$40, D1
+    * Number is out of range
+        BLE ERROR
+        
+        CMP #$47, D1
     * Number is out of range
         BGE ERROR
         
@@ -114,13 +120,21 @@ STORE_ADDR
         BRA CONVERT_STRING
         
     * Error handling
-ERROR 
+ERROR
+    LEA   ERROR_MSG, A1 
+    MOVE.B #14, D0
+    TRAP #15
+    JMP   STARTING_MESSAGE
+
     
 ENDCONV * Next instruction starts 
         RTS
        * MOVE.L D4, STARTING_ADDR 
         
 GO_THROUGH_MEMORY
+
+
+
 
 
 

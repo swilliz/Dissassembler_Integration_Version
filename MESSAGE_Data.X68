@@ -13,6 +13,7 @@ WELCOME_MESSAGE DC.B 'Welcome to our Team wild pokemon disassembly!!', CR, LF, 0
 STARTING        DC.B 'Enter the starting location: ', 0
 ENDING          DC.B 'Enter the ending locaiton: ', 0
 ENTER           DC.B 'Enter to continue ', 0
+ERROR_MSG       DC.B 'Invalid Input, must be 8 characters, (0-9), (A-F), re-do ',CR, LF, 0
 CR_LF           DC.B '', CR, LF, 0
     
 ADDI_MESSAGE    DC.B 'ADDI.',0
@@ -79,6 +80,10 @@ A_PI_END        DC.B ')+',0
 A_PD_START      DC.B '-(A',0
 A_PD_END        DC.B ')',0
 COMMA           DC.B ', ',0
+
+
+
+
 
 
 
