@@ -85,11 +85,11 @@ code0100       BRA         GROUP_0100_CODE
 
 code0101       BRA         ADDQ   * Subroutine for ADDQ
 
-code0110       BRA         BCC
+code0110       STOP        #$2700
 
 code0111       BRA         MOVEQ
 
-code1000       BRA         DIVU_OR
+code1000       STOP        #$2700
 
 code1001       BRA         SUB    * Subroutine for SUB
 
@@ -109,7 +109,7 @@ code1010       STOP        #$2700
 
 code1011       BRA        CMP  * Subroutuine for CMP
 
-code1100       BRA         MULS_AND
+code1100       STOP        #$2700
 
 code1101       BRA         ADD_ADDA       *#$2700
 
@@ -124,7 +124,6 @@ code1111       STOP        #$2700
 *            *INCLUDE 'MESSAGE_Data.X68'
 *            INCLUDE 'JUMPTABLE EA.X68'
 *               END   $400 
-
 
 
 

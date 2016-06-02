@@ -7,27 +7,12 @@
     ORG    $7000
  BEGIN:                  ; first instruction of program
 
-		DIVU.W D0,D1
-		DIVU.W D2,D3
-		
-		DIVU.W (A1),D1
-		DIVU.W (A2),D3
-		
-		DIVU.W (A1)+,D5
-		DIVU.W (A2)+,D6
-		
-		DIVU.W -(A1),D5
-		DIVU.W -(A2),D6
-		
-		DIVU.W $500,D0
-		DIVU.W $200,D2
-		
-		DIVU.W $A204,D0
-		DIVU.W $FFFF5000,D2
-	
-		DIVU.W #$50,D0
-		DIVU.W #$700,D2
-
+		LEA	(A0),A1
+		LEA	(A2),A3
+		LEA	$00006500,A4
+		LEA	$1010,A5
+		LEA	$0000AA02,A6
+		LEA	$FFFF2102,A7
 				
     
 *JSR_TEST
@@ -40,7 +25,6 @@
 * Put variables and constants here
 
     END    BEGIN        ; last line of source
-
 
 
 
