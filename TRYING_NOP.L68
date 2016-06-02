@@ -1,0 +1,225 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/1/16 8:52:23 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  *    ORG    $1000
+00000000                             8  
+00000000                             9      
+00000000                            10  *START:                  ; first instruction of program
+00000000                            11   
+00000000                            12      *MOVE.W  #$4E75, D2          * hardcodiing nop
+00000000                            13  
+00000000                            14     * CMP.L       #$4E71, D2      * has to be NOP
+00000000                            15      *
+00000000                            16     * BEQ         NOP_OPCODE
+00000000                            17      
+00000000                            18     * CMP.L       #$4E75, D2      * has to be RTS
+00000000                            19      
+00000000                            20    *  BEQ         RTS_OPCODE
+00000000                            21     *BRA CLR_OPCODE  
+00000000                            22  
+00000000                            23  NOP_OPCODE
+Line 24 ERROR: Undefined symbol
+00000000  43F9 004DBB8E             24      LEA         NOP_MESSAGE, A1     * print out message for 'NOP'
+00000006                            25      
+00000006  103C 000E                 26      MOVE.B      #14, D0
+0000000A                            27      
+0000000A  4E4F                      28      TRAP #15
+0000000C                            29      
+Line 30 ERROR: Undefined symbol
+0000000C  6000 BB80                 30      BRA PARSE_MEMORY
+00000010                            31  RTS_OPCODE 
+Line 32 ERROR: Undefined symbol
+00000010  43F9 004DBB8E             32      LEA         RTS_MESSAGE, A1     * print out message for 'RTS'
+00000016                            33      
+00000016  103C 000E                 34      MOVE.B      #14, D0
+0000001A                            35      
+0000001A  4E4F                      36      TRAP #15
+0000001C                            37      
+Line 38 ERROR: Undefined symbol
+0000001C  6000 BB70                 38      BRA PARSE_MEMORY
+00000020                            39      
+00000020                            40  JSR_OPCODE 
+Line 41 ERROR: Undefined symbol
+00000020  43F9 004DBB8E             41      LEA         JSR_MESSAGE, A1     * print out message for 'JSR'
+00000026                            42      
+00000026  103C 000E                 43      MOVE.B      #14, D0
+0000002A                            44      
+0000002A  4E4F                      45      TRAP #15
+0000002C                            46      
+0000002C  2002                      47      MOVE.L D2, D0
+0000002E                            48  
+0000002E  123C 000D                 49      MOVE.B  #13,D1     
+00000032                            50  
+00000032  E368                      51      LSL.W   D1,D0
+00000034                            52                   
+00000034  123C 000D                 53      MOVE.B  #13,D1
+00000038                            54  
+00000038  E268                      55      LSR.W   D1,D0  *D0 now holds Register
+0000003A                            56                                              
+0000003A  3E00                      57      MOVE.W D0, D7 *D7 holds Register  
+0000003C                            58  
+0000003C  2002                      59      MOVE.L D2, D0
+0000003E                            60  
+0000003E  123C 000A                 61      MOVE.B  #10,D1     
+00000042                            62  
+00000042  E368                      63      LSL.W   D1,D0
+00000044                            64                   
+00000044  123C 000D                 65      MOVE.B  #13,D1
+00000048                            66  
+00000048  E268                      67      LSR.W   D1,D0  *D0 now holds MODE
+0000004A                            68                                              
+0000004A  3C00                      69      MOVE.W D0, D6 *D6 holds MODE  
+0000004C                            70      
+Line 71 ERROR: Undefined symbol
+0000004C  4EB9 004DBB8E             71      JSR PRINT_EA
+00000052                            72      
+Line 73 ERROR: Undefined symbol
+00000052  6000 BB3A                 73      BRA PARSE_MEMORY
+00000056                            74         
+00000056                            75  CLR_OPCODE 
+Line 76 ERROR: Undefined symbol
+00000056  43F9 004DBB8E             76      LEA         CLR_MESSAGE, A1     * print out message for 'CLR'
+0000005C                            77      
+0000005C  103C 000E                 78      MOVE.B      #14, D0
+00000060                            79      
+00000060  4E4F                      80      TRAP #15
+00000062                            81                     
+Line 82 ERROR: Undefined symbol
+00000062  43F9 004DBB8E             82      LEA      PERIOD, A1
+00000068                            83      
+00000068  103C 000E                 84      MOVE.B   #14, D0
+0000006C                            85      
+0000006C  4E4F                      86      TRAP #15 
+0000006E                            87                
+0000006E  3015                      88      MOVE.W      (A5), D0
+00000070                            89               
+00000070  123C 0006                 90      MOVE.B      #6, D1
+00000074                            91                 
+00000074  E268                      92      LSR.W       D1, D0  *shift right 6 
+00000076                            93                 
+00000076  123C 000E                 94      MOVE.B      #14, D1
+0000007A                            95                 
+0000007A  E368                      96      LSL.W       D1, D0  *shift left 15, only size is left
+0000007C                            97      
+0000007C  123C 000E                 98      MOVE.B      #14, D1
+00000080                            99                 
+00000080  E268                     100      LSR.W       D1, D0  *shift right 15, size is left   
+00000082                           101      
+00000082  B07C 0000                102      CMP.W       #00, D0
+00000086                           103  
+00000086  6700 004A                104      BEQ         SIZE_B
+0000008A                           105      
+0000008A  B07C 0001                106      CMP.W       #01, D0
+0000008E                           107                 
+0000008E  6700 004C                108      BEQ         SIZE_W 
+00000092                           109      
+00000092  B07C 000A                110      CMP.W       #10, D0
+00000096                           111                 
+00000096  6700 004E                112      BEQ         SIZE_L
+0000009A                           113  
+0000009A                           114  PRINT_SIZE
+0000009A                           115  
+0000009A  103C 000E                116      MOVE.B      #14, D0
+0000009E                           117      
+0000009E  4E4F                     118      TRAP #15
+000000A0                           119  
+000000A0  4280                     120      CLR.L   D0
+000000A2                           121                  
+000000A2  4281                     122      CLR.L   D1
+000000A4                           123                       * set register
+000000A4                           124                   
+000000A4  3015                     125      MOVE.W  (A5),D0     *D0 is the binary value to decode
+000000A6                           126                 
+000000A6  123C 000D                127      MOVE.B  #13,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+000000AA                           128  
+000000AA  E368                     129      LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+000000AC                           130  
+000000AC  123C 000D                131      MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
+000000B0                           132  
+000000B0  E268                     133      LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+000000B2                           134  
+000000B2  1E00                     135      MOVE.B  D0, D7          *put D0 to data register into D7 for future printing
+000000B4                           136                   
+000000B4                           137                   * set mode
+000000B4  4280                     138      CLR.L D0                *clear D0
+000000B6                           139                   
+000000B6  4281                     140      CLR.L D1                *clear D1
+000000B8                           141                   
+000000B8  3015                     142      MOVE.W  (A5),D0     *D0 is the binary value to decode
+000000BA                           143                 
+000000BA  123C 000A                144      MOVE.B  #10,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+000000BE                           145  
+000000BE  E368                     146      LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+000000C0                           147  
+000000C0  123C 000D                148      MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
+000000C4                           149  
+000000C4  E268                     150      LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+000000C6                           151  
+000000C6  2C00                     152      MOVE.L  D0, D6          *put D0 to data register into D7 for future printing
+000000C8                           153                   
+Line 154 ERROR: Undefined symbol
+000000C8  4EB9 004DBB8E            154      JSR     PRINT_EA *by using jmp table
+000000CE                           155  
+Line 156 ERROR: Undefined symbol
+000000CE  6000 BABE                156      BRA PARSE_MEMORY
+000000D2                           157      
+000000D2                           158  SIZE_B 
+000000D2                           159                
+Line 160 ERROR: Undefined symbol
+000000D2  43F9 004DBB8E            160      LEA         SIZE_B_PRINT, A1 
+000000D8                           161      
+000000D8  4EF8 009A                162      JMP PRINT_SIZE
+000000DC                           163      
+000000DC                           164  SIZE_W 
+000000DC                           165                
+Line 166 ERROR: Undefined symbol
+000000DC  43F9 004DBB8E            166      LEA         SIZE_W_PRINT, A1 
+000000E2                           167      
+000000E2  4EF8 009A                168      JMP PRINT_SIZE
+000000E6                           169      
+000000E6                           170  SIZE_L 
+000000E6                           171                
+Line 172 ERROR: Undefined symbol
+000000E6  43F9 004DBB8E            172      LEA         SIZE_L_PRINT, A1 
+000000EC                           173      
+000000EC  4EF8 009A                174      JMP PRINT_SIZE
+000000F0                           175      
+000000F0                           176  *   SIMHALT             ; halt simulator
+000000F0                           177  *DONE
+000000F0                           178  * Put variables and constants here
+000000F0                           179  
+000000F0                           180   *   END    START        ; last line of source
+000000F0                           181  
+000000F0                           182  
+000000F0                           183  
+000000F0                           184  
+000000F0                           185  
+000000F0                           186  
+000000F0                           187  
+000000F0                           188  
+000000F0                           189  
+000000F0                           190  
+Line 191 WARNING: END directive missing, starting address not set
+
+14 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CLR_OPCODE          56
+JSR_OPCODE          20
+NOP_OPCODE          0
+PRINT_SIZE          9A
+RTS_OPCODE          10
+SIZE_B              D2
+SIZE_L              E6
+SIZE_W              DC

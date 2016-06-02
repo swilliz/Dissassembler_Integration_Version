@@ -1,0 +1,106 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/1/2016 3:12:06 AM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000                             7      *ORG    $5000
+00000000                             8  
+00000000                             9  * put your data that you want printed into D5
+00000000                            10  *START 
+00000000                            11  
+00000000                            12  HEX_TO_ASCII      
+00000000  4283                      13       CLR.L      D3
+00000002                            14       
+00000002  BABC 00000000             15       CMP.L       #0, D5
+00000008                            16       
+00000008  6700 0046                 17       BEQ         PRINT_ZERO
+0000000C                            18      
+0000000C                            19       *MOVE.L     #$ABCDEF, D5
+0000000C                            20       
+0000000C                            21  LOOP     
+0000000C  2C05                      22       MOVE.L     D5, D6                  * put the data in a register so we can manipulate it
+0000000E                            23       
+0000000E  4282                      24       CLR.L      D2
+00000010                            25       
+00000010  143C 001C                 26       MOVE.B     #28, D2
+00000014                            27  
+00000014  E4AE                      28       LSR.L      D2, D6                  * shift out everything to the right of the last nibble, we print backwards so it shows up the correct order in the console
+00000016                            29       
+00000016  BC3C 000A                 30       CMP.B      #10, D6
+0000001A                            31       
+0000001A  6C00 0006                 32       BGE        LETTER_1                  * determine if a letter or a number
+0000001E                            33       
+0000001E  6000 000C                 34       BRA        NUMBER_1
+00000022                            35       
+00000022                            36  LETTER_1
+00000022  0606 0037                 37       ADD.B      #55, D6
+00000026                            38       
+00000026  1206                      39       MOVE.B     D6, D1                  * add the amount to change to ascii and move to D1 to prepare for printing
+00000028                            40       
+00000028  6000 000C                 41       BRA        PRINTOUT_NIBBLE
+0000002C                            42  
+0000002C                            43  NUMBER_1     
+0000002C  0606 0030                 44       ADD.B      #48, D6
+00000030                            45       
+00000030  1206                      46       MOVE.B     D6, D1                  * add the amount to change to ascii and move to D1 to prepare for printing
+00000032                            47       
+00000032  6000 0002                 48       BRA        PRINTOUT_NIBBLE
+00000036                            49  
+00000036                            50  
+00000036                            51  PRINTOUT_NIBBLE
+00000036  E98D                      52      LSL.L      #4, D5                   * shift out the nibble you just read from the source
+00000038                            53      
+00000038  5203                      54      ADD.B      #1, D3
+0000003A                            55      
+0000003A  BC3C 0030                 56      CMP.B      #$30, D6
+0000003E                            57  
+0000003E  67CC                      58      BEQ        LOOP             
+00000040                            59      
+00000040  103C 0006                 60      MOVE.B     #6, D0                      * use TRAP task #6 to print a single character from D1  
+00000044                            61      
+00000044  4E4F                      62      TRAP #15
+00000046                            63       
+00000046  B63C 0008                 64      CMP.B      #8, D3                   * compare to the counter to check if you are done
+0000004A                            65       
+Line 66 ERROR: Undefined symbol
+0000004A  6700 BB42                 66      BEQ        DONE
+0000004E                            67          
+0000004E  60BC                      68      BRA LOOP                            * continue the loop and print next nibble
+00000050                            69       
+00000050                            70  PRINT_ZERO
+00000050  123C 0030                 71      MOVE.B      #$30, D1
+00000054                            72  
+00000054  103C 0006                 73      MOVE.B      #6, D0  
+00000058                            74  
+00000058  4E4F                      75      TRAP #15 
+0000005A                            76  
+Line 77 ERROR: Undefined symbol
+0000005A  6000 BB32                 77      BRA DONE  
+0000005E                            78  
+0000005E                            79  * Put program code here
+0000005E                            80  
+0000005E                            81      *SIMHALT             ; halt simulator
+0000005E                            82  
+0000005E                            83  * Put variables and constants here
+0000005E                            84  
+0000005E                            85      *END    START       ; last line of source
+Line 86 WARNING: END directive missing, starting address not set
+
+2 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+HEX_TO_ASCII        0
+LETTER_1            22
+LOOP                C
+NUMBER_1            2C
+PRINTOUT_NIBBLE     36
+PRINT_ZERO          50

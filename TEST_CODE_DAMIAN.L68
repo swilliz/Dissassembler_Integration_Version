@@ -1,0 +1,54 @@
+00007000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/1/16 9:09:54 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00007000                             7      ORG    $7000
+00007000                             8   BEGIN:                  ; first instruction of program
+00007000                             9  
+00007000                            10    *  MOVE.B    #3, D2
+00007000                            11      
+00007000                            12      *NOP  
+00007000                            13      
+00007000  4200                      14      CLR.B D0
+00007002  4240                      15      CLR.W D0
+00007004  4280                      16      CLR.L D0
+00007006                            17  
+00007006  4201                      18      CLR.B D1
+00007008  4241                      19      CLR.W D1
+0000700A  4281                      20      CLR.L D1
+0000700C                            21      
+0000700C  4210                      22      CLR.B (A0)
+0000700E  4250                      23      CLR.W (A0)
+00007010  4290                      24      CLR.L (A0)
+00007012                            25  
+00007012  4218                      26      CLR.B (A0)+
+00007014  4258                      27      CLR.W (A0)+
+00007016  4298                      28      CLR.L (A0)+    
+00007018                            29      *JSR JSR_TEST    
+00007018                            30      *RTS
+00007018                            31      
+00007018                            32  *JSR_TEST
+00007018                            33      
+00007018                            34      
+00007018                            35  * Put program code here
+00007018                            36  
+00007018  FFFF FFFF                 37      SIMHALT             ; halt simulator
+0000701C                            38  
+0000701C                            39  * Put variables and constants here
+0000701C                            40  
+0000701C                            41      END    BEGIN        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+BEGIN               7000

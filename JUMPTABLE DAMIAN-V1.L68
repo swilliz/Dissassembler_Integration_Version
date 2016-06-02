@@ -1,0 +1,176 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 5/31/16 11:49:45 PM
+
+00000000                             1   
+00000000                             2  * Program starts here
+00000000                             3  
+00000000  3015                       4                   MOVE.W  (A5),D0
+00000002                             5  
+00000002                             6  *                 ORG     $400
+00000002                             7  
+00000002                             8  *start            LEA     stack,SP        *Load the SP
+00000002                             9  
+00000002  41F9 0000001A             10                   LEA     jmp_table,A0    *Index into the table
+00000008                            11  
+00000008  4280                      12                   CLR.L   D0              *Zero it
+0000000A                            13  
+0000000A  3015                      14                   MOVE.W  (A5),D0     *We'll play with it here
+0000000C                            15  
+Line 16 ERROR: Undefined symbol
+0000000C  123C 008E                 16                   MOVE.B  #shift,D1       *Shift 12 bits to the right  
+00000010                            17  
+00000010  E268                      18                   LSR.W   D1,D0           *Move the bits
+00000012                            19  
+00000012                            20  *
+00000012                            21  
+00000012                            22  * Consider the next instruction. Why do we have to multiply the index 
+00000012                            23  
+00000012                            24  * by 6? How many bytes does a single jump table entry require? 
+00000012                            25  
+00000012                            26   
+00000012                            27  
+00000012  C0FC 0006                 28                 MULU        #6,D0       *Form offset     
+00000016                            29  
+00000016  4EB0 0000                 30                 JSR         0(A0,D0)   *Jump indirect with index
+0000001A                            31  
+0000001A                            32                      
+0000001A                            33  
+0000001A  4EF9 0000007A             34  jmp_table      JMP         code0000
+00000020                            35  
+00000020  4EF9 0000007E             36                 JMP         code0001
+00000026                            37  
+00000026  4EF9 00000082             38                 JMP         code0010
+0000002C                            39  
+0000002C  4EF9 00000086             40                 JMP         code0011
+00000032                            41  
+00000032  4EF9 0000008A             42                 JMP         code0100
+00000038                            43  
+00000038  4EF9 0000008E             44                 JMP         code0101
+0000003E                            45  
+0000003E  4EF9 0000008E             46                 JMP         code0110
+00000044                            47  
+00000044  4EF9 00000092             48                 JMP         code0111
+0000004A                            49  
+0000004A  4EF9 00000096             50                 JMP         code1000
+00000050                            51  
+00000050  4EF9 0000009A             52                 JMP         code1001
+00000056                            53  
+00000056  4EF9 0000009A             54                 JMP         code1010
+0000005C                            55  
+0000005C  4EF9 0000009E             56                 JMP         code1011
+00000062                            57  
+00000062  4EF9 000000A2             58                 JMP         code1100
+00000068                            59  
+00000068  4EF9 000000A6             60                 JMP         code1101
+0000006E                            61  
+0000006E  4EF9 000000AA             62                 JMP         code1110
+00000074                            63  
+00000074  4EF9 000000AE             64                 JMP         code1111
+0000007A                            65  
+0000007A                            66          
+0000007A                            67  
+0000007A                            68   
+0000007A                            69  
+0000007A                            70  *The following subroutines will get filled in as you decode the instructions . For *now, just exit gracefully.
+0000007A                            71  
+0000007A                            72   
+0000007A                            73  
+0000007A                            74   
+0000007A                            75  
+0000007A  4E72 2700                 76  code0000       STOP        #$2700
+0000007E                            77  
+Line 78 ERROR: Undefined symbol
+0000007E  6000 BB0E                 78  code0001       BRA         MOVEB
+00000082                            79  
+Line 80 ERROR: Undefined symbol
+00000082  6000 BB0A                 80  code0010       BRA         MOVEL
+00000086                            81  
+Line 82 ERROR: Undefined symbol
+00000086  6000 BB06                 82  code0011       BRA         MOVEW
+0000008A                            83  
+0000008A  4E72 2700                 84  code0100       STOP        #$2700
+0000008E                            85  
+Line 86 ERROR: Invalid addressing mode
+0000008E                            86  code0101       STOP        ADDQ   * Subroutine for ADDQ
+0000008E                            87  
+0000008E  4E72 2700                 88  code0110       STOP        #$2700
+00000092                            89  
+00000092  4E72 2700                 90  code0111       STOP        #$2700
+00000096                            91  
+00000096  4E72 2700                 92  code1000       STOP        #$2700
+0000009A                            93  
+Line 94 ERROR: Invalid addressing mode
+0000009A                            94  code1001       STOP        SUB    * Subroutine for SUB
+0000009A                            95  
+0000009A  4E72 2700                 96  code1010       STOP        #$2700
+0000009E                            97  
+0000009E                            98   
+0000009E                            99  
+0000009E                           100  * Next we put in the next level of decoding. I just stuck this BRA
+0000009E                           101  
+0000009E                           102  * instruction here so it would look different. If this was your real
+0000009E                           103  
+0000009E                           104  * code, you would decode to the next level. Perhaps this would be
+0000009E                           105  
+0000009E                           106   * another jump table to the 8 possible op-codes at the next level.
+0000009E                           107  
+0000009E                           108   
+0000009E                           109  
+Line 110 ERROR: Undefined symbol
+0000009E  6000 BAEE                110  code1011       BRA        CMP  * Subroutuine for CMP
+000000A2                           111  
+000000A2  4E72 2700                112  code1100       STOP        #$2700
+000000A6                           113  
+Line 114 ERROR: Undefined symbol
+000000A6  6000 BAE6                114  code1101       BRA         ADD_ADDA       *#$2700
+000000AA                           115  
+Line 116 ERROR: Undefined symbol
+000000AA  6000 BAE2                116  code1110       BRA         SHIFTS
+000000AE                           117  
+000000AE  4E72 2700                118  code1111       STOP        #$2700
+000000B2                           119                   
+000000B2                           120  
+000000B2                           121                      
+000000B2                           122              
+000000B2                           123  
+000000B2                           124  *            *INCLUDE 'MESSAGE_Data.X68'
+000000B2                           125  *            INCLUDE 'JUMPTABLE EA.X68'
+000000B2                           126  *               END   $400 
+000000B2                           127  
+000000B2                           128  
+000000B2                           129  
+000000B2                           130  
+000000B2                           131  
+000000B2                           132  
+000000B2                           133  
+000000B2                           134  
+000000B2                           135  
+000000B2                           136  
+000000B2                           137  
+Line 138 WARNING: END directive missing, starting address not set
+
+9 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CODE0000            7A
+CODE0001            7E
+CODE0010            82
+CODE0011            86
+CODE0100            8A
+CODE0101            8E
+CODE0110            8E
+CODE0111            92
+CODE1000            96
+CODE1001            9A
+CODE1010            9A
+CODE1011            9E
+CODE1100            A2
+CODE1101            A6
+CODE1110            AA
+CODE1111            AE
+JMP_TABLE           1A

@@ -1,0 +1,616 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/1/2016 1:58:06 AM
+
+00000000  4280                       1  SHIFTS           CLR.L D0
+00000002                             2  
+00000002  4281                       3                   CLR.L D1
+00000004                             4                   
+00000004  3015                       5                   MOVE.W (A5),D0
+00000006                             6                   
+00000006  E948                       7                   LSL.W #4,D0            *shift out the opcode
+00000008                             8                   
+00000008  123C 000D                  9                   MOVE.B #13,D1          
+0000000C                            10                   
+0000000C  E268                      11                   LSR.W D1,D0            *shift out everything, so only three bits after opcode are there
+0000000E                            12                   
+0000000E  B03C 0001                 13                   CMP.B #1,D0            
+00000012                            14                   
+00000012  6700 000E                 15                   BEQ LSD                *if the bits are 1, it is a logical shift
+00000016                            16                   
+00000016  B03C 0003                 17                   CMP.B #3,D0
+0000001A                            18                   
+0000001A  6700 0080                 19                   BEQ ROD                *if the bits are 3, it is a rotation
+0000001E                            20                   
+0000001E  6000 00F6                 21                   BRA ASD                *if it is not equal to 1 or 3, it is arithmetic shift
+00000022                            22                   
+00000022                            23  
+00000022  4280                      24  LSD              CLR.L D0               *still need to do checks, since an asd shift could still be a possibility
+00000024                            25                   
+00000024  4281                      26                   CLR.L D1
+00000026                            27                   
+00000026  3015                      28                   MOVE.W (A5),D0
+00000028                            29                   
+00000028  E148                      30                   LSL.W #8,D0
+0000002A                            31                   
+0000002A  123C 000E                 32                   MOVE.B #14,D1
+0000002E                            33                   
+0000002E  E268                      34                   LSR.W D1,D0
+00000030                            35                   
+00000030  B03C 0003                 36                   CMP.B #3,D0            *need to check the two bits after the direction 
+00000034                            37                   
+00000034  6600 00E0                 38                   BNE ASD                *if the two bits are not 3, it is an arithmetic shift
+00000038                            39                   
+00000038  3015                      40                   MOVE.W (A5), D0
+0000003A                            41                   
+0000003A  EF48                      42                   LSL.W  #7, D0
+0000003C                            43                   
+0000003C  123C 000F                 44                   MOVE.B #15, D1
+00000040                            45                   
+00000040  E268                      46                   LSR.W  D1, D0
+00000042                            47                   
+00000042  B03C 0001                 48                   CMP.B  #1, D0
+00000046                            49                   
+00000046  6700 0006                 50                   BEQ LSL
+0000004A                            51                   
+0000004A  6000 0024                 52                   BRA LSR
+0000004E                            53                   
+0000004E                            54  
+0000004E                            55  LSL
+Line 56 ERROR: Undefined symbol
+0000004E  43F9 004DBB8E             56                   LEA LSL_MESSAGE, A1    * print message
+00000054                            57                   
+00000054  103C 000E                 58                   MOVE.B #14, D0
+00000058                            59                   
+00000058  4E4F                      60                   TRAP #15
+0000005A                            61              
+0000005A  2015                      62                   MOVE.L (A5), D0
+0000005C                            63                   
+0000005C  E148                      64                   LSL.W #8, D0
+0000005E                            65                   
+0000005E  123C 000E                 66                   MOVE.B #14, D1
+00000062                            67                   
+00000062  E268                      68                   LSR.W D1, D0
+00000064                            69                   
+00000064  B03C 0003                 70                   CMP.B  #%11, D0        * check to see if it is memory and not register shift
+00000068                            71                   
+00000068  6700 0028                 72                   BEQ LSD_MEMORY
+0000006C                            73                   
+0000006C  6000 010C                 74                   BRA PRINTOUT_REGISTER_SHIFTS_EA
+00000070                            75  
+00000070                            76  LSR              
+Line 77 ERROR: Undefined symbol
+00000070  43F9 004DBB8E             77                   LEA LSR_MESSAGE, A1            * print message
+00000076                            78                   
+00000076  103C 000E                 79                   MOVE.B #14, D0
+0000007A                            80                   
+0000007A  4E4F                      81                   TRAP #15
+0000007C                            82          
+0000007C  2015                      83                   MOVE.L (A5), D0
+0000007E                            84                   
+0000007E  E148                      85                   LSL.W #8, D0
+00000080                            86                   
+00000080  123C 000E                 87                   MOVE.B #14, D1
+00000084                            88                   
+00000084  E268                      89                   LSR.W D1, D0
+00000086                            90                   
+00000086  B03C 0003                 91                   CMP.B  #%11, D0            * check to see if memory shift
+0000008A                            92                   
+0000008A  6700 0006                 93                   BEQ LSD_MEMORY
+0000008E                            94                   
+0000008E  6000 00EA                 95                   BRA PRINTOUT_REGISTER_SHIFTS_EA
+00000092                            96                   
+00000092                            97  LSD_MEMORY
+00000092  4EB9 00000220             98                   JSR    PRINTOUT_MEMORY_SHIFTS_EA
+00000098                            99                   
+Line 100 ERROR: Undefined symbol
+00000098  6000 BAF4                100                   BRA PARSE_MEMORY
+0000009C                           101              
+0000009C                           102  
+0000009C  4280                     103  ROD              CLR.L D0               *same check as logical shift, since an arithmetic shift could still be possible
+0000009E                           104                   
+0000009E  4281                     105                   CLR.L D1
+000000A0                           106                   
+000000A0  3015                     107                   MOVE.W (A5),D0
+000000A2                           108                   
+000000A2  E148                     109                   LSL.W #8,D0
+000000A4                           110                   
+000000A4  123C 000E                111                   MOVE.B #14,D1
+000000A8                           112                   
+000000A8  E268                     113                   LSR.W D1,D0
+000000AA                           114                   
+000000AA  B03C 0003                115                   CMP.B #3,D0
+000000AE                           116                   
+000000AE  6600 0066                117                   BNE ASD
+000000B2                           118                   
+000000B2  2015                     119                   MOVE.L (A5), D0
+000000B4                           120                   
+000000B4  EF48                     121                   LSL.W  #7, D0
+000000B6                           122                   
+000000B6  123C 000F                123                   MOVE.B #15, D1
+000000BA                           124                   
+000000BA  E268                     125                   LSR.W  D1, D0
+000000BC                           126                   
+000000BC  B03C 0001                127                   CMP.B  #1, D0
+000000C0                           128                   
+000000C0  6700 0006                129                   BEQ ROL
+000000C4                           130                   
+000000C4  6000 0024                131                   BRA ROR
+000000C8                           132  
+000000C8                           133  ROL              
+Line 134 ERROR: Undefined symbol
+000000C8  43F9 004DBB8E            134                   LEA ROL_MESSAGE, A1
+000000CE                           135                   
+000000CE  103C 000E                136                   MOVE.B #14, D0
+000000D2                           137                   
+000000D2  4E4F                     138                   TRAP #15
+000000D4                           139  
+000000D4  2015                     140                   MOVE.L (A5), D0
+000000D6                           141                   
+000000D6  E148                     142                   LSL.W #8, D0
+000000D8                           143                   
+000000D8  123C 000E                144                   MOVE.B #14, D1
+000000DC                           145                   
+000000DC  E268                     146                   LSR.W D1, D0
+000000DE                           147                   
+000000DE  B03C 0003                148                   CMP.B  #%11, D0            * check to see if its memory shift
+000000E2                           149                   
+000000E2  6700 0028                150                   BEQ ROD_MEMORY
+000000E6                           151                   
+000000E6  6000 0092                152                   BRA PRINTOUT_REGISTER_SHIFTS_EA
+000000EA                           153  
+000000EA                           154  ROR       
+Line 155 ERROR: Undefined symbol
+000000EA  43F9 004DBB8E            155                   LEA ROR_MESSAGE, A1
+000000F0                           156                   
+000000F0  103C 000E                157                   MOVE.B #14, D0
+000000F4                           158                   
+000000F4  4E4F                     159                   TRAP #15
+000000F6                           160                   
+000000F6  2015                     161                   MOVE.L (A5), D0
+000000F8                           162                   
+000000F8  E148                     163                   LSL.W #8, D0
+000000FA                           164                   
+000000FA  123C 000E                165                   MOVE.B #14, D1
+000000FE                           166                   
+000000FE  E268                     167                   LSR.W D1, D0
+00000100                           168                   
+00000100  B03C 0003                169                   CMP.B  #%11, D0            * check to see if its memory shift
+00000104                           170                   
+00000104  6700 0006                171                   BEQ ROD_MEMORY
+00000108                           172                   
+00000108  6000 0070                173                   BRA PRINTOUT_REGISTER_SHIFTS_EA
+0000010C                           174  
+0000010C                           175  ROD_MEMORY       
+0000010C  4EB9 00000220            176                   JSR    PRINTOUT_MEMORY_SHIFTS_EA
+00000112                           177                   
+Line 178 ERROR: Undefined symbol
+00000112  6000 BA7A                178                   BRA PARSE_MEMORY
+00000116                           179                   
+00000116                           180                   
+00000116  2015                     181  ASD              MOVE.L (A5), D0
+00000118                           182                   
+00000118  EF48                     183                   LSL.W  #7, D0
+0000011A                           184                   
+0000011A  123C 000F                185                   MOVE.B #15, D1
+0000011E                           186                   
+0000011E  E268                     187                   LSR.W  D1, D0
+00000120                           188                   
+00000120  B03C 0001                189                   CMP.B  #1, D0
+00000124                           190                   
+00000124  6700 0006                191                   BEQ ASL
+00000128                           192                   
+00000128  6000 0024                193                   BRA ASR
+0000012C                           194                   
+0000012C                           195  ASL
+Line 196 ERROR: Undefined symbol
+0000012C  43F9 004DBB8E            196                   LEA ASL_MESSAGE, A1
+00000132                           197                   
+00000132  103C 000E                198                   MOVE.B #14, D0
+00000136                           199                   
+00000136  4E4F                     200                   TRAP #15
+00000138                           201                   
+00000138  2015                     202                   MOVE.L (A5), D0
+0000013A                           203                   
+0000013A  E148                     204                   LSL.W #8, D0
+0000013C                           205                   
+0000013C  123C 000E                206                   MOVE.B #14, D1
+00000140                           207                   
+00000140  E268                     208                   LSR.W D1, D0
+00000142                           209                   
+00000142  B03C 0003                210                   CMP.B  #%11, D0            * check to see if its memory shift
+00000146                           211                   
+00000146  6700 0028                212                   BEQ ASD_MEMORY
+0000014A                           213                   
+0000014A  6000 002E                214                   BRA PRINTOUT_REGISTER_SHIFTS_EA
+0000014E                           215                                    
+0000014E                           216  
+0000014E                           217  ASR              
+Line 218 ERROR: Undefined symbol
+0000014E  43F9 004DBB8E            218                   LEA ASR_MESSAGE, A1
+00000154                           219                   
+00000154  103C 000E                220                   MOVE.B #14, D0
+00000158                           221                   
+00000158  4E4F                     222                   TRAP #15
+0000015A                           223                   
+0000015A  2015                     224                   MOVE.L (A5), D0
+0000015C                           225                   
+0000015C  E148                     226                   LSL.W #8, D0
+0000015E                           227                   
+0000015E  123C 000E                228                   MOVE.B #14, D1
+00000162                           229                   
+00000162  E268                     230                   LSR.W D1, D0
+00000164                           231                   
+00000164  B03C 0003                232                   CMP.B  #%11, D0            * check to see if its memory shift
+00000168                           233                   
+00000168  6700 0006                234                   BEQ ASD_MEMORY
+0000016C                           235                   
+0000016C  6000 000C                236                   BRA PRINTOUT_REGISTER_SHIFTS_EA
+00000170                           237  
+00000170                           238  ASD_MEMORY
+00000170  4EB9 00000220            239                   JSR    PRINTOUT_MEMORY_SHIFTS_EA
+00000176                           240                   
+Line 241 ERROR: Undefined symbol
+00000176  6000 BA16                241                   BRA PARSE_MEMORY
+0000017A                           242                   
+0000017A                           243  PRINTOUT_REGISTER_SHIFTS_EA
+Line 244 ERROR: Undefined symbol
+0000017A  43F9 004DBB8E            244                   LEA PERIOD, A1
+00000180                           245                   
+00000180  103C 000E                246                   MOVE.B #14, D0
+00000184                           247                   
+00000184  4E4F                     248                   TRAP #15
+00000186                           249  
+00000186  2015                     250                   MOVE.L (A5), D0
+00000188                           251                   
+00000188  123C 000A                252                   MOVE.B #10, D1
+0000018C                           253                   
+0000018C  E368                     254                   LSL.W D1, D0
+0000018E                           255                   
+0000018E  123C 000F                256                   MOVE.B #15, D1
+00000192                           257                   
+00000192  E268                     258                   LSR.W D1, D0
+00000194                           259                   
+00000194  B03C 0001                260                   CMP.B #1, D0
+00000198                           261                   
+00000198  6700 004A                262                   BEQ PRINTOUT_REGISTER
+0000019C                           263                   
+0000019C  6000 0002                264                   BRA PRINTOUT_COUNT
+000001A0                           265  
+000001A0                           266                   
+000001A0                           267  PRINTOUT_COUNT
+Line 268 ERROR: Undefined symbol
+000001A0  43F9 004DBB8E            268                   LEA POUND_SIGN, A1
+000001A6                           269  
+000001A6  103C 000E                270                   MOVE.B #14, D0
+000001AA                           271  
+000001AA  4E4F                     272                   TRAP #15     
+000001AC                           273                 
+000001AC  2015                     274                   MOVE.L (A5), D0
+000001AE                           275                   
+000001AE  E948                     276                   LSL.W #4, D0
+000001B0                           277                   
+000001B0  123C 000D                278                   MOVE.B #13, D1
+000001B4                           279                   
+000001B4  E268                     280                   LSR.W D1, D0
+000001B6                           281                   
+000001B6  1200                     282                   MOVE.B D0, D1
+000001B8                           283                   
+000001B8  103C 0003                284                   MOVE.B #3, D0
+000001BC                           285                   
+000001BC  4E4F                     286                   TRAP #15                  * print out the amount that the ea is being shifted by
+000001BE                           287                   
+Line 288 ERROR: Undefined symbol
+000001BE  43F9 004DBB8E            288                   LEA COMMA, A1
+000001C4                           289                   
+000001C4  103C 000E                290                   MOVE.B #14, D0
+000001C8                           291                   
+000001C8  4E4F                     292                   TRAP #15
+000001CA                           293                   
+000001CA  2015                     294                   MOVE.L (A5), D0
+000001CC                           295                   
+000001CC  123C 000D                296                   MOVE.B #13, D1                * to print out the ea that is being shifted
+000001D0                           297                   
+000001D0  E368                     298                   LSL.W D1, D0
+000001D2                           299                   
+000001D2  E268                     300                   LSR.W D1, D0
+000001D4                           301                   
+000001D4  1E00                     302                   MOVE.B D0, D7
+000001D6                           303                   
+000001D6  1C3C 0000                304                   MOVE.B #%000, D6              * we know it is a data register
+000001DA                           305                   
+Line 306 ERROR: Undefined symbol
+000001DA  4EB9 004DBB8E            306                   JSR PRINT_EA
+000001E0                           307                   
+Line 308 ERROR: Undefined symbol
+000001E0  6000 B9AC                308                   BRA PARSE_MEMORY
+000001E4                           309                   
+000001E4                           310  
+000001E4                           311  PRINTOUT_REGISTER
+000001E4  2015                     312                   MOVE.L (A5), D0
+000001E6                           313                   
+000001E6  E948                     314                   LSL.W #4, D0
+000001E8                           315                   
+000001E8  123C 000D                316                   MOVE.B #13, D1
+000001EC                           317                   
+000001EC  E268                     318                   LSR.W D1, D0
+000001EE                           319                   
+000001EE  1E00                     320                   MOVE.B D0, D7
+000001F0                           321                   
+000001F0  1C3C 0000                322                   MOVE.B #%000, D6
+000001F4                           323                   
+Line 324 ERROR: Undefined symbol
+000001F4  4EB9 004DBB8E            324                   JSR PRINT_EA                  * to print out the data register
+000001FA                           325                   
+Line 326 ERROR: Undefined symbol
+000001FA  43F9 004DBB8E            326                   LEA COMMA, A1
+00000200                           327                   
+00000200  103C 000E                328                   MOVE.B #14, D0
+00000204                           329                   
+00000204  4E4F                     330                   TRAP #15
+00000206                           331                   
+00000206  2015                     332                   MOVE.L (A5), D0
+00000208                           333                   
+00000208  123C 000D                334                   MOVE.B #13, D1                * to print out the ea that is being shifted
+0000020C                           335                   
+0000020C  E368                     336                   LSL.W D1, D0
+0000020E                           337                   
+0000020E  E268                     338                   LSR.W D1, D0
+00000210                           339                   
+00000210  1E00                     340                   MOVE.B D0, D7
+00000212                           341                   
+00000212  1C3C 0000                342                   MOVE.B #%000, D6              * we know it is a data register
+00000216                           343                   
+Line 344 ERROR: Undefined symbol
+00000216  4EB9 004DBB8E            344                   JSR PRINT_EA
+0000021C                           345                   
+Line 346 ERROR: Undefined symbol
+0000021C  6000 B970                346                   BRA PARSE_MEMORY
+00000220                           347                                   
+00000220                           348  
+00000220                           349  PRINTOUT_MEMORY_SHIFTS_EA   * gets the mode and register of the memory ea, and prints it out
+Line 350 ERROR: Undefined symbol
+00000220  43F9 004DBB8E            350                   LEA PERIOD, A1
+00000226                           351                   
+00000226  103C 000E                352                   MOVE.B #14, D0
+0000022A                           353                   
+0000022A  4E4F                     354                   TRAP #15
+0000022C                           355  
+0000022C  2015                     356                   MOVE.L (A5), D0
+0000022E                           357                   
+0000022E  123C 000A                358                   MOVE.B #10, D1
+00000232                           359                   
+00000232  E368                     360                   LSL.W D1, D0
+00000234                           361                   
+00000234  123C 000D                362                   MOVE.B #13, D1
+00000238                           363                   
+00000238  E268                     364                   LSR.W D1, D0
+0000023A                           365                   
+0000023A  1C00                     366                   MOVE.B D0, D6
+0000023C                           367                   
+0000023C  2015                     368                   MOVE.L (A5), D0
+0000023E                           369                   
+0000023E  123C 000D                370                   MOVE.B #13, D1
+00000242                           371                   
+00000242  E368                     372                   LSL.W D1, D0
+00000244                           373                   
+00000244  E268                     374                   LSR.W D1, D0
+00000246                           375                   
+00000246  1E00                     376                   MOVE.B D0, D7
+00000248                           377                   
+Line 378 ERROR: Undefined symbol
+00000248  4EB9 004DBB8E            378                   JSR PRINT_EA
+0000024E                           379                   
+0000024E  4E75                     380                   RTS
+00000250                           381                  
+00000250                           382                
+Line 383 ERROR: Undefined symbol
+00000250  43F9 004DBB8E            383  MOVEB            LEA MOVE_MESSAGE, A1   * printing out the opcode and size
+00000256                           384  
+00000256  4280                     385                   CLR.L  D0
+00000258                           386                   
+00000258  103C 000E                387                   MOVE.B #14, D0
+0000025C                           388                   
+0000025C  4E4F                     389                   TRAP #15
+0000025E                           390                   
+Line 391 ERROR: Undefined symbol
+0000025E  43F9 004DBB8E            391                   LEA SIZE_B_PRINT, A1
+00000264                           392                   
+00000264  4E4F                     393                   TRAP #15               * done printing opcode and size
+00000266                           394                   
+00000266  6000 0096                395                   BRA PRINTOUT_MOVE_EA
+0000026A                           396  
+0000026A  4280                     397  MOVEW            CLR.L D0
+0000026C                           398                   
+0000026C  4281                     399                   CLR.L D1
+0000026E                           400                   
+0000026E  3015                     401                   MOVE.W (A5),D0
+00000270                           402                   
+00000270  EF48                     403                   LSL.W #7,D0
+00000272                           404                   
+00000272  123C 000D                405                   MOVE.B #13,D1
+00000276                           406                   
+00000276  E268                     407                   LSR.W D1,D0
+00000278                           408                   
+00000278  B03C 0001                409                   CMP.B #1,D0            *check to see if the mode of the destination is an address register
+0000027C                           410                   
+0000027C  6700 004C                411                   BEQ MOVEAW             *if the destination is an address, it is MOVEA
+00000280                           412                   
+Line 413 ERROR: Undefined symbol
+00000280  43F9 004DBB8E            413                   LEA MOVE_MESSAGE, A1   * printing out the opcode and size
+00000286                           414                   
+00000286  4280                     415                   CLR.L D0
+00000288                           416                   
+00000288  103C 000E                417                   MOVE.B #14, D0
+0000028C                           418                   
+0000028C  4E4F                     419                   TRAP #15
+0000028E                           420                   
+Line 421 ERROR: Undefined symbol
+0000028E  43F9 004DBB8E            421                   LEA SIZE_W_PRINT, A1
+00000294                           422                   
+00000294  4E4F                     423                   TRAP #15               * done printing opcode and size
+00000296                           424                      
+00000296  6000 0066                425                   BRA PRINTOUT_MOVE_EA
+0000029A                           426                
+0000029A                           427  
+0000029A  4280                     428  MOVEL            CLR.L D0
+0000029C                           429                   
+0000029C  4281                     430                   CLR.L D1
+0000029E                           431                   
+0000029E  3015                     432                   MOVE.W (A5),D0
+000002A0                           433                   
+000002A0  EF48                     434                   LSL.W #7,D0
+000002A2                           435                   
+000002A2  123C 000D                436                   MOVE.B #13,D1
+000002A6                           437                   
+000002A6  E268                     438                   LSR.W D1,D0
+000002A8                           439                   
+000002A8  B03C 0001                440                   CMP.B #1,D0            *check to see if the mode of the destination is equal to 1
+000002AC                           441                   
+000002AC  6700 0036                442                   BEQ MOVEAL             *if the mode is 1, then it is an address register, and the opcode is MOVEA
+000002B0                           443                   
+Line 444 ERROR: Undefined symbol
+000002B0  43F9 004DBB8E            444                   LEA MOVE_MESSAGE, A1   * printing out opcode and size
+000002B6                           445                   
+000002B6  4280                     446                   CLR.L D0
+000002B8                           447                   
+000002B8  103C 000E                448                   MOVE.B #14, D0
+000002BC                           449                   
+000002BC  4E4F                     450                   TRAP #15
+000002BE                           451                   
+Line 452 ERROR: Undefined symbol
+000002BE  43F9 004DBB8E            452                   LEA SIZE_L_PRINT, A1
+000002C4                           453                   
+000002C4  4E4F                     454                   TRAP #15               * done printing opcode and size
+000002C6                           455                   
+000002C6  6000 0036                456                   BRA PRINTOUT_MOVE_EA
+000002CA                           457                   
+000002CA                           458                   
+Line 459 ERROR: Undefined symbol
+000002CA  43F9 004DBB8E            459  MOVEAW           LEA MOVEA_MESSAGE, A1  * start printing out opcode and size
+000002D0                           460  
+000002D0  4280                     461                   CLR.L D0
+000002D2                           462                   
+000002D2  103C 000E                463                   MOVE.B #14, D0
+000002D6                           464                   
+000002D6  4E4F                     465                   TRAP #15
+000002D8                           466                   
+Line 467 ERROR: Undefined symbol
+000002D8  43F9 004DBB8E            467                   LEA SIZE_W_PRINT, A1
+000002DE                           468                   
+000002DE  4E4F                     469                   TRAP #15               * done printing out opcode and size
+000002E0                           470                   
+000002E0  6000 001C                471                   BRA PRINTOUT_MOVE_EA
+000002E4                           472  
+Line 473 ERROR: Undefined symbol
+000002E4  43F9 004DBB8E            473  MOVEAL           LEA MOVEA_MESSAGE, A1  * start printing out opcode and size
+000002EA                           474  
+000002EA  4280                     475                   CLR.L D0
+000002EC                           476                   
+000002EC  103C 000E                477                   MOVE.B #14, D0
+000002F0                           478                   
+000002F0  4E4F                     479                   TRAP #15
+000002F2                           480                   
+Line 481 ERROR: Undefined symbol
+000002F2  43F9 004DBB8E            481                   LEA SIZE_L_PRINT, A1
+000002F8                           482                   
+000002F8  4E4F                     483                   TRAP #15               * done printing out opcode and size
+000002FA                           484                   
+000002FA  6000 0002                485                   BRA PRINTOUT_MOVE_EA
+000002FE                           486  
+000002FE                           487  PRINTOUT_MOVE_EA
+000002FE  3015                     488                   MOVE.W (A5), D0
+00000300                           489                   
+00000300  E948                     490                   LSL.W #4, D0
+00000302                           491                   
+00000302  123C 000D                492                   MOVE.B #13, D1
+00000306                           493                   
+00000306  E268                     494                   LSR.W D1, D0
+00000308                           495                   
+00000308  4247                     496                   CLR    D7
+0000030A                           497                   
+0000030A  1E00                     498                   MOVE.B D0, D7          * getting the register of the first ea
+0000030C                           499                   
+0000030C  3015                     500                   MOVE.W (A5), D0
+0000030E                           501                   
+0000030E  EF48                     502                   LSL.W #7, D0
+00000310                           503                   
+00000310  123C 000D                504                   MOVE.B #13, D1
+00000314                           505                   
+00000314  E268                     506                   LSR.W D1, D0
+00000316                           507                   
+00000316  4246                     508                   CLR    D6
+00000318                           509                   
+00000318  1C00                     510                   MOVE.B D0, D6          * getting the mode of the first ea
+0000031A                           511                   
+Line 512 ERROR: Undefined symbol
+0000031A  4EB9 004DBB8E            512                   JSR PRINT_EA
+00000320                           513                   
+00000320  3015                     514                   MOVE.W (A5), D0
+00000322                           515                   
+00000322  123C 000A                516                   MOVE.B #10, D1
+00000326                           517                   
+00000326  E368                     518                   LSL.W D1, D0
+00000328                           519                   
+00000328  123C 000D                520                   MOVE.B #13, D1
+0000032C                           521                   
+0000032C  E268                     522                   LSR.W D1, D0
+0000032E                           523                   
+0000032E  1C00                     524                   MOVE.B D0, D6          * getting the mode of the second ea
+00000330                           525                   
+Line 526 ERROR: Undefined symbol
+00000330  43F9 004DBB8E            526                   LEA COMMA, A1
+00000336                           527                   
+00000336  103C 000E                528                   MOVE.B #14, D0
+0000033A                           529                   
+0000033A  4E4F                     530                   TRAP #15
+0000033C                           531                   
+0000033C  3015                     532                   MOVE.W (A5), D0
+0000033E                           533                   
+0000033E  123C 000D                534                   MOVE.B #13, D1
+00000342                           535                   
+00000342  E368                     536                   LSL.W D1, D0
+00000344                           537                   
+00000344  E268                     538                   LSR.W D1, D0
+00000346                           539                   
+00000346  1E00                     540                   MOVE.B D0, D7          * getting the register of the second ea
+00000348                           541                   
+Line 542 ERROR: Undefined symbol
+00000348  4EB9 004DBB8E            542                   JSR PRINT_EA
+0000034E                           543                   
+Line 544 ERROR: Undefined symbol
+0000034E  6000 B83E                544                   BRA PARSE_MEMORY
+00000352                           545  
+00000352                           546  
+Line 547 WARNING: END directive missing, starting address not set
+
+34 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ASD                 116
+ASD_MEMORY          170
+ASL                 12C
+ASR                 14E
+LSD                 22
+LSD_MEMORY          92
+LSL                 4E
+LSR                 70
+MOVEAL              2E4
+MOVEAW              2CA
+MOVEB               250
+MOVEL               29A
+MOVEW               26A
+PRINTOUT_COUNT      1A0
+PRINTOUT_MEMORY_SHIFTS_EA  220
+PRINTOUT_MOVE_EA    2FE
+PRINTOUT_REGISTER   1E4
+PRINTOUT_REGISTER_SHIFTS_EA  17A
+ROD                 9C
+ROD_MEMORY          10C
+ROL                 C8
+ROR                 EA
+SHIFTS              0
