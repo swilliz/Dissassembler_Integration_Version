@@ -15,7 +15,7 @@ PARSE_MEMORY
                 LEA      CR_LF, A1
                 MOVE.B   #14, D0
                 TRAP #15  
-        
+
 PARSE_MEMORY_FIRST    
                 CMPA.L   ENDING_ADDR, A5
                 BEQ      STOP
@@ -36,19 +36,21 @@ CONTINUE_PARSE
                     
 NEXT_INSTRUCTION
                 INCLUDE 'JUMPTABLE DAMIAN-V1.X68'
+                INCLUDE 'ADD_ADDA.X68'
                 INCLUDE 'ADDI.X68'
-                INCLUDE 'ADDQ_SUB_CMP.X68'
-                INCLUDE 'TRYING_NOP.X68'
+                INCLUDE 'ADDQ.X68'
+                INCLUDE 'CMP.X68'
+                INCLUDE 'SUB.X68'
+                INCLUDE 'LEA_NOP_CLR_RTS_JSR.X68'
                 INCLUDE 'DIVU_OR.X68'
                 INCLUDE 'GROUP_0100_CODE.X68'
                 INCLUDE 'MULS_AND.X68'
                 INCLUDE 'MOVEM.X68'
                 INCLUDE 'MOVEQ.X68'
                 INCLUDE 'DAMIAN_OP_CODE.X68'
-                INCLUDE 'ADD_ADDA.X68'
                 INCLUDE 'BCC.X68'
                 INCLUDE 'HEX_TO_ASCII_V1.X68'
-                INCLUDE 'JUMPTABLE-EA.X68'
+                INCLUDE 'JUMPTABLE EA.X68'
                 
                 JMP      PARSE_MEMORY
                 
@@ -73,6 +75,9 @@ PRESS_ENTER_CONTINUE
                
                 
 STOP
+
+
+
 
 
 

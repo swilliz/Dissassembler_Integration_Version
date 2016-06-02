@@ -1,6 +1,6 @@
 00007000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.15.04
-Created On: 6/2/16 3:36:07 AM
+Created On: 6/2/16 5:16:25 AM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -11,24 +11,39 @@ Created On: 6/2/16 3:36:07 AM
 00007000                             7      ORG    $7000
 00007000                             8   BEGIN:                  ; first instruction of program
 00007000                             9  
-00007000  43D0                      10          LEA (A0),A1
-00007002  47D2                      11          LEA (A2),A3
-00007004  49F8 6500                 12          LEA $00006500,A4
-00007008  4BF8 1010                 13          LEA $1010,A5
-0000700C  4DF9 0000AA02             14          LEA $0000AA02,A6
-00007012  4FF9 FFFF2102             15          LEA $FFFF2102,A7
-00007018                            16                  
-00007018                            17      
-00007018                            18  *JSR_TEST
-00007018                            19      
-00007018                            20      
-00007018                            21  * Put program code here
-00007018                            22  
-00007018  FFFF FFFF                 23      SIMHALT             ; halt simulator
-0000701C                            24  
-0000701C                            25  * Put variables and constants here
-0000701C                            26  
-0000701C                            27      END    BEGIN        ; last line of source
+00007000  82C0                      10          DIVU.W D0,D1
+00007002  86C2                      11          DIVU.W D2,D3
+00007004                            12          
+00007004  82D1                      13          DIVU.W (A1),D1
+00007006  86D2                      14          DIVU.W (A2),D3
+00007008                            15          
+00007008  8AD9                      16          DIVU.W (A1)+,D5
+0000700A  8CDA                      17          DIVU.W (A2)+,D6
+0000700C                            18          
+0000700C  8AE1                      19          DIVU.W -(A1),D5
+0000700E  8CE2                      20          DIVU.W -(A2),D6
+00007010                            21          
+00007010  80F8 0500                 22          DIVU.W $500,D0
+00007014  84F8 0200                 23          DIVU.W $200,D2
+00007018                            24          
+00007018  80F9 0000A204             25          DIVU.W $A204,D0
+0000701E  84F9 FFFF5000             26          DIVU.W $FFFF5000,D2
+00007024                            27      
+00007024  80FC 0050                 28          DIVU.W #$50,D0
+00007028  84FC 0700                 29          DIVU.W #$700,D2
+0000702C                            30  
+0000702C                            31                  
+0000702C                            32      
+0000702C                            33  *JSR_TEST
+0000702C                            34      
+0000702C                            35      
+0000702C                            36  * Put program code here
+0000702C                            37  
+0000702C  FFFF FFFF                 38      SIMHALT             ; halt simulator
+00007030                            39  
+00007030                            40  * Put variables and constants here
+00007030                            41  
+00007030                            42      END    BEGIN        ; last line of source
 
 No errors detected
 No warnings generated
