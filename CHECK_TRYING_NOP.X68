@@ -1,11 +1,11 @@
-LEA_OPCODE
+CHECK_LEA_OPCODE
     
-    LEA         LEA_MESSAGE, A1     * print out message for 'NOP'
-    
-    MOVE.B      #14, D0
-    
-    TRAP #15  
-    
+*    LEA         LEA_MESSAGE, A1     * print out message for 'NOP'
+*    
+*    MOVE.B      #14, D0
+*    
+*    TRAP #15  
+*    
     MOVE.W  (A5),D0     *D0 is the binary value to decode
     
     MOVE.B  #13,D1     
@@ -30,13 +30,13 @@ LEA_OPCODE
                                             
     MOVE.W D0, D6 *D6 holds MODE  
     
-    JSR PRINT_EA
+    JSR CHECK_EA
 
-    LEA         COMMA, A1     * print out message for 'NOP'
-    
-    MOVE.B      #14, D0
-    
-    TRAP #15 
+*    LEA         COMMA, A1     * print out message for 'NOP'
+*    
+*    MOVE.B      #14, D0
+*    
+*    TRAP #15 
                                   
     MOVE.W  (A5),D0     *D0 is the binary value to decode 
 
@@ -52,33 +52,33 @@ LEA_OPCODE
                                             
     MOVE.W D0, D7 
     
-    JSR PRINT_EA
+    JSR CHECK_EA
     
-    JMP     PARSE_MEMORY       
+    JMP     CHECK_PARSE_MEMORY       
           
-NOP_OPCODE
-    LEA         NOP_MESSAGE, A1     * print out message for 'NOP'
+CHECK_NOP_OPCODE
+*    LEA         NOP_MESSAGE, A1     * print out message for 'NOP'
+*    
+*    MOVE.B      #14, D0
+*    
+*    TRAP #15
     
-    MOVE.B      #14, D0
+    BRA CHECK_PARSE_MEMORY
+CHECk_RTS_OPCODE 
+*    LEA         RTS_MESSAGE, A1     * print out message for 'RTS'
+*    
+*    MOVE.B      #14, D0
+*    
+*    TRAP #15
     
-    TRAP #15
+    BRA CHECK_PARSE_MEMORY
     
-    BRA PARSE_MEMORY
-RTS_OPCODE 
-    LEA         RTS_MESSAGE, A1     * print out message for 'RTS'
-    
-    MOVE.B      #14, D0
-    
-    TRAP #15
-    
-    BRA PARSE_MEMORY
-    
-JSR_OPCODE 
-    LEA         JSR_MESSAGE, A1     * print out message for 'JSR'
-    
-    MOVE.B      #14, D0
-    
-    TRAP #15
+CHECK_JSR_OPCODE 
+*    LEA         JSR_MESSAGE, A1     * print out message for 'JSR'
+*    
+*    MOVE.B      #14, D0
+*    
+*    TRAP #15
     
     MOVE.L (A5), D0
 
@@ -104,22 +104,22 @@ JSR_OPCODE
                                             
     MOVE.W D0, D6 *D6 holds MODE  
     
-    JSR PRINT_EA
+    JSR CHECK_PRINT_EA
     
-    BRA PARSE_MEMORY
+    BRA CHECK_PARSE_MEMORY
        
-CLR_OPCODE 
-    LEA         CLR_MESSAGE, A1     * print out message for 'CLR'
-    
-    MOVE.B      #14, D0
-    
-    TRAP #15
+CHECK_CLR_OPCODE 
+*    LEA         CLR_MESSAGE, A1     * print out message for 'CLR'
+*    
+*    MOVE.B      #14, D0
+*    
+*    TRAP #15
                    
-    LEA      PERIOD, A1
+*    LEA      PERIOD, A1
+*    
+*    MOVE.B   #14, D0
     
-    MOVE.B   #14, D0
-    
-    TRAP #15 
+*    TRAP #15 
               
     MOVE.W      (A5), D0
              
@@ -137,21 +137,23 @@ CLR_OPCODE
     
     CMP.W       #00, D0
 
-    BEQ         SIZE_B
+    BEQ         CHECK_SIZE_B
     
     CMP.W       #01, D0
                
-    BEQ         SIZE_W 
+    BEQ         CHECK_SIZE_W 
     
     CMP.W       #2, D0
                
-    BEQ         SIZE_L
-
-PRINT_SIZE
-
-    MOVE.B      #14, D0
+    BEQ         CHECK_SIZE_L
     
-    TRAP #15
+    BRA          ERROR_HANDLE
+
+CHECK_PRINT_SIZE
+*
+*    MOVE.B      #14, D0
+*    
+*    TRAP #15
 
     CLR.L   D0
                 
@@ -187,27 +189,27 @@ PRINT_SIZE
 
     MOVE.L  D0, D6          *put D0 to data register into D7 for future printing
                  
-    JSR     PRINT_EA *by using jmp table
+    JSR     CHECK_PRINT_EA *by using jmp table
 
-    BRA PARSE_MEMORY
+    BRA CHECK_PARSE_MEMORY
     
-SIZE_B 
+CHECK_SIZE_B 
               
-    LEA         SIZE_B_PRINT, A1 
+*    LEA         SIZE_B_PRINT, A1 
     
-    JMP PRINT_SIZE
+    JMP CHECK_PRINT_SIZE
     
-SIZE_W 
+CHECK_SIZE_W 
               
-    LEA         SIZE_W_PRINT, A1 
+*    LEA         SIZE_W_PRINT, A1 
     
-    JMP PRINT_SIZE
+    JMP CHECK_PRINT_SIZE
     
-SIZE_L 
+CHECK_SIZE_L 
               
-    LEA         SIZE_L_PRINT, A1 
+*    LEA         SIZE_L_PRINT, A1 
     
-    JMP PRINT_SIZE
+    JMP CHECK_PRINT_SIZE
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

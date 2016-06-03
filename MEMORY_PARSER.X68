@@ -17,7 +17,7 @@ PARSE_MEMORY
                 TRAP #15  
         
 PARSE_MEMORY_FIRST    
-                CMPA.L   ENDING_ADDR, A5
+                CMPA.L   ENDING_ADDR, A6
                 BEQ      ASK_TO_CONTINUE
                 MOVE.W   (A6)+, D0
                 
@@ -32,6 +32,19 @@ CONTINUE_PARSE
 *                LEA CR_LF, A1
 *                MOVE.B #14, D0
 *                TRAP #15          *end testing
+
+                MOVE.W      A5, D5
+                
+                JSR      HEX_TO_ASCII
+                
+                LEA      SPACE, A1
+                
+                MOVE.B   #14, D0
+                
+                TRAP #15
+                
+                MOVE.W   (A5), D0
+                
                 JMP      NEXT_INSTRUCTION
                     
 NEXT_INSTRUCTION
@@ -110,6 +123,7 @@ ASK_TO_CONTINUE
     BRA         ASK_TO_CONTINUE   
     
 RESTART
+
     BRA         START_OF_PROGRAM   
 
                
@@ -120,6 +134,11 @@ STOP
     MOVE.B      #14, D0
     
     TRAP #15
+
+
+
+
+
 
 
 

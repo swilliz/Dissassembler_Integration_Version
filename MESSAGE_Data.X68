@@ -44,11 +44,11 @@ BVC_MESSAGE     DC.B 'BVC',0   *//
 BVS_MESSAGE     DC.B 'BVS',0   *//
 
 MOVEQ_MESSAGE   DC.B 'MOVEQ.',0
-DIVU_MESSAGE    DC.B 'DIVU.',0
+DIVU_MESSAGE    DC.B 'DIVU ',0
 OR_MESSAGE      DC.B 'OR.',0
 SUB_MESSAGE     DC.B 'SUB.',0
 CMP_MESSAGE     DC.B 'CMP.',0
-MULS_MESSAGE    DC.B 'MULS.',0
+MULS_MESSAGE    DC.B 'MULS ',0
 AND_MESSAGE     DC.B 'AND.',0
 ADD_MESSAGE     DC.B 'ADD.',0
 ADDA_MESSAGE    DC.B 'ADDA.',0
@@ -87,6 +87,7 @@ COMMA           DC.B ', ',0
 ASK_TO_CONTINUE_M     DC.B    'do you want to continue? (y/n)', 0
 
 TERMINATED          DC.B    'PROGRAM TERMINATED',0
+
 
 
 
