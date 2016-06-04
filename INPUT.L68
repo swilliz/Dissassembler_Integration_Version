@@ -1,0 +1,193 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/2/2016 11:23:11 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : Disaasembly 
+00000000                             3  * Written by : Ko Fukushima, Sam Williams, Damian Banki
+00000000                             4  * Date       : 4/24/2016
+00000000                             5  * Description: 
+00000000                             6  *-----------------------------------------------------------
+00000000                             7      * I/O 
+00000000                             8  START_OF_PROGRAM    
+00000000                             9      * Welcome message
+Line 10 ERROR: Undefined symbol
+00000000  43F9 004DBB8E             10          LEA WELCOME_MESSAGE, A1
+00000006  103C 000E                 11          MOVE.B #14, D0
+0000000A  4E4F                      12          TRAP #15
+0000000C                            13          
+0000000C                            14  STARTING_MESSAGE    
+0000000C                            15      * Printing out the Starting address message
+Line 16 ERROR: Undefined symbol
+0000000C  43F9 004DBB8E             16          LEA STARTING, A1
+00000012  103C 000E                 17          MOVE.B #14, D0
+00000016  4E4F                      18          TRAP #15
+00000018                            19      
+00000018                            20      * Code for input
+00000018  227C 00000200             21          MOVEA.L #$200, A1 *we have to change this addr later
+0000001E  103C 0002                 22          MOVE.B #2, D0
+00000022  4E4F                      23          TRAP #15
+Line 24 ERROR: Undefined symbol
+00000024  143C 008E                 24          MOVE.B #MAX_USER_INPUT, D2
+00000028                            25      
+00000028                            26      * JSR to convert string function
+00000028  4EB9 0000007E             27          JSR CONVERT_STRING   
+0000002E                            28      * check if the address is even number
+0000002E  E25C                      29          ROR #1, D4   * C now holds 0 (if even) or 1 (if odd)
+00000030  65DA                      30          BCS STARTING_MESSAGE   *if carry is set then the user typed in an odd address
+00000032  E35C                      31          ROL #1, D4     *PUT D4 BACK
+00000034                            32         
+00000034                            33      * store hex value of inputted string 
+Line 34 ERROR: Undefined symbol
+00000034  23C4 00544480             34          MOVE.L D4, STARTING_ADDR 
+0000003A                            35      * reset the D4
+0000003A  4284                      36          CLR.L  D4
+0000003C                            37          
+0000003C                            38  ENDING_MESSAGE
+0000003C                            39      * message user to input
+Line 40 ERROR: Undefined symbol
+0000003C  43F9 004DBB8E             40          LEA ENDING, A1   
+00000042  103C 000E                 41          MOVE.B #14, D0
+00000046  4E4F                      42          TRAP #15
+00000048                            43      * read user input
+00000048  227C 00000200             44          MOVEA.L #$200, A1 *we have to change this addr later
+0000004E  103C 0002                 45          MOVE.B #2, D0   
+00000052  4E4F                      46          TRAP #15
+00000054                            47      * counter for loop
+Line 48 ERROR: Undefined symbol
+00000054  143C 008E                 48          MOVE.B #MAX_USER_INPUT, D2   
+00000058                            49      * JSR to convert string function
+00000058  4EB9 0000007E             50          JSR CONVERT_STRING 
+0000005E                            51          
+0000005E                            52      * check if the address is even number
+0000005E  E25C                      53          ROR #1, D4   * C now holds 0 (if even) or 1 (if odd)
+00000060  65DA                      54          BCS ENDING_MESSAGE   *if carry is set then the user typed in an odd address
+00000062  E35C                      55          ROL #1, D4     *PUT D4 BACK        
+00000064                            56          
+00000064                            57      * Check if the starting and ending address is the same
+00000064                            58         ; CMP.L #STARTING_ADDR, D4
+00000064                            59         * MOVE.L #STARTING_ADDR, D5
+Line 60 ERROR: Undefined symbol
+00000064  2C39 004DBB8E             60          MOVE.L STARTING_ADDR, D6
+0000006A  B886                      61          CMP.L  D6, D4
+0000006C  6FCE                      62          BLE   ENDING_MESSAGE
+0000006E                            63      * store hex value of inputted string   
+Line 64 ERROR: Undefined symbol
+0000006E  23C4 00544480             64          MOVE.L D4, ENDING_ADDR   
+00000074                            65          
+00000074                            66      * clear the unused data in the data and address regisgter
+00000074  4280                      67          CLR.L D0
+00000076  4284                      68          CLR.L D4
+00000078                            69          
+00000078                            70          * Do error handling here Sam
+00000078                            71          
+00000078  4EF9 000000DC             72          JMP GO_THROUGH_MEMORY
+0000007E                            73      
+0000007E                            74      * Get each char
+0000007E                            75  CONVERT_STRING 
+0000007E  1219                      76          MOVE.B (A1)+, D1
+00000080                            77      
+00000080                            78      * Go to next instruction for converting
+00000080  B23C 0039                 79          CMP.B #$39, D1
+00000084  6F00 000A                 80          BLE NUMBER
+00000088                            81          
+00000088  B23C 003A                 82          CMP.B #$3A, D1
+0000008C  6C00 0012                 83          BGE CHAR   
+00000090                            84      
+00000090                            85      * Convert Ascii numbers to hex
+00000090                            86  NUMBER  
+00000090  B23C 002F                 87          CMP.B #$2F, D1
+00000094                            88      * Number is out of range
+00000094  6F00 0034                 89          BLE ERROR       
+00000098  0401 0030                 90          SUB.B #48, D1
+0000009C                            91          
+0000009C                            92      * Need to be changed the name of label
+0000009C  6000 001A                 93          BRA STORE_ADDR    
+000000A0                            94      
+000000A0                            95      * Convert Ascii charaters to hex
+000000A0                            96  CHAR    
+000000A0  B27C 0040                 97          CMP #$40, D1
+000000A4                            98      * Number is out of range
+000000A4  6F00 0024                 99          BLE ERROR
+000000A8                           100          
+000000A8  B27C 0047                101          CMP #$47, D1
+000000AC                           102      * Number is out of range
+000000AC  6C00 001C                103          BGE ERROR
+000000B0                           104          
+000000B0  0401 0037                105          SUB.B #55, D1
+000000B4  6000 0002                106          BRA STORE_ADDR
+000000B8                           107          
+000000B8                           108  STORE_ADDR
+000000B8                           109      * Add converted nibble to overall number
+000000B8  D801                     110          ADD.B D1, D4
+000000BA                           111      * Clear D1 for reuse 
+000000BA  4201                     112          CLR.B D1
+000000BC                           113      * Subtract from counter
+000000BC  5342                     114          SUB #1, D2
+000000BE                           115      * If counter is 0, we compared all 8 hex numbers
+000000BE  B43C 0000                116          CMP.B #0, D2
+000000C2  6700 0016                117          BEQ ENDCONV
+000000C6                           118      * Shift the overall number to the left by 1 nibble, so it will fit next hex number
+000000C6  E98C                     119          LSL.L #4, D4
+000000C8  60B4                     120          BRA CONVERT_STRING
+000000CA                           121          
+000000CA                           122      * Error handling
+000000CA                           123  ERROR
+Line 124 ERROR: Undefined symbol
+000000CA  43F9 004DBB8E            124      LEA   ERROR_MSG, A1 
+000000D0  103C 000E                125      MOVE.B #14, D0
+000000D4  4E4F                     126      TRAP #15
+000000D6  4EF8 000C                127      JMP   STARTING_MESSAGE
+000000DA                           128  
+000000DA                           129      
+000000DA                           130  ENDCONV * Next instruction starts 
+000000DA  4E75                     131          RTS
+000000DC                           132         * MOVE.L D4, STARTING_ADDR 
+000000DC                           133          
+000000DC                           134  GO_THROUGH_MEMORY
+000000DC                           135  
+000000DC                           136  
+000000DC                           137  
+000000DC                           138  
+000000DC                           139  
+000000DC                           140  
+000000DC                           141  
+000000DC                           142  
+000000DC                           143  
+000000DC                           144  
+000000DC                           145  
+000000DC                           146  
+000000DC                           147  
+000000DC                           148  
+000000DC                           149  
+000000DC                           150  
+000000DC                           151  
+000000DC                           152  
+000000DC                           153  
+000000DC                           154  
+000000DC                           155  
+000000DC                           156  
+000000DC                           157  
+000000DC                           158  
+000000DC                           159  
+000000DC                           160  
+000000DC                           161  
+Line 162 WARNING: END directive missing, starting address not set
+
+9 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CHAR                A0
+CONVERT_STRING      7E
+ENDCONV             DA
+ENDING_MESSAGE      3C
+ERROR               CA
+GO_THROUGH_MEMORY   DC
+NUMBER              90
+STARTING_MESSAGE    C
+START_OF_PROGRAM    0
+STORE_ADDR          B8

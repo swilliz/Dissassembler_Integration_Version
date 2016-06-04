@@ -1,0 +1,110 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/3/2016 4:18:51 AM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : SUB
+00000000                             3  * Written by : Ko Fukushima
+00000000                             4  * Date       : 5/20/2016
+00000000                             5  * Description: 
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8  SUB
+00000000                             9                   * ADD message
+Line 10 ERROR: Undefined symbol
+00000000  43F9 004DBB8E             10                   LEA      SUB_MESSAGE,    A1
+00000006  103C 000E                 11                   MOVE.B   #14,            D0
+0000000A  4E4F                      12                   TRAP #15
+0000000C                            13                   
+Line 14 ERROR: Undefined symbol
+0000000C  4EB9 004DBB8E             14                   JSR    GET_SIZE_PURPLE
+00000012                            15                   
+Line 16 ERROR: Undefined symbol
+00000012  4EB9 004DBB8E             16                   JSR     PRINTOUT_SIZE_PURPLE
+00000018                            17                   
+00000018                            18                   
+00000018                            19  * check for dn and ea
+00000018  4280                      20                   CLR.L D0                *clear D0
+0000001A                            21                   
+0000001A  4281                      22                   CLR.L D1                *clear D1
+0000001C                            23                   
+0000001C  3015                      24                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+0000001E                            25                   
+0000001E                            26                   * check the bit at 7
+0000001E  123C 0007                 27                   MOVE.B  #7,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+00000022                            28  
+00000022  E368                      29                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000024                            30                   
+00000024  123C 000F                 31                   MOVE.B  #15,D1          *14 bits is the number of times to shift to hold the mode number
+00000028                            32  
+00000028  E268                      33                   LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+0000002A                            34                   
+0000002A  B03C 0000                 35                   CMP.B   #0, D0
+0000002E                            36  
+0000002E                            37                   
+0000002E                            38                *   BTST    #8, D0
+0000002E                            39                   
+0000002E  6700 002C                 40                   BEQ     SUB_FIRST_EA
+00000032                            41                   
+00000032                            42                   * for the first Dn 
+Line 43 ERROR: Undefined symbol
+00000032  4EB9 004DBB8E             43                   JSR     GET_Data_Register
+00000038                            44                   
+00000038  4286                      45                   CLR.L   D6
+0000003A                            46                   
+0000003A  1C3C 0000                 47                   MOVE.B  #%000, D6 * for mode
+0000003E                            48                   
+Line 49 ERROR: Undefined symbol
+0000003E  4EB9 004DBB8E             49                   JSR     PRINT_EA *by using jmp table
+00000044                            50                   
+Line 51 ERROR: Undefined symbol
+00000044  4EB9 004DBB8E             51                   JSR     PRINT_COMMA
+0000004A                            52                   
+Line 53 ERROR: Undefined symbol
+0000004A  4EB9 004DBB8E             53                   JSR     Set_Ea
+00000050                            54                   
+Line 55 ERROR: Undefined symbol
+00000050  4EB9 004DBB8E             55                   JSR     PRINT_EA *by using jmp table
+00000056                            56                   
+Line 57 ERROR: Undefined symbol
+00000056  4EF9 004DBB8E             57                   JMP     PARSE_MEMORY
+0000005C                            58                   
+0000005C                            59  SUB_FIRST_EA
+Line 60 ERROR: Undefined symbol
+0000005C  4EB9 004DBB8E             60                   JSR     Set_Ea
+00000062                            61                   
+Line 62 ERROR: Undefined symbol
+00000062  4EB9 004DBB8E             62                   JSR     PRINT_EA *by using jmp table
+00000068                            63                   
+Line 64 ERROR: Undefined symbol
+00000068  4EB9 004DBB8E             64                   JSR     PRINT_COMMA
+0000006E                            65                   
+0000006E                            66                    * for the first Dn 
+Line 67 ERROR: Undefined symbol
+0000006E  4EB9 004DBB8E             67                   JSR     GET_Data_Register
+00000074                            68                   
+00000074  4286                      69                   CLR.L   D6
+00000076                            70                   
+00000076  1C3C 0000                 71                   MOVE.B  #%000, D6 * for mode
+0000007A                            72  
+Line 73 ERROR: Undefined symbol
+0000007A  4EB9 004DBB8E             73                   JSR     PRINT_EA *by using jmp table
+00000080                            74                   
+Line 75 ERROR: Undefined symbol
+00000080  4EF9 004DBB8E             75                   JMP     PARSE_MEMORY
+00000086                            76  
+00000086                            77  
+00000086                            78  
+00000086                            79  
+00000086                            80  
+Line 81 WARNING: END directive missing, starting address not set
+
+15 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+SUB                 0
+SUB_FIRST_EA        5C

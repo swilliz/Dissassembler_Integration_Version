@@ -223,9 +223,14 @@ PRINTADDQ
     LSR.W   D1,D0  *D0 now holds Dn
     
     CLR.L D1
-                                            
-    MOVE.W D0, D1 *D6 holds Dn   
+    
+    CMP.B   #0, D0
+    
+    BEQ     PRINT_8
+                                  
+    MOVE.W D0, D1 *D1 holds Dn   
 
+CONTINUE_PRINTADDQ
     MOVE.B #3, D0
                
     TRAP #15
@@ -272,7 +277,11 @@ PRINTADDQ
     
     BRA PARSE_MEMORY
 
-    
+PRINT_8
+    MOVE.W      #8, D1
+
+    BRA         CONTINUE_PRINTADDQ 
+
 
 
 

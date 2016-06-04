@@ -80,7 +80,11 @@ JSR_OPCODE
     
     TRAP #15
     
-    MOVE.L (A5), D0
+    LEA     SPACE, A1
+    
+    TRAP #15
+    
+    MOVE.W (A5), D0
 
     MOVE.B  #13,D1     
 
@@ -92,7 +96,7 @@ JSR_OPCODE
                                             
     MOVE.W D0, D7 *D7 holds Register  
 
-    MOVE.L D2, D0
+    MOVE.W (A5), D0
 
     MOVE.B  #10,D1     
 
@@ -208,6 +212,9 @@ SIZE_L
     LEA         SIZE_L_PRINT, A1 
     
     JMP PRINT_SIZE
+
+
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

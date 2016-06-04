@@ -1,7 +1,14 @@
- 
-* Program starts here
-
-                 MOVE.W  (A5),D0
+CHECK_PARSE_MEMORY
+* Program starts here               
+*                                  
+                  LEA       HEX_SIGN, A1
+                  MOVE.B    #14, D0
+                  TRAP #15                 
+                  MOVE.W   A5, D5
+                  JSR        HEX_TO_ASCII
+                  LEA       SPACE, A1
+                  MOVE.B    #14, D0
+                  TRAP #15
 
 *                 ORG     $400
 
@@ -124,6 +131,12 @@ code1111       STOP        #$2700
 *            *INCLUDE 'MESSAGE_Data.X68'
 *            INCLUDE 'JUMPTABLE EA.X68'
 *               END   $400 
+
+
+
+
+
+
 
 
 

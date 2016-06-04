@@ -25,7 +25,7 @@ JSR_MESSAGE     DC.B 'JSR',0
 RTS_MESSAGE     DC.B 'RTS',0
 CLR_MESSAGE     DC.B 'CLR',0
 ADDQ_MESSAGE    DC.B 'ADDQ.',0
-LEA_MESSAGE     DC.B 'LEA',0
+LEA_MESSAGE     DC.B 'LEA ',0
 
 
 BCC_MESSAGE     DC.B 'BCC',0   *//
@@ -85,8 +85,10 @@ COMMA           DC.B ', ',0
 
 
 ASK_TO_CONTINUE_M     DC.B    'do you want to continue? (y/n)', 0
-
 TERMINATED          DC.B    'PROGRAM TERMINATED',0
+
+* message for error
+DATA                  DC.B    'DATA     ',0
 
 
 

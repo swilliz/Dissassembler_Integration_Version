@@ -175,6 +175,8 @@ ADDI_EA
                  MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
 
                  LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+                 
+                 CLR.L D6
 
                  MOVE.B  D0, D6          *put D0 to data register into D7 for future printing
 
@@ -191,6 +193,7 @@ ADDI_EA
 
 
                
+
 
 
 

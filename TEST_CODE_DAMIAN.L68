@@ -1,6 +1,6 @@
 00007000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.15.04
-Created On: 6/2/16 3:36:07 AM
+Created On: 6/3/16 7:57:51 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -10,25 +10,52 @@ Created On: 6/2/16 3:36:07 AM
 00000000                             6  *-----------------------------------------------------------
 00007000                             7      ORG    $7000
 00007000                             8   BEGIN:                  ; first instruction of program
-00007000                             9  
-00007000  43D0                      10          LEA (A0),A1
-00007002  47D2                      11          LEA (A2),A3
-00007004  49F8 6500                 12          LEA $00006500,A4
-00007008  4BF8 1010                 13          LEA $1010,A5
-0000700C  4DF9 0000AA02             14          LEA $0000AA02,A6
-00007012  4FF9 FFFF2102             15          LEA $FFFF2102,A7
-00007018                            16                  
-00007018                            17      
-00007018                            18  *JSR_TEST
-00007018                            19      
-00007018                            20      
-00007018                            21  * Put program code here
-00007018                            22  
-00007018  FFFF FFFF                 23      SIMHALT             ; halt simulator
-0000701C                            24  
-0000701C                            25  * Put variables and constants here
-0000701C                            26  
-0000701C                            27      END    BEGIN        ; last line of source
+00007000  4E71                       9      NOP
+00007002                            10      *   *LEA
+00007002  6000 003C                 11          BRA CLEAR_REGISTER
+00007006  43D0                      12          LEA (A0),A1
+00007008  47D2                      13          LEA (A2),A3
+0000700A  49F8 6500                 14          LEA $00006500,A4
+0000700E  4BF8 1010                 15          LEA $1010,A5
+00007012  4DF9 0000AA02             16          LEA $0000AA02,A6
+00007018  4FF9 FFFF2102             17          LEA $FFFF2102,A7
+0000701E  4204                      18          CLR.B   D4
+00007020  48D0 00FF                 19          MOVEM.L D0-D7,(A0)
+00007024  48D0 FF00                 20          MOVEM.L A0-A7,(A0)
+00007028  48D0 0FFF                 21          MOVEM.L A0-A3/D0-D7,(A0)
+0000702C  48D0 0F07                 22          MOVEM.L A0-A3/D0-D2,(A0)
+00007030  48D0 F003                 23          MOVEM.L A4-A7/D0-D1,(A0)
+00007034  48D0 0924                 24          MOVEM.L A0/A3/D2/D5,(A0)
+00007038  48D0 00A2                 25          MOVEM.L D1/D5/D7,(A0)   
+0000703C  6000 0014                 26          BRA  MOVES
+00007040                            27  CLEAR_REGISTER
+00007040  4240                      28          CLR D0
+00007042  4241                      29          CLR D1
+00007044  4242                      30          CLR D2
+00007046  4243                      31          CLR D3
+00007048  4244                      32          CLR D4
+0000704A  4245                      33          CLR D5
+0000704C  4246                      34          CLR D6
+0000704E  4247                      35          CLR D7
+00007050  4E75                      36          RTS
+00007052                            37          
+00007052                            38  MOVES
+00007052  1200                      39          MOVE.B  D0,D1
+00007054  33CE F30045BB             40          MOVE.W  A6,$F30045BB
+0000705A  2000                      41          MOVE.L  D0,D0
+0000705C  2CC7                      42          MOVE.L  D7,(A6)+
+0000705E  36BC FFD0                 43          MOVE.W  #$FFD0,(A3)
+00007062  23F9 C00022AA 3000A0F8    44          MOVE.L  $C00022AA,$3000A0F8
+0000706C  2B08                      45          MOVE.L  A0,-(A5)
+0000706E  3056                      46          MOVEA.W (A6),A0
+00007070  48B6 07E0 483A            47          MOVEM.W A0/A1/A2/D5/D6/D7,$3A(A6,D4.L)
+00007076  4CD8 1B07                 48          MOVEM.L (A0)+,D0/D1/D2/A4/A3/A0/A1
+0000707A  4E75                      49          RTS
+0000707C  FFFF FFFF                 50      SIMHALT             ; halt simulator
+00007080                            51  
+00007080                            52  * Put variables and constants here
+00007080                            53  
+00007080                            54      END    BEGIN        ; last line of source
 
 No errors detected
 No warnings generated
@@ -38,3 +65,5 @@ SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
 BEGIN               7000
+CLEAR_REGISTER      7040
+MOVES               7052

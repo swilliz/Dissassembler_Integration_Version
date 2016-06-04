@@ -1,0 +1,525 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/2/2016 4:28:48 PM
+
+00000000  4280                       1  CHECK_SHIFTS           CLR.L D0
+00000002                             2                      
+00000002  4286                       3                   CLR.L D6
+00000004                             4  
+00000004  4281                       5                   CLR.L D1
+00000006                             6                   
+00000006  3015                       7                   MOVE.W (A5), D0
+00000008                             8                   
+00000008  E148                       9                   LSL.W #8, D0
+0000000A                            10                   
+0000000A  123C 000E                 11                   MOVE.B #14, D1
+0000000E                            12                   
+0000000E  E268                      13                   LSR.W D1, D0
+00000010                            14                   
+00000010  B03C 0003                 15                   CMP.B  #%11, D0            * check to see if its memory shift
+00000014                            16                   
+00000014  6700 002C                 17                   BEQ CHECK_MEMORY_SHIFTS
+00000018                            18                   
+00000018  3015                      19                   MOVE.W     (A5), D0
+0000001A                            20                   
+0000001A  123C 000B                 21                   MOVE.B     #11, D1
+0000001E                            22                   
+0000001E  E368                      23                   LSL.W      D1, D0
+00000020                            24                   
+00000020  123C 000E                 25                   MOVE.B     #14, D1
+00000024                            26                   
+00000024  E268                      27                   LSR.W      D1, D0
+00000026                            28                   
+00000026  B03C 0000                 29                   CMP.B      #%00, D0
+0000002A                            30                   
+0000002A  6700 00EE                 31                   BEQ        CHECK_ASD
+0000002E                            32                   
+0000002E  B03C 0001                 33                   CMP.B      #%01, D0
+00000032                            34                   
+00000032  6700 003E                 35                   BEQ        CHECK_LSD
+00000036                            36                   
+00000036  B07C 0003                 37                   CMP        #%11, D0
+0000003A                            38                   
+0000003A  6700 008E                 39                   BEQ        CHECK_ROD
+0000003E                            40                   
+Line 41 ERROR: Undefined symbol
+0000003E  6000 BB4E                 41                   BRA        HANDLE_ERROR
+00000042                            42                   
+00000042                            43                   
+00000042                            44  CHECK_MEMORY_SHIFTS
+00000042  3015                      45                   MOVE.W (A5),D0
+00000044                            46                   
+00000044  E948                      47                   LSL.W #4,D0            *shift out the opcode
+00000046                            48                   
+00000046  123C 000D                 49                   MOVE.B #13,D1          
+0000004A                            50                   
+0000004A  E268                      51                   LSR.W D1,D0            *shift out everything, so only three bits after opcode are there
+0000004C                            52                   
+0000004C  B03C 0001                 53                   CMP.B #1,D0            
+00000050                            54                   
+00000050  6700 0020                 55                   BEQ CHECK_LSD                *if the bits are 1, it is a logical shift
+00000054                            56                   
+00000054  B03C 0003                 57                   CMP.B #3,D0
+00000058                            58                   
+00000058  6700 0070                 59                   BEQ CHECK_ROD                *if the bits are 3, it is a rotation
+0000005C                            60                   
+0000005C  3015                      61                   MOVE.W (A5),D0
+0000005E                            62                   
+0000005E  E948                      63                   LSL.W #4,D0            *shift out the opcode
+00000060                            64                   
+00000060  123C 000D                 65                   MOVE.B #13,D1          
+00000064                            66                   
+00000064  E268                      67                   LSR.W D1,D0            *shift out everything, so only three bits after opcode are there   
+00000066                            68                      
+00000066  B03C 0000                 69                   CMP.B  #0, D0
+0000006A                            70                   
+0000006A  6700 00AE                 71                   BEQ    CHECK_ASD
+0000006E                            72                   
+Line 73 ERROR: Undefined symbol
+0000006E  6000 BB1E                 73                   BRA ERR0R_HANDLE
+00000072                            74                   
+00000072                            75  
+00000072  4280                      76  CHECK_LSD              CLR.L D0               *still need to do checks, since an asd shift could still be a possibility
+00000074                            77                   
+00000074  4281                      78                   CLR.L D1
+00000076                            79                                                 
+00000076  3015                      80                   MOVE.W (A5), D0
+00000078                            81                   
+00000078  EF48                      82                   LSL.W  #7, D0
+0000007A                            83                   
+0000007A  123C 000F                 84                   MOVE.B #15, D1
+0000007E                            85                   
+0000007E  E268                      86                   LSR.W  D1, D0
+00000080                            87                   
+00000080  B03C 0001                 88                   CMP.B  #1, D0
+00000084                            89                   
+00000084  6700 000E                 90                   BEQ CHECK_LSL
+00000088                            91                   
+00000088  B03C 0000                 92                   CMP.B #0, D0
+0000008C                            93                   
+0000008C  6700 001C                 94                   BEQ CHECK_LSR
+00000090                            95                   
+Line 96 ERROR: Undefined symbol
+00000090  6000 BAFC                 96                   BRA HANDLE_ERROR
+00000094                            97                   
+00000094                            98  
+00000094                            99  CHECK_LSL           
+00000094  3015                     100                   MOVE.W (A5), D0
+00000096                           101                   
+00000096  E148                     102                   LSL.W #8, D0
+00000098                           103                   
+00000098  123C 000E                104                   MOVE.B #14, D1
+0000009C                           105                   
+0000009C  E268                     106                   LSR.W D1, D0
+0000009E                           107                   
+0000009E  B03C 0003                108                   CMP.B  #%11, D0        * check to see if it is memory and not register shift
+000000A2                           109                   
+000000A2  6700 001C                110                   BEQ CHECK_LSD_MEMORY
+000000A6                           111                   
+000000A6  6000 00BE                112                   BRA CHECK_REGISTER_SHIFTS_EA
+000000AA                           113  
+000000AA                           114  CHECK_LSR                    
+000000AA  3015                     115                   MOVE.W (A5), D0
+000000AC                           116                   
+000000AC  E148                     117                   LSL.W #8, D0
+000000AE                           118                   
+000000AE  123C 000E                119                   MOVE.B #14, D1
+000000B2                           120                   
+000000B2  E268                     121                   LSR.W D1, D0
+000000B4                           122                   
+000000B4  B03C 0003                123                   CMP.B  #%11, D0            * check to see if memory shift
+000000B8                           124                   
+000000B8  6700 0006                125                   BEQ CHECK_LSD_MEMORY
+000000BC                           126                   
+000000BC  6000 00A8                127                   BRA CHECK_REGISTER_SHIFTS_EA
+000000C0                           128                   
+000000C0                           129  CHECK_LSD_MEMORY
+000000C0  4EB9 000001DC            130                   JSR    CHECK_MEMORY_SHIFTS_EA
+000000C6                           131                   
+Line 132 ERROR: Undefined symbol
+000000C6  6000 BAC6                132                   BRA PARSE_MEMORY
+000000CA                           133              
+000000CA                           134  
+000000CA  4280                     135  CHECK_ROD              CLR.L D0               *same check as logical shift, since an arithmetic shift could still be possible
+000000CC                           136                   
+000000CC  4281                     137                   CLR.L D1
+000000CE                           138                   
+000000CE  3015                     139                   MOVE.W (A5), D0
+000000D0                           140                   
+000000D0  EF48                     141                   LSL.W  #7, D0
+000000D2                           142                   
+000000D2  123C 000F                143                   MOVE.B #15, D1
+000000D6                           144                   
+000000D6  E268                     145                   LSR.W  D1, D0
+000000D8                           146                   
+000000D8  B03C 0001                147                   CMP.B  #1, D0
+000000DC                           148                   
+000000DC  6700 0006                149                   BEQ CHECK_ROL
+000000E0                           150                   
+000000E0  6000 0018                151                   BRA CHECK_ROR
+000000E4                           152  
+000000E4                           153  CHECK_ROL              
+000000E4  3015                     154                   MOVE.W (A5), D0
+000000E6                           155                   
+000000E6  E148                     156                   LSL.W #8, D0
+000000E8                           157                   
+000000E8  123C 000E                158                   MOVE.B #14, D1
+000000EC                           159                   
+000000EC  E268                     160                   LSR.W D1, D0
+000000EE                           161                   
+000000EE  B03C 0003                162                   CMP.B  #%11, D0            * check to see if its memory shift
+000000F2                           163                   
+000000F2  6700 001C                164                   BEQ CHECK_ROD_MEMORY
+000000F6                           165                   
+000000F6  6000 006E                166                   BRA CHECK_REGISTER_SHIFTS_EA
+000000FA                           167  
+000000FA                           168  CHECK_ROR                        
+000000FA  3015                     169                   MOVE.W (A5), D0
+000000FC                           170                   
+000000FC  E148                     171                   LSL.W #8, D0
+000000FE                           172                   
+000000FE  123C 000E                173                   MOVE.B #14, D1
+00000102                           174                   
+00000102  E268                     175                   LSR.W D1, D0
+00000104                           176                   
+00000104  B03C 0003                177                   CMP.B  #%11, D0            * check to see if its memory shift
+00000108                           178                   
+00000108  6700 0006                179                   BEQ CHECK_ROD_MEMORY
+0000010C                           180                   
+0000010C  6000 0058                181                   BRA CHECK_REGISTER_SHIFTS_EA
+00000110                           182  
+00000110                           183  CHECK_ROD_MEMORY       
+00000110  4EB9 000001DC            184                   JSR    CHECK_MEMORY_SHIFTS_EA
+00000116                           185                   
+Line 186 ERROR: Undefined symbol
+00000116  6000 BA76                186                   BRA PARSE_MEMORY
+0000011A                           187                   
+0000011A                           188                   
+0000011A  3015                     189  CHECK_ASD              MOVE.W (A5), D0
+0000011C                           190                   
+0000011C  EF48                     191                   LSL.W  #7, D0
+0000011E                           192                   
+0000011E  123C 000F                193                   MOVE.B #15, D1
+00000122                           194                   
+00000122  E268                     195                   LSR.W  D1, D0
+00000124                           196                   
+00000124  B03C 0001                197                   CMP.B  #1, D0
+00000128                           198                   
+00000128  6700 0006                199                   BEQ CHECK_ASL
+0000012C                           200                   
+0000012C  6000 0018                201                   BRA CHECK_ASR
+00000130                           202                   
+00000130                           203  CHECK_ASL
+00000130                           204                   
+00000130  3015                     205                   MOVE.W (A5), D0
+00000132                           206                   
+00000132  E148                     207                   LSL.W #8, D0
+00000134                           208                   
+00000134  123C 000E                209                   MOVE.B #14, D1
+00000138                           210                   
+00000138  E268                     211                   LSR.W D1, D0
+0000013A                           212                   
+0000013A  B03C 0003                213                   CMP.B  #%11, D0            * check to see if its memory shift
+0000013E                           214                   
+0000013E  6700 001C                215                   BEQ CHECK_ASD_MEMORY
+00000142                           216                   
+00000142  6000 0022                217                   BRA CHECK_REGISTER_SHIFTS_EA
+00000146                           218                                    
+00000146                           219  
+00000146                           220  CHECK_ASR                               
+00000146  3015                     221                   MOVE.W (A5), D0
+00000148                           222                   
+00000148  E148                     223                   LSL.W #8, D0
+0000014A                           224                   
+0000014A  123C 000E                225                   MOVE.B #14, D1
+0000014E                           226                   
+0000014E  E268                     227                   LSR.W D1, D0
+00000150                           228                   
+00000150  B03C 0003                229                   CMP.B  #%11, D0            * check to see if its memory shift
+00000154                           230                   
+00000154  6700 0006                231                   BEQ CHECK_ASD_MEMORY
+00000158                           232                   
+00000158  6000 000C                233                   BRA CHECK_REGISTER_SHIFTS_EA
+0000015C                           234  
+0000015C                           235  CHECK_ASD_MEMORY
+0000015C  4EB9 000001DC            236                   JSR    CHECK_MEMORY_SHIFTS_EA
+00000162                           237                   
+Line 238 ERROR: Undefined symbol
+00000162  6000 BA2A                238                   BRA PARSE_MEMORY
+00000166                           239                   
+00000166                           240  CHECK_REGISTER_SHIFTS_EA               
+Line 241 ERROR: Undefined symbol
+00000166  4EB9 004DBB8E            241                   JSR GET_SIZE_PURPLE
+0000016C                           242  
+0000016C  3015                     243                   MOVE.W (A5), D0
+0000016E                           244                   
+0000016E  123C 000A                245                   MOVE.B #10, D1
+00000172                           246                   
+00000172  E368                     247                   LSL.W D1, D0
+00000174                           248                   
+00000174  123C 000F                249                   MOVE.B #15, D1
+00000178                           250                   
+00000178  E268                     251                   LSR.W D1, D0
+0000017A                           252                   
+0000017A  B03C 0001                253                   CMP.B #1, D0
+0000017E                           254                   
+0000017E  6700 0030                255                   BEQ CHECK_REGISTER
+00000182                           256                   
+00000182  B03C 0000                257                   CMP.B  #0, D0
+00000186                           258                   
+00000186  6700 0006                259                   BEQ CHECK_COUNT
+0000018A                           260                   
+Line 261 ERROR: Undefined symbol
+0000018A  6000 BA02                261                   BRA ERROR_HANDLE
+0000018E                           262  
+0000018E                           263                   
+0000018E                           264  CHECK_COUNT    
+0000018E                           265                 
+0000018E  3015                     266                   MOVE.W (A5), D0
+00000190                           267                   
+00000190  E948                     268                   LSL.W #4, D0
+00000192                           269                   
+00000192  123C 000D                270                   MOVE.B #13, D1
+00000196                           271                   
+00000196  E268                     272                   LSR.W D1, D0
+00000198                           273                                    
+00000198  3015                     274                   MOVE.W (A5), D0
+0000019A                           275                   
+0000019A  123C 000D                276                   MOVE.B #13, D1                * to print out the ea that is being shifted
+0000019E                           277                   
+0000019E  E368                     278                   LSL.W D1, D0
+000001A0                           279                   
+000001A0  E268                     280                   LSR.W D1, D0
+000001A2                           281                   
+000001A2  1E00                     282                   MOVE.B D0, D7
+000001A4                           283                   
+000001A4  7C00                     284                   MOVE.L #%000, D6              * we know it is a data register
+000001A6                           285                   
+Line 286 ERROR: Undefined symbol
+000001A6  4EB9 004DBB8E            286                   JSR CHECK_EA
+000001AC                           287                   
+Line 288 ERROR: Undefined symbol
+000001AC  6000 B9E0                288                   BRA PARSE_MEMORY
+000001B0                           289                   
+000001B0                           290  
+000001B0                           291  CHECK_REGISTER
+000001B0  3015                     292                   MOVE.W (A5), D0
+000001B2                           293                   
+000001B2  E948                     294                   LSL.W #4, D0
+000001B4                           295                   
+000001B4  123C 000D                296                   MOVE.B #13, D1
+000001B8                           297                   
+000001B8  E268                     298                   LSR.W D1, D0
+000001BA                           299                   
+000001BA  1E00                     300                   MOVE.B D0, D7
+000001BC                           301                   
+000001BC  7C00                     302                   MOVE.L #%000, D6
+000001BE                           303                   
+Line 304 ERROR: Undefined symbol
+000001BE  4EB9 004DBB8E            304                   JSR CHECK_EA                  * to print out the data register
+000001C4                           305                   
+000001C4  3015                     306                   MOVE.W (A5), D0
+000001C6                           307                   
+000001C6  123C 000D                308                   MOVE.B #13, D1                * to print out the ea that is being shifted
+000001CA                           309                   
+000001CA  E368                     310                   LSL.W D1, D0
+000001CC                           311                   
+000001CC  E268                     312                   LSR.W D1, D0
+000001CE                           313                   
+000001CE  1E00                     314                   MOVE.B D0, D7
+000001D0                           315                   
+000001D0  7C00                     316                   MOVE.L #%000, D6              * we know it is a data register
+000001D2                           317                   
+Line 318 ERROR: Undefined symbol
+000001D2  4EB9 004DBB8E            318                   JSR CHECK_EA
+000001D8                           319                   
+Line 320 ERROR: Undefined symbol
+000001D8  6000 B9B4                320                   BRA PARSE_MEMORY
+000001DC                           321                                   
+000001DC                           322  
+000001DC                           323  CHECK_MEMORY_SHIFTS_EA   * gets the mode and register of the memory ea, and prints it out
+000001DC                           324                   *JSR GET_SIZE_PURPLE
+000001DC                           325                   
+000001DC                           326                   *JSR PRINTOUT_SIZE_PURPLE
+000001DC                           327  
+000001DC  3015                     328                   MOVE.W (A5), D0
+000001DE                           329                   
+000001DE  123C 000A                330                   MOVE.B #10, D1
+000001E2                           331                   
+000001E2  E368                     332                   LSL.W D1, D0
+000001E4                           333                   
+000001E4  123C 000D                334                   MOVE.B #13, D1
+000001E8                           335                   
+000001E8  E268                     336                   LSR.W D1, D0
+000001EA                           337                   
+000001EA  2C00                     338                   MOVE.L D0, D6
+000001EC                           339                   
+000001EC  3015                     340                   MOVE.W (A5), D0
+000001EE                           341                   
+000001EE  123C 000D                342                   MOVE.B #13, D1
+000001F2                           343                   
+000001F2  E368                     344                   LSL.W D1, D0
+000001F4                           345                   
+000001F4  E268                     346                   LSR.W D1, D0
+000001F6                           347                   
+000001F6  2E00                     348                   MOVE.L D0, D7
+000001F8                           349                   
+Line 350 ERROR: Undefined symbol
+000001F8  4EB9 004DBB8E            350                   JSR CHECK_EA
+000001FE                           351                   
+000001FE  4E75                     352                   RTS
+00000200                           353                                   
+00000200                           354                
+00000200                           355  CHECK_MOVEB            
+00000200                           356                   
+00000200  1A3C 0000                357                   MOVE.B     #%00, D5
+00000204                           358                   
+00000204  6000 004E                359                   BRA CHECK_MOVE_EA
+00000208                           360  
+00000208  4280                     361  CHECK_MOVEW            CLR.L D0
+0000020A                           362                   
+0000020A  4281                     363                   CLR.L D1
+0000020C                           364                   
+0000020C  3015                     365                   MOVE.W (A5),D0
+0000020E                           366                   
+0000020E  EF48                     367                   LSL.W #7,D0
+00000210                           368                   
+00000210  123C 000D                369                   MOVE.B #13,D1
+00000214                           370                   
+00000214  E268                     371                   LSR.W D1,D0
+00000216                           372                   
+00000216  B03C 0001                373                   CMP.B #1,D0            *check to see if the mode of the destination is an address register
+0000021A                           374                   
+0000021A  6700 0028                375                   BEQ CHECK_MOVEAW             *if the destination is an address, it is MOVEA
+0000021E                           376                   
+0000021E  1A3C 0001                377                   MOVE.B     #%01, D5
+00000222                           378                      
+00000222  6000 0030                379                   BRA CHECK_MOVE_EA
+00000226                           380                
+00000226                           381  
+00000226  4280                     382  CHECK_MOVEL            CLR.L D0
+00000228                           383                   
+00000228  4281                     384                   CLR.L D1
+0000022A                           385                   
+0000022A  3015                     386                   MOVE.W (A5),D0
+0000022C                           387                   
+0000022C  EF48                     388                   LSL.W #7,D0
+0000022E                           389                   
+0000022E  123C 000D                390                   MOVE.B #13,D1
+00000232                           391                   
+00000232  E268                     392                   LSR.W D1,D0
+00000234                           393                   
+00000234  B03C 0001                394                   CMP.B #1,D0            *check to see if the mode of the destination is equal to 1
+00000238                           395                   
+00000238  6700 0012                396                   BEQ CHECK_MOVEAL             *if the mode is 1, then it is an address register, and the opcode is MOVEA
+0000023C                           397                   
+0000023C  1A3C 0002                398                   MOVE.B     #%10, D5
+00000240                           399                   
+00000240  6000 0012                400                   BRA CHECK_MOVE_EA
+00000244                           401                   
+00000244                           402                   
+00000244                           403  CHECK_MOVEAW                    
+00000244  1A3C 0001                404                   MOVE.B     #%01, D5
+00000248                           405                   
+00000248  6000 000A                406                   BRA CHECK_MOVE_EA
+0000024C                           407  
+0000024C                           408  CHECK_MOVEAL                  
+0000024C  1A3C 0002                409                   MOVE.B     #%10, D5
+00000250                           410                   
+00000250  6000 0002                411                   BRA CHECK_MOVE_EA
+00000254                           412  
+00000254                           413  CHECK_MOVE_EA
+00000254  4247                     414                   CLR    D7 
+00000256                           415                   
+00000256  4246                     416                   CLR    D6               
+00000258                           417                   
+00000258  3015                     418                   MOVE.W (A5), D0
+0000025A                           419                   
+0000025A  123C 000A                420                   MOVE.B #10, D1
+0000025E                           421                   
+0000025E  E368                     422                   LSL.W D1, D0
+00000260                           423                   
+00000260  123C 000D                424                   MOVE.B #13, D1
+00000264                           425                   
+00000264  E268                     426                   LSR.W D1, D0
+00000266                           427                   
+00000266  1C00                     428                   MOVE.B D0, D6          * getting the mode of the second ea
+00000268                           429                   
+00000268  3015                     430                   MOVE.W (A5), D0
+0000026A                           431                   
+0000026A  123C 000D                432                   MOVE.B #13, D1
+0000026E                           433                   
+0000026E  E368                     434                   LSL.W D1, D0
+00000270                           435                   
+00000270  E268                     436                   LSR.W D1, D0
+00000272                           437                   
+00000272  1E00                     438                   MOVE.B D0, D7          * getting the register of the second ea
+00000274                           439                   
+Line 440 ERROR: Undefined symbol
+00000274  4EB9 004DBB8E            440                   JSR PRINT_EA
+0000027A                           441                   
+0000027A  3015                     442                   MOVE.W (A5), D0
+0000027C                           443                   
+0000027C  E948                     444                   LSL.W #4, D0
+0000027E                           445                   
+0000027E  123C 000D                446                   MOVE.B #13, D1
+00000282                           447                   
+00000282  E268                     448                   LSR.W D1, D0
+00000284                           449                   
+00000284  1E00                     450                   MOVE.B D0, D7          * getting the register of the first ea
+00000286                           451                   
+00000286  3015                     452                   MOVE.W (A5), D0
+00000288                           453                   
+00000288  EF48                     454                   LSL.W #7, D0
+0000028A                           455                   
+0000028A  123C 000D                456                   MOVE.B #13, D1
+0000028E                           457                   
+0000028E  E268                     458                   LSR.W D1, D0
+00000290                           459                   
+00000290  1C00                     460                   MOVE.B D0, D6          * getting the mode of the first ea
+00000292                           461                   
+Line 462 ERROR: Undefined symbol
+00000292  4EB9 004DBB8E            462                   JSR PRINT_EA
+00000298                           463                   
+Line 464 ERROR: Undefined symbol
+00000298  6000 B8F4                464                   BRA PARSE_MEMORY
+0000029C                           465  
+0000029C                           466  
+0000029C                           467  
+0000029C                           468  
+0000029C                           469  
+0000029C                           470  
+0000029C                           471  
+Line 472 WARNING: END directive missing, starting address not set
+
+17 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CHECK_ASD           11A
+CHECK_ASD_MEMORY    15C
+CHECK_ASL           130
+CHECK_ASR           146
+CHECK_COUNT         18E
+CHECK_LSD           72
+CHECK_LSD_MEMORY    C0
+CHECK_LSL           94
+CHECK_LSR           AA
+CHECK_MEMORY_SHIFTS  42
+CHECK_MEMORY_SHIFTS_EA  1DC
+CHECK_MOVEAL        24C
+CHECK_MOVEAW        244
+CHECK_MOVEB         200
+CHECK_MOVEL         226
+CHECK_MOVEW         208
+CHECK_MOVE_EA       254
+CHECK_REGISTER      1B0
+CHECK_REGISTER_SHIFTS_EA  166
+CHECK_ROD           CA
+CHECK_ROD_MEMORY    110
+CHECK_ROL           E4
+CHECK_ROR           FA
+CHECK_SHIFTS        0

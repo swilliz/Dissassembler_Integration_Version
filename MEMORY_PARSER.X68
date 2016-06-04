@@ -8,18 +8,28 @@
 
                 MOVEA.L   STARTING_ADDR, A5
                 MOVEA.L   A5, A6
+
                 MOVEA.L  #outputCountMax, A2
                 MOVEA.L  #outputCountCurr, A3
 PARSE_MEMORY      
                 MOVE.W   A6, A5
+                MOVE.W   (A6)+, D0
+                CLR.L    D0
                 LEA      CR_LF, A1
                 MOVE.B   #14, D0
-                TRAP #15  
+                TRAP #15 
+
+CATCH_BAD_OPCODES               
+                CMPA.L   ENDING_ADDR, A5
+                BEQ      ASK_TO_CONTINUE
+                CMPA.L   #outputCountMax, A3
+                BEQ       PRESS_ENTER_CONTINUE
+                ADDA.L    #1, A3
+                BRA      ERROR_HANDLING
         
 PARSE_MEMORY_FIRST    
                 CMPA.L   ENDING_ADDR, A6
                 BEQ      ASK_TO_CONTINUE
-                MOVE.W   (A6)+, D0
                 
                 CMPA.L   #outputCountMax, A3
                 BEQ       PRESS_ENTER_CONTINUE
@@ -32,18 +42,6 @@ CONTINUE_PARSE
 *                LEA CR_LF, A1
 *                MOVE.B #14, D0
 *                TRAP #15          *end testing
-
-                MOVE.W      A5, D5
-                
-                JSR      HEX_TO_ASCII
-                
-                LEA      SPACE, A1
-                
-                MOVE.B   #14, D0
-                
-                TRAP #15
-                
-                MOVE.W   (A5), D0
                 
                 JMP      NEXT_INSTRUCTION
                     
@@ -64,6 +62,7 @@ NEXT_INSTRUCTION
                 INCLUDE 'BCC.X68'
                 INCLUDE 'HEX_TO_ASCII_V1.X68'
                 INCLUDE 'JUMPTABLE-EA.X68'
+                INCLUDE 'ERROR_HANDLING.X68'
                 
                 JMP      PARSE_MEMORY
                 
@@ -83,7 +82,7 @@ PRESS_ENTER_CONTINUE
                  MOVE.W #$FF00, D1
                  TRAP #15
 
-                 JMP CONTINUE_PARSE
+                 JMP CATCH_BAD_OPCODES
                 
 ASK_TO_CONTINUE
     LEA         ASK_TO_CONTINUE_M, A1
@@ -123,7 +122,8 @@ ASK_TO_CONTINUE
     BRA         ASK_TO_CONTINUE   
     
 RESTART
-
+    CLR.L       D4
+    
     BRA         START_OF_PROGRAM   
 
                
@@ -134,6 +134,16 @@ STOP
     MOVE.B      #14, D0
     
     TRAP #15
+
+
+
+
+
+
+
+
+
+
 
 
 

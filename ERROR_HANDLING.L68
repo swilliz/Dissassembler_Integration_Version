@@ -1,0 +1,2386 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.04
+Created On: 6/3/2016 1:04:42 AM
+
+00000000                             1  ERROR_HANDLING 
+00000000                             2  * Program starts here
+00000000                             3  
+00000000  3015                       4                   MOVE.W  (A5),D0
+00000002                             5  
+00000002                             6  *                 ORG     $400
+00000002                             7  
+00000002                             8  *start            LEA     stack,SP        *Load the SP
+00000002                             9  
+00000002  41F9 0000001A             10                   LEA     CHECK_jmp_table,A0    *Index into the table
+00000008                            11  
+00000008  4280                      12                   CLR.L   D0              *Zero it
+0000000A                            13  
+0000000A  3015                      14                   MOVE.W  (A5),D0     *We'll play with it here
+0000000C                            15  
+Line 16 ERROR: Undefined symbol
+0000000C  123C 008E                 16                   MOVE.B  #shift,D1       *Shift 12 bits to the right  
+00000010                            17  
+00000010  E268                      18                   LSR.W   D1,D0           *Move the bits
+00000012                            19  
+00000012                            20  *
+00000012                            21  
+00000012                            22  * Consider the next instruction. Why do we have to multiply the index 
+00000012                            23  
+00000012                            24  * by 6? How many bytes does a single jump table entry require? 
+00000012                            25  
+00000012                            26   
+00000012                            27  
+00000012  C0FC 0006                 28                 MULU        #6,D0       *Form offset     
+00000016                            29  
+00000016  4EB0 0000                 30                 JSR         0(A0,D0)   *Jump indirect with index
+0000001A                            31  
+0000001A                            32                      
+0000001A                            33  
+0000001A  4EF9 0000007A             34  CHECK_jmp_table      JMP         CHECK_code0000
+00000020                            35  
+00000020  4EF9 0000007E             36                 JMP         CHECK_code0001
+00000026                            37  
+00000026  4EF9 00000082             38                 JMP         CHECK_code0010
+0000002C                            39  
+0000002C  4EF9 00000086             40                 JMP         CHECK_code0011
+00000032                            41  
+00000032  4EF9 0000008A             42                 JMP         CHECK_code0100
+00000038                            43  
+00000038  4EF9 0000008E             44                 JMP         CHECK_code0101
+0000003E                            45  
+0000003E  4EF9 00000092             46                 JMP         CHECK_code0110
+00000044                            47  
+00000044  4EF9 00000098             48                 JMP         CHECK_code0111
+0000004A                            49  
+0000004A  4EF9 0000009C             50                 JMP         CHECK_code1000
+00000050                            51  
+00000050  4EF9 000000A0             52                 JMP         CHECK_code1001
+00000056                            53  
+00000056  4EF9 000000A4             54                 JMP         CHECK_code1010
+0000005C                            55  
+0000005C  4EF9 000000A8             56                 JMP         CHECK_code1011
+00000062                            57  
+00000062  4EF9 000000AC             58                 JMP         CHECK_code1100
+00000068                            59  
+00000068  4EF9 000000B0             60                 JMP         CHECK_code1101
+0000006E                            61  
+0000006E  4EF9 000000B4             62                 JMP         CHECK_code1110
+00000074                            63  
+00000074  4EF9 000000B8             64                 JMP         CHECK_code1111
+0000007A                            65  
+0000007A                            66          
+0000007A                            67  
+0000007A                            68   
+0000007A                            69  
+0000007A                            70  *The following subroutines will get filled in as you decode the instructions . For *now, just exit gracefully.
+0000007A                            71  
+0000007A                            72   
+0000007A                            73  
+0000007A                            74   
+0000007A                            75  
+0000007A  6000 099C                 76  CHECK_code0000       BRA         CHECK_ADDI
+0000007E                            77  
+0000007E  6000 0288                 78  CHECK_code0001       BRA         CHECK_MOVEB
+00000082                            79  
+00000082  6000 02AA                 80  CHECK_code0010       BRA         CHECK_MOVEL
+00000086                            81  
+00000086  6000 0288                 82  CHECK_code0011       BRA         CHECK_MOVEW
+0000008A                            83  
+0000008A  6000 0488                 84  CHECK_code0100       BRA         CHECK_GROUP_0100_CODE
+0000008E                            85  
+0000008E  6000 03F8                 86  CHECK_code0101       BRA         CHECK_ADDQ   * Subroutine for ADDQ
+00000092                            87  
+00000092  4EF9 0000093A             88  CHECK_code0110       JMP         CHECK_BCC
+00000098                            89  
+00000098  6000 0946                 90  CHECK_code0111       BRA         CHECK_MOVEQ
+0000009C                            91  
+0000009C  6000 054E                 92  CHECK_code1000       BRA         CHECK_DIVU_OR
+000000A0                            93  
+000000A0  6000 04E2                 94  CHECK_code1001       BRA         CHECK_SUB    * Subroutine for SUB    
+000000A4                            95  
+000000A4  6000 0016                 96  CHECK_code1010       BRA         ERROR_HANDLE
+000000A8                            97  
+000000A8                            98   
+000000A8                            99  
+000000A8                           100  * Next we put in the next level of decoding. I just stuck this BRA
+000000A8                           101  
+000000A8                           102  * instruction here so it would look different. If this was your real
+000000A8                           103  
+000000A8                           104  * code, you would decode to the next level. Perhaps this would be
+000000A8                           105  
+000000A8                           106   * another jump table to the 8 possible op-codes at the next level.
+000000A8                           107  
+000000A8                           108   
+000000A8                           109  
+000000A8  6000 05E4                110  CHECK_code1011       BRA         CHECK_CMP             *CMP  * Subroutuine for CMP
+000000AC                           111  
+000000AC  6000 060A                112  CHECK_code1100       BRA         CHECK_MULS_AND             *MULS, AND
+000000B0                           113  
+000000B0  6000 0772                114  CHECK_code1101       BRA         CHECK_ADD_ADDA             *ADD_ADDA       *#$2700
+000000B4                           115  
+000000B4  6000 0052                116  CHECK_code1110       BRA         CHECK_SHIFTS
+000000B8                           117  
+000000B8  6000 0002                118  CHECK_code1111       BRA         ERROR_HANDLE
+000000BC                           119                   
+000000BC                           120  ERROR_HANDLE
+Line 121 ERROR: Undefined symbol
+000000BC  43F9 004DBB8E            121          LEA         HEX_SIGN, A1
+000000C2                           122          
+000000C2  103C 000E                123          MOVE.B      #14, D0
+000000C6                           124          
+000000C6  4E4F                     125          TRAP #15
+000000C8                           126  
+000000C8  3A0D                     127          MOVE.W      A5, D5
+000000CA                           128          
+Line 129 ERROR: Undefined symbol
+000000CA  4EB9 004DBB8E            129          JSR         HEX_TO_ASCII
+000000D0                           130          
+Line 131 ERROR: Undefined symbol
+000000D0  43F9 004DBB8E            131          LEA         SPACE, A1
+000000D6                           132          
+000000D6  103C 000E                133          MOVE.B      #14, D0
+000000DA                           134          
+000000DA  4E4F                     135          TRAP #15
+000000DC                           136  
+Line 137 ERROR: Undefined symbol
+000000DC  43F9 004DBB8E            137          LEA     DATA, A1
+000000E2                           138          
+000000E2  103C 000E                139          MOVE.B      #14, D0
+000000E6                           140          
+000000E6  4E4F                     141          TRAP #15
+000000E8                           142          
+Line 143 ERROR: Undefined symbol
+000000E8  43F9 004DBB8E            143          LEA         POUND_SIGN, A1
+000000EE                           144          
+000000EE  103C 000E                145          MOVE.B      #14, D0
+000000F2                           146          
+000000F2  4E4F                     147          TRAP #15
+000000F4                           148          
+Line 149 ERROR: Undefined symbol
+000000F4  43F9 004DBB8E            149          LEA         HEX_SIGN, A1
+000000FA                           150          
+000000FA  4E4F                     151          TRAP #15
+000000FC                           152          
+000000FC  3A1D                     153          MOVE.W      (A5)+, D5
+000000FE                           154          
+Line 155 ERROR: Undefined symbol
+000000FE  4EB9 004DBB8E            155          JSR         HEX_TO_ASCII
+00000104                           156          
+Line 157 ERROR: Undefined symbol
+00000104  6000 BA88                157          BRA         PARSE_MEMORY
+00000108                           158          
+00000108                           159          INCLUDE     'DAMIAN_OP_CODE_HANDLE_ERROR.X68'
+00000108  4280                     160  CHECK_SHIFTS           CLR.L D0
+0000010A                           161                      
+0000010A  4286                     162                   CLR.L D6
+0000010C                           163  
+0000010C  4281                     164                   CLR.L D1
+0000010E                           165                   
+0000010E  3015                     166                   MOVE.W (A5), D0
+00000110                           167                   
+00000110  E148                     168                   LSL.W #8, D0
+00000112                           169                   
+00000112  123C 000E                170                   MOVE.B #14, D1
+00000116                           171                   
+00000116  E268                     172                   LSR.W D1, D0
+00000118                           173                   
+00000118  B03C 0003                174                   CMP.B  #%11, D0            * check to see if its memory shift
+0000011C                           175                   
+0000011C  6700 002C                176                   BEQ CHECK_MEMORY_SHIFTS
+00000120                           177                   
+00000120  3015                     178                   MOVE.W     (A5), D0
+00000122                           179                   
+00000122  123C 000B                180                   MOVE.B     #11, D1
+00000126                           181                   
+00000126  E368                     182                   LSL.W      D1, D0
+00000128                           183                   
+00000128  123C 000E                184                   MOVE.B     #14, D1
+0000012C                           185                   
+0000012C  E268                     186                   LSR.W      D1, D0
+0000012E                           187                   
+0000012E  B03C 0000                188                   CMP.B      #%00, D0
+00000132                           189                   
+00000132  6700 00EE                190                   BEQ        CHECK_ASD
+00000136                           191                   
+00000136  B03C 0001                192                   CMP.B      #%01, D0
+0000013A                           193                   
+0000013A  6700 003E                194                   BEQ        CHECK_LSD
+0000013E                           195                   
+0000013E  B07C 0003                196                   CMP        #%11, D0
+00000142                           197                   
+00000142  6700 008E                198                   BEQ        CHECK_ROD
+00000146                           199                   
+00000146  6000 FF74                200                   BRA        ERROR_HANDLE
+0000014A                           201                   
+0000014A                           202                   
+0000014A                           203  CHECK_MEMORY_SHIFTS
+0000014A  3015                     204                   MOVE.W (A5),D0
+0000014C                           205                   
+0000014C  E948                     206                   LSL.W #4,D0            *shift out the opcode
+0000014E                           207                   
+0000014E  123C 000D                208                   MOVE.B #13,D1          
+00000152                           209                   
+00000152  E268                     210                   LSR.W D1,D0            *shift out everything, so only three bits after opcode are there
+00000154                           211                   
+00000154  B03C 0001                212                   CMP.B #1,D0            
+00000158                           213                   
+00000158  6700 0020                214                   BEQ CHECK_LSD                *if the bits are 1, it is a logical shift
+0000015C                           215                   
+0000015C  B03C 0003                216                   CMP.B #3,D0
+00000160                           217                   
+00000160  6700 0070                218                   BEQ CHECK_ROD                *if the bits are 3, it is a rotation
+00000164                           219                   
+00000164  3015                     220                   MOVE.W (A5),D0
+00000166                           221                   
+00000166  E948                     222                   LSL.W #4,D0            *shift out the opcode
+00000168                           223                   
+00000168  123C 000D                224                   MOVE.B #13,D1          
+0000016C                           225                   
+0000016C  E268                     226                   LSR.W D1,D0            *shift out everything, so only three bits after opcode are there   
+0000016E                           227                      
+0000016E  B03C 0000                228                   CMP.B  #0, D0
+00000172                           229                   
+00000172  6700 00AE                230                   BEQ    CHECK_ASD
+00000176                           231                   
+00000176  6000 FF44                232                   BRA ERROR_HANDLE
+0000017A                           233                   
+0000017A                           234  
+0000017A  4280                     235  CHECK_LSD              CLR.L D0               *still need to do checks, since an asd shift could still be a possibility
+0000017C                           236                   
+0000017C  4281                     237                   CLR.L D1
+0000017E                           238                                                 
+0000017E  3015                     239                   MOVE.W (A5), D0
+00000180                           240                   
+00000180  EF48                     241                   LSL.W  #7, D0
+00000182                           242                   
+00000182  123C 000F                243                   MOVE.B #15, D1
+00000186                           244                   
+00000186  E268                     245                   LSR.W  D1, D0
+00000188                           246                   
+00000188  B03C 0001                247                   CMP.B  #1, D0
+0000018C                           248                   
+0000018C  6700 000E                249                   BEQ CHECK_LSL
+00000190                           250                   
+00000190  B03C 0000                251                   CMP.B #0, D0
+00000194                           252                   
+00000194  6700 001C                253                   BEQ CHECK_LSR
+00000198                           254                   
+00000198  6000 FF22                255                   BRA ERROR_HANDLE
+0000019C                           256                   
+0000019C                           257  
+0000019C                           258  CHECK_LSL           
+0000019C  3015                     259                   MOVE.W (A5), D0
+0000019E                           260                   
+0000019E  E148                     261                   LSL.W #8, D0
+000001A0                           262                   
+000001A0  123C 000E                263                   MOVE.B #14, D1
+000001A4                           264                   
+000001A4  E268                     265                   LSR.W D1, D0
+000001A6                           266                   
+000001A6  B03C 0003                267                   CMP.B  #%11, D0        * check to see if it is memory and not register shift
+000001AA                           268                   
+000001AA  6700 001C                269                   BEQ CHECK_LSD_MEMORY
+000001AE                           270                   
+000001AE  6000 00BE                271                   BRA CHECK_REGISTER_SHIFTS_EA
+000001B2                           272  
+000001B2                           273  CHECK_LSR                    
+000001B2  3015                     274                   MOVE.W (A5), D0
+000001B4                           275                   
+000001B4  E148                     276                   LSL.W #8, D0
+000001B6                           277                   
+000001B6  123C 000E                278                   MOVE.B #14, D1
+000001BA                           279                   
+000001BA  E268                     280                   LSR.W D1, D0
+000001BC                           281                   
+000001BC  B03C 0003                282                   CMP.B  #%11, D0            * check to see if memory shift
+000001C0                           283                   
+000001C0  6700 0006                284                   BEQ CHECK_LSD_MEMORY
+000001C4                           285                   
+000001C4  6000 00A8                286                   BRA CHECK_REGISTER_SHIFTS_EA
+000001C8                           287                   
+000001C8                           288  CHECK_LSD_MEMORY
+000001C8  4EB9 000002E4            289                   JSR    CHECK_MEMORY_SHIFTS_EA
+000001CE                           290                   
+Line 291 ERROR: Undefined symbol
+000001CE  6000 B9BE                291                   BRA CHECK_PARSE_MEMORY
+000001D2                           292              
+000001D2                           293  
+000001D2  4280                     294  CHECK_ROD              CLR.L D0               *same check as logical shift, since an arithmetic shift could still be possible
+000001D4                           295                   
+000001D4  4281                     296                   CLR.L D1
+000001D6                           297                   
+000001D6  3015                     298                   MOVE.W (A5), D0
+000001D8                           299                   
+000001D8  EF48                     300                   LSL.W  #7, D0
+000001DA                           301                   
+000001DA  123C 000F                302                   MOVE.B #15, D1
+000001DE                           303                   
+000001DE  E268                     304                   LSR.W  D1, D0
+000001E0                           305                   
+000001E0  B03C 0001                306                   CMP.B  #1, D0
+000001E4                           307                   
+000001E4  6700 0006                308                   BEQ CHECK_ROL
+000001E8                           309                   
+000001E8  6000 0018                310                   BRA CHECK_ROR
+000001EC                           311  
+000001EC                           312  CHECK_ROL              
+000001EC  3015                     313                   MOVE.W (A5), D0
+000001EE                           314                   
+000001EE  E148                     315                   LSL.W #8, D0
+000001F0                           316                   
+000001F0  123C 000E                317                   MOVE.B #14, D1
+000001F4                           318                   
+000001F4  E268                     319                   LSR.W D1, D0
+000001F6                           320                   
+000001F6  B03C 0003                321                   CMP.B  #%11, D0            * check to see if its memory shift
+000001FA                           322                   
+000001FA  6700 001C                323                   BEQ CHECK_ROD_MEMORY
+000001FE                           324                   
+000001FE  6000 006E                325                   BRA CHECK_REGISTER_SHIFTS_EA
+00000202                           326  
+00000202                           327  CHECK_ROR                        
+00000202  3015                     328                   MOVE.W (A5), D0
+00000204                           329                   
+00000204  E148                     330                   LSL.W #8, D0
+00000206                           331                   
+00000206  123C 000E                332                   MOVE.B #14, D1
+0000020A                           333                   
+0000020A  E268                     334                   LSR.W D1, D0
+0000020C                           335                   
+0000020C  B03C 0003                336                   CMP.B  #%11, D0            * check to see if its memory shift
+00000210                           337                   
+00000210  6700 0006                338                   BEQ CHECK_ROD_MEMORY
+00000214                           339                   
+00000214  6000 0058                340                   BRA CHECK_REGISTER_SHIFTS_EA
+00000218                           341  
+00000218                           342  CHECK_ROD_MEMORY       
+00000218  4EB9 000002E4            343                   JSR    CHECK_MEMORY_SHIFTS_EA
+0000021E                           344                   
+Line 345 ERROR: Undefined symbol
+0000021E  6000 B96E                345                   BRA CHECK_PARSE_MEMORY
+00000222                           346                   
+00000222                           347                   
+00000222  3015                     348  CHECK_ASD              MOVE.W (A5), D0
+00000224                           349                   
+00000224  EF48                     350                   LSL.W  #7, D0
+00000226                           351                   
+00000226  123C 000F                352                   MOVE.B #15, D1
+0000022A                           353                   
+0000022A  E268                     354                   LSR.W  D1, D0
+0000022C                           355                   
+0000022C  B03C 0001                356                   CMP.B  #1, D0
+00000230                           357                   
+00000230  6700 0006                358                   BEQ CHECK_ASL
+00000234                           359                   
+00000234  6000 0018                360                   BRA CHECK_ASR
+00000238                           361                   
+00000238                           362  CHECK_ASL
+00000238                           363                   
+00000238  3015                     364                   MOVE.W (A5), D0
+0000023A                           365                   
+0000023A  E148                     366                   LSL.W #8, D0
+0000023C                           367                   
+0000023C  123C 000E                368                   MOVE.B #14, D1
+00000240                           369                   
+00000240  E268                     370                   LSR.W D1, D0
+00000242                           371                   
+00000242  B03C 0003                372                   CMP.B  #%11, D0            * check to see if its memory shift
+00000246                           373                   
+00000246  6700 001C                374                   BEQ CHECK_ASD_MEMORY
+0000024A                           375                   
+0000024A  6000 0022                376                   BRA CHECK_REGISTER_SHIFTS_EA
+0000024E                           377                                    
+0000024E                           378  
+0000024E                           379  CHECK_ASR                               
+0000024E  3015                     380                   MOVE.W (A5), D0
+00000250                           381                   
+00000250  E148                     382                   LSL.W #8, D0
+00000252                           383                   
+00000252  123C 000E                384                   MOVE.B #14, D1
+00000256                           385                   
+00000256  E268                     386                   LSR.W D1, D0
+00000258                           387                   
+00000258  B03C 0003                388                   CMP.B  #%11, D0            * check to see if its memory shift
+0000025C                           389                   
+0000025C  6700 0006                390                   BEQ CHECK_ASD_MEMORY
+00000260                           391                   
+00000260  6000 000C                392                   BRA CHECK_REGISTER_SHIFTS_EA
+00000264                           393  
+00000264                           394  CHECK_ASD_MEMORY
+00000264  4EB9 000002E4            395                   JSR    CHECK_MEMORY_SHIFTS_EA
+0000026A                           396                   
+Line 397 ERROR: Undefined symbol
+0000026A  6000 B922                397                   BRA CHECK_PARSE_MEMORY
+0000026E                           398                   
+0000026E                           399  CHECK_REGISTER_SHIFTS_EA               
+Line 400 ERROR: Undefined symbol
+0000026E  4EB9 004DBB8E            400                   JSR GET_SIZE_PURPLE
+00000274                           401  
+00000274  3015                     402                   MOVE.W (A5), D0
+00000276                           403                   
+00000276  123C 000A                404                   MOVE.B #10, D1
+0000027A                           405                   
+0000027A  E368                     406                   LSL.W D1, D0
+0000027C                           407                   
+0000027C  123C 000F                408                   MOVE.B #15, D1
+00000280                           409                   
+00000280  E268                     410                   LSR.W D1, D0
+00000282                           411                   
+00000282  B03C 0001                412                   CMP.B #1, D0
+00000286                           413                   
+00000286  6700 0030                414                   BEQ CHECK_REGISTER
+0000028A                           415                   
+0000028A  B03C 0000                416                   CMP.B  #0, D0
+0000028E                           417                   
+0000028E  6700 0006                418                   BEQ CHECK_COUNT
+00000292                           419                   
+00000292  6000 FE28                420                   BRA ERROR_HANDLE
+00000296                           421  
+00000296                           422                   
+00000296                           423  CHECK_COUNT    
+00000296                           424                 
+00000296  3015                     425                   MOVE.W (A5), D0
+00000298                           426                   
+00000298  E948                     427                   LSL.W #4, D0
+0000029A                           428                   
+0000029A  123C 000D                429                   MOVE.B #13, D1
+0000029E                           430                   
+0000029E  E268                     431                   LSR.W D1, D0
+000002A0                           432                                    
+000002A0  3015                     433                   MOVE.W (A5), D0
+000002A2                           434                   
+000002A2  123C 000D                435                   MOVE.B #13, D1                * to print out the ea that is being shifted
+000002A6                           436                   
+000002A6  E368                     437                   LSL.W D1, D0
+000002A8                           438                   
+000002A8  E268                     439                   LSR.W D1, D0
+000002AA                           440                   
+000002AA  1E00                     441                   MOVE.B D0, D7
+000002AC                           442                   
+000002AC  7C00                     443                   MOVE.L #%000, D6              * we know it is a data register
+000002AE                           444                   
+000002AE  4EB9 00000756            445                   JSR CHECK_EA
+000002B4                           446                   
+Line 447 ERROR: Undefined symbol
+000002B4  6000 B8D8                447                   BRA CHECK_PARSE_MEMORY
+000002B8                           448                   
+000002B8                           449  
+000002B8                           450  CHECK_REGISTER
+000002B8  3015                     451                   MOVE.W (A5), D0
+000002BA                           452                   
+000002BA  E948                     453                   LSL.W #4, D0
+000002BC                           454                   
+000002BC  123C 000D                455                   MOVE.B #13, D1
+000002C0                           456                   
+000002C0  E268                     457                   LSR.W D1, D0
+000002C2                           458                   
+000002C2  1E00                     459                   MOVE.B D0, D7
+000002C4                           460                   
+000002C4  7C00                     461                   MOVE.L #%000, D6
+000002C6                           462                   
+000002C6  4EB9 00000756            463                   JSR CHECK_EA                  * to print out the data register
+000002CC                           464                   
+000002CC  3015                     465                   MOVE.W (A5), D0
+000002CE                           466                   
+000002CE  123C 000D                467                   MOVE.B #13, D1                * to print out the ea that is being shifted
+000002D2                           468                   
+000002D2  E368                     469                   LSL.W D1, D0
+000002D4                           470                   
+000002D4  E268                     471                   LSR.W D1, D0
+000002D6                           472                   
+000002D6  1E00                     473                   MOVE.B D0, D7
+000002D8                           474                   
+000002D8  7C00                     475                   MOVE.L #%000, D6              * we know it is a data register
+000002DA                           476                   
+000002DA  4EB9 00000756            477                   JSR CHECK_EA
+000002E0                           478                   
+Line 479 ERROR: Undefined symbol
+000002E0  6000 B8AC                479                   BRA CHECK_PARSE_MEMORY
+000002E4                           480                                   
+000002E4                           481  
+000002E4                           482  CHECK_MEMORY_SHIFTS_EA   * gets the mode and register of the memory ea, and prints it out
+000002E4                           483                   *JSR GET_SIZE_PURPLE
+000002E4                           484                   
+000002E4                           485                   *JSR PRINTOUT_SIZE_PURPLE
+000002E4                           486  
+000002E4  3015                     487                   MOVE.W (A5), D0
+000002E6                           488                   
+000002E6  123C 000A                489                   MOVE.B #10, D1
+000002EA                           490                   
+000002EA  E368                     491                   LSL.W D1, D0
+000002EC                           492                   
+000002EC  123C 000D                493                   MOVE.B #13, D1
+000002F0                           494                   
+000002F0  E268                     495                   LSR.W D1, D0
+000002F2                           496                   
+000002F2  2C00                     497                   MOVE.L D0, D6
+000002F4                           498                   
+000002F4  3015                     499                   MOVE.W (A5), D0
+000002F6                           500                   
+000002F6  123C 000D                501                   MOVE.B #13, D1
+000002FA                           502                   
+000002FA  E368                     503                   LSL.W D1, D0
+000002FC                           504                   
+000002FC  E268                     505                   LSR.W D1, D0
+000002FE                           506                   
+000002FE  2E00                     507                   MOVE.L D0, D7
+00000300                           508                   
+00000300  4EB9 00000756            509                   JSR CHECK_EA
+00000306                           510                   
+00000306  4E75                     511                   RTS
+00000308                           512                                   
+00000308                           513                
+00000308                           514  CHECK_MOVEB            
+00000308                           515                   
+00000308  1A3C 0000                516                   MOVE.B     #%00, D5
+0000030C                           517                   
+0000030C  6000 004E                518                   BRA CHECK_MOVE_EA
+00000310                           519  
+00000310  4280                     520  CHECK_MOVEW            CLR.L D0
+00000312                           521                   
+00000312  4281                     522                   CLR.L D1
+00000314                           523                   
+00000314  3015                     524                   MOVE.W (A5),D0
+00000316                           525                   
+00000316  EF48                     526                   LSL.W #7,D0
+00000318                           527                   
+00000318  123C 000D                528                   MOVE.B #13,D1
+0000031C                           529                   
+0000031C  E268                     530                   LSR.W D1,D0
+0000031E                           531                   
+0000031E  B03C 0001                532                   CMP.B #1,D0            *check to see if the mode of the destination is an address register
+00000322                           533                   
+00000322  6700 0028                534                   BEQ CHECK_MOVEAW             *if the destination is an address, it is MOVEA
+00000326                           535                   
+00000326  1A3C 0001                536                   MOVE.B     #%01, D5
+0000032A                           537                      
+0000032A  6000 0030                538                   BRA CHECK_MOVE_EA
+0000032E                           539                
+0000032E                           540  
+0000032E  4280                     541  CHECK_MOVEL            CLR.L D0
+00000330                           542                   
+00000330  4281                     543                   CLR.L D1
+00000332                           544                   
+00000332  3015                     545                   MOVE.W (A5),D0
+00000334                           546                   
+00000334  EF48                     547                   LSL.W #7,D0
+00000336                           548                   
+00000336  123C 000D                549                   MOVE.B #13,D1
+0000033A                           550                   
+0000033A  E268                     551                   LSR.W D1,D0
+0000033C                           552                   
+0000033C  B03C 0001                553                   CMP.B #1,D0            *check to see if the mode of the destination is equal to 1
+00000340                           554                   
+00000340  6700 0012                555                   BEQ CHECK_MOVEAL             *if the mode is 1, then it is an address register, and the opcode is MOVEA
+00000344                           556                   
+00000344  1A3C 0002                557                   MOVE.B     #%10, D5
+00000348                           558                   
+00000348  6000 0012                559                   BRA CHECK_MOVE_EA
+0000034C                           560                   
+0000034C                           561                   
+0000034C                           562  CHECK_MOVEAW                    
+0000034C  1A3C 0001                563                   MOVE.B     #%01, D5
+00000350                           564                   
+00000350  6000 000A                565                   BRA CHECK_MOVE_EA
+00000354                           566  
+00000354                           567  CHECK_MOVEAL                  
+00000354  1A3C 0002                568                   MOVE.B     #%10, D5
+00000358                           569                   
+00000358  6000 0002                570                   BRA CHECK_MOVE_EA
+0000035C                           571  
+0000035C                           572  CHECK_MOVE_EA
+0000035C  4247                     573                   CLR    D7 
+0000035E                           574                   
+0000035E  4246                     575                   CLR    D6               
+00000360                           576                   
+00000360  3015                     577                   MOVE.W (A5), D0
+00000362                           578                   
+00000362  123C 000A                579                   MOVE.B #10, D1
+00000366                           580                   
+00000366  E368                     581                   LSL.W D1, D0
+00000368                           582                   
+00000368  123C 000D                583                   MOVE.B #13, D1
+0000036C                           584                   
+0000036C  E268                     585                   LSR.W D1, D0
+0000036E                           586                   
+0000036E  1C00                     587                   MOVE.B D0, D6          * getting the mode of the second ea
+00000370                           588                   
+00000370  3015                     589                   MOVE.W (A5), D0
+00000372                           590                   
+00000372  123C 000D                591                   MOVE.B #13, D1
+00000376                           592                   
+00000376  E368                     593                   LSL.W D1, D0
+00000378                           594                   
+00000378  E268                     595                   LSR.W D1, D0
+0000037A                           596                   
+0000037A  1E00                     597                   MOVE.B D0, D7          * getting the register of the second ea
+0000037C                           598                   
+0000037C  4EB9 00000756            599                   JSR CHECK_EA
+00000382                           600                   
+00000382  3015                     601                   MOVE.W (A5), D0
+00000384                           602                   
+00000384  E948                     603                   LSL.W #4, D0
+00000386                           604                   
+00000386  123C 000D                605                   MOVE.B #13, D1
+0000038A                           606                   
+0000038A  E268                     607                   LSR.W D1, D0
+0000038C                           608                   
+0000038C  1E00                     609                   MOVE.B D0, D7          * getting the register of the first ea
+0000038E                           610                   
+0000038E  3015                     611                   MOVE.W (A5), D0
+00000390                           612                   
+00000390  EF48                     613                   LSL.W #7, D0
+00000392                           614                   
+00000392  123C 000D                615                   MOVE.B #13, D1
+00000396                           616                   
+00000396  E268                     617                   LSR.W D1, D0
+00000398                           618                   
+00000398  1C00                     619                   MOVE.B D0, D6          * getting the mode of the first ea
+0000039A                           620                   
+0000039A  4EB9 00000756            621                   JSR CHECK_EA
+000003A0                           622                   
+Line 623 ERROR: Undefined symbol
+000003A0  6000 B7EC                623                   BRA CHECK_PARSE_MEMORY
+000003A4                           624  
+000003A4                           625  
+000003A4                           626  
+000003A4                           627  
+000003A4                           628  
+000003A4                           629  
+000003A4                           630  
+000003A4                           631  
+000003A4                           632  
+000003A4                           633  
+000003A4                           634  
+000003A4                           635  
+000003A4                           636  
+000003A4                           637  -------------------- end include --------------------
+000003A4                           638          INCLUDE     'CHECK_TRYING_NOP.X68'
+000003A4                           639  CHECK_LEA_OPCODE
+000003A4                           640      
+000003A4  3015                     641      MOVE.W  (A5),D0     *D0 is the binary value to decode
+000003A6                           642      
+000003A6  123C 000D                643      MOVE.B  #13,D1     
+000003AA                           644  
+000003AA  E368                     645      LSL.W   D1,D0
+000003AC                           646                   
+000003AC  123C 000D                647      MOVE.B  #13,D1
+000003B0                           648  
+000003B0  E268                     649      LSR.W   D1,D0  *D0 now holds Register
+000003B2                           650                                              
+000003B2  3E00                     651      MOVE.W D0, D7 *D7 holds Register  
+000003B4                           652  
+000003B4  3015                     653      MOVE.W  (A5),D0     *D0 is the binary value to decode
+000003B6                           654  
+000003B6  123C 000A                655      MOVE.B  #10,D1     
+000003BA                           656  
+000003BA  E368                     657      LSL.W   D1,D0
+000003BC                           658                   
+000003BC  123C 000D                659      MOVE.B  #13,D1
+000003C0                           660  
+000003C0  E268                     661      LSR.W   D1,D0  *D0 now holds MODE
+000003C2                           662                                              
+000003C2  3C00                     663      MOVE.W D0, D6 *D6 holds MODE  
+000003C4                           664      
+000003C4  4EB9 00000756            665      JSR CHECK_EA
+000003CA                           666  
+000003CA                           667                                    
+000003CA  3015                     668      MOVE.W  (A5),D0     *D0 is the binary value to decode 
+000003CC                           669  
+000003CC  7C01                     670      MOVE.L #%001, D6
+000003CE                           671  
+000003CE  123C 0004                672      MOVE.B  #4,D1     
+000003D2                           673  
+000003D2  E368                     674      LSL.W   D1,D0
+000003D4                           675                   
+000003D4  123C 000D                676      MOVE.B  #13,D1
+000003D8                           677  
+000003D8  E268                     678      LSR.W   D1,D0  
+000003DA                           679                                              
+000003DA  3E00                     680      MOVE.W D0, D7 
+000003DC                           681      
+000003DC  4EB9 00000756            682      JSR CHECK_EA
+000003E2                           683      
+Line 684 ERROR: Undefined symbol
+000003E2  4EF9 004DBB8E            684      JMP     CHECK_PARSE_MEMORY       
+000003E8                           685            
+000003E8                           686  CHECK_NOP_OPCODE
+000003E8                           687      
+Line 688 ERROR: Undefined symbol
+000003E8  6000 B7A4                688      BRA CHECK_PARSE_MEMORY
+000003EC                           689  CHECk_RTS_OPCODE 
+000003EC                           690      
+Line 691 ERROR: Undefined symbol
+000003EC  6000 B7A0                691      BRA CHECK_PARSE_MEMORY
+000003F0                           692      
+000003F0                           693  CHECK_JSR_OPCODE 
+000003F0                           694      
+000003F0  3015                     695      MOVE.W (A5), D0
+000003F2                           696  
+000003F2  123C 000D                697      MOVE.B  #13,D1     
+000003F6                           698  
+000003F6  E368                     699      LSL.W   D1,D0
+000003F8                           700                   
+000003F8  123C 000D                701      MOVE.B  #13,D1
+000003FC                           702  
+000003FC  E268                     703      LSR.W   D1,D0  *D0 now holds Register
+000003FE                           704                                              
+000003FE  3E00                     705      MOVE.W D0, D7 *D7 holds Register  
+00000400                           706  
+00000400  3015                     707      MOVE.W (A5), D0
+00000402                           708  
+00000402  123C 000A                709      MOVE.B  #10,D1     
+00000406                           710  
+00000406  E368                     711      LSL.W   D1,D0
+00000408                           712                   
+00000408  123C 000D                713      MOVE.B  #13,D1
+0000040C                           714  
+0000040C  E268                     715      LSR.W   D1,D0  *D0 now holds MODE
+0000040E                           716                                              
+0000040E  3C00                     717      MOVE.W D0, D6 *D6 holds MODE  
+00000410                           718      
+00000410  4EB9 00000756            719      JSR CHECK_EA
+00000416                           720      
+Line 721 ERROR: Undefined symbol
+00000416  6000 B776                721      BRA CHECK_PARSE_MEMORY
+0000041A                           722         
+0000041A                           723  CHECK_CLR_OPCODE 
+0000041A                           724                     
+0000041A                           725      
+0000041A                           726                
+0000041A  3015                     727      MOVE.W      (A5), D0
+0000041C                           728               
+0000041C  123C 0006                729      MOVE.B      #6, D1
+00000420                           730                 
+00000420  E268                     731      LSR.W       D1, D0  *shift right 6 
+00000422                           732                 
+00000422  123C 000E                733      MOVE.B      #14, D1
+00000426                           734                 
+00000426  E368                     735      LSL.W       D1, D0  *shift left 15, only size is left
+00000428                           736      
+00000428  123C 000E                737      MOVE.B      #14, D1
+0000042C                           738                 
+0000042C  E268                     739      LSR.W       D1, D0  *shift right 15, size is left   
+0000042E                           740      
+0000042E  B07C 0000                741      CMP.W       #00, D0
+00000432                           742  
+00000432  6700 0048                743      BEQ         CHECK_SIZE_B
+00000436                           744      
+00000436  B07C 0001                745      CMP.W       #01, D0
+0000043A                           746                 
+0000043A  6700 0044                747      BEQ         CHECK_SIZE_W 
+0000043E                           748      
+0000043E  B07C 0002                749      CMP.W       #2, D0
+00000442                           750                 
+00000442  6700 0040                751      BEQ         CHECK_SIZE_L
+00000446                           752      
+00000446  6000 FC74                753      BRA          ERROR_HANDLE
+0000044A                           754  
+0000044A                           755  CHECK_PRINT_SIZE
+0000044A                           756  
+0000044A  4280                     757      CLR.L   D0
+0000044C                           758                  
+0000044C  4281                     759      CLR.L   D1
+0000044E                           760                       * set register
+0000044E                           761                   
+0000044E  3015                     762      MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000450                           763                 
+00000450  123C 000D                764      MOVE.B  #13,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+00000454                           765  
+00000454  E368                     766      LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000456                           767  
+00000456  123C 000D                768      MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
+0000045A                           769  
+0000045A  E268                     770      LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+0000045C                           771  
+0000045C  1E00                     772      MOVE.B  D0, D7          *put D0 to data register into D7 for future printing
+0000045E                           773                   
+0000045E                           774                   * set mode
+0000045E  4280                     775      CLR.L D0                *clear D0
+00000460                           776                   
+00000460  4281                     777      CLR.L D1                *clear D1
+00000462                           778                   
+00000462  3015                     779      MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000464                           780                 
+00000464  123C 000A                781      MOVE.B  #10,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+00000468                           782  
+00000468  E368                     783      LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+0000046A                           784  
+0000046A  123C 000D                785      MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
+0000046E                           786  
+0000046E  E268                     787      LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+00000470                           788  
+00000470  2C00                     789      MOVE.L  D0, D6          *put D0 to data register into D7 for future printing
+00000472                           790                   
+00000472  4EB9 00000756            791      JSR     CHECK_EA *by using jmp table
+00000478                           792  
+Line 793 ERROR: Undefined symbol
+00000478  6000 B714                793      BRA CHECK_PARSE_MEMORY
+0000047C                           794      
+0000047C                           795  CHECK_SIZE_B 
+0000047C                           796                
+0000047C                           797      
+0000047C  4EF8 044A                798      JMP CHECK_PRINT_SIZE
+00000480                           799      
+00000480                           800  CHECK_SIZE_W 
+00000480                           801                
+00000480                           802      
+00000480  4EF8 044A                803      JMP CHECK_PRINT_SIZE
+00000484                           804      
+00000484                           805  CHECK_SIZE_L 
+00000484                           806                
+00000484                           807      
+00000484  4EF8 044A                808      JMP CHECK_PRINT_SIZE
+00000488                           809  
+00000488                           810  
+00000488                           811  
+00000488                           812  -------------------- end include --------------------
+00000488                           813          INCLUDE     'CHECK_ADDQ.X68'
+00000488                           814  CHECK_ADDQ
+00000488                           815  
+00000488                           816      
+00000488  3015                     817      MOVE.W (A5), D0
+0000048A                           818      
+0000048A  123C 0008                819      MOVE.B  #8,D1     
+0000048E                           820  
+0000048E  E368                     821      LSL.W   D1,D0
+00000490                           822                   
+00000490  123C 000E                823      MOVE.B  #14,D1
+00000494                           824  
+00000494  E268                     825      LSR.W   D1,D0  *DO now holds size
+00000496                           826                                              
+00000496  B03C 0002                827      CMP.B    #$2, D0        *if D0 holds 2, size is L
+0000049A                           828      
+0000049A  6700 002A                829      BEQ      CHECK_ADDQL
+0000049E                           830                   
+0000049E  B03C 0001                831      CMP.B    #$1, D0        *if D0 holds 1, size is W
+000004A2                           832                                   
+000004A2  6700 0018                833      BEQ      CHECK_ADDQW
+000004A6                           834      
+000004A6  B03C 0000                835      CMP.B    #$0, D0        *if D0 holds 1, size is W
+000004AA                           836                                   
+000004AA  6700 0006                837      BEQ      CHECK_ADDQB
+000004AE                           838  
+000004AE  6000 FC0C                839      BRA      ERROR_HANDLE
+000004B2                           840  
+000004B2                           841  CHECK_ADDQB  *Print B
+000004B2                           842  
+000004B2                           843      
+000004B2  1A3C 0000                844      MOVE.B #%00, D5
+000004B6                           845      
+000004B6  4EF9 000004D0            846      JMP CHECK_PRINTADDQ
+000004BC                           847      
+000004BC                           848  CHECK_ADDQW  *Print W
+000004BC                           849  
+000004BC                           850      
+000004BC  1A3C 0001                851      MOVE.B #%01, D5
+000004C0                           852  
+000004C0  4EF9 000004D0            853      JMP CHECK_PRINTADDQ
+000004C6                           854  
+000004C6                           855  CHECK_ADDQL   *Print L
+000004C6                           856  
+000004C6                           857  
+000004C6  1A3C 0002                858      MOVE.B #%10, D5
+000004CA                           859      
+000004CA  4EF9 000004D0            860      JMP CHECK_PRINTADDQ
+000004D0                           861      
+000004D0                           862  CHECK_PRINTADDQ
+000004D0                           863  
+000004D0                           864      
+000004D0  3015                     865      MOVE.W (A5), D0
+000004D2                           866  
+000004D2  123C 0004                867      MOVE.B  #4,D1     
+000004D6                           868  
+000004D6  E368                     869      LSL.W   D1,D0
+000004D8                           870                   
+000004D8  123C 000D                871      MOVE.B  #13,D1
+000004DC                           872  
+000004DC  E268                     873      LSR.W   D1,D0  *D0 now holds Dn
+000004DE                           874      
+000004DE  4281                     875      CLR.L D1
+000004E0                           876                                              
+000004E0  3200                     877      MOVE.W D0, D1 *D6 holds Dn   
+000004E2                           878  
+000004E2                           879      
+000004E2  4286                     880      CLR.L D6
+000004E4                           881      
+000004E4  4287                     882      CLR.L D7
+000004E6                           883      
+000004E6  3015                     884      MOVE.W (A5), D0
+000004E8                           885  
+000004E8  123C 000A                886      MOVE.B  #10,D1     
+000004EC                           887  
+000004EC  E368                     888      LSL.W   D1,D0
+000004EE                           889                   
+000004EE  123C 000D                890      MOVE.B  #13,D1
+000004F2                           891  
+000004F2  E268                     892      LSR.W   D1,D0  *D0 now holds MODE
+000004F4                           893                                              
+000004F4  3C00                     894      MOVE.W D0, D6 *D6 holds mode
+000004F6                           895      
+000004F6  4281                     896      CLR.L D1
+000004F8                           897      
+000004F8  4280                     898      CLR.L D0
+000004FA                           899      
+000004FA  3015                     900      MOVE.W (A5), D0
+000004FC                           901  
+000004FC  123C 000D                902      MOVE.B  #13,D1     
+00000500                           903  
+00000500  E368                     904      LSL.W   D1,D0
+00000502                           905                   
+00000502  123C 000D                906      MOVE.B  #13,D1
+00000506                           907  
+00000506  E268                     908      LSR.W   D1,D0  *D0 now holds MODE
+00000508                           909                                              
+00000508  3E00                     910      MOVE.W D0, D7 *D6 holds Register   
+0000050A                           911      
+0000050A  4EB9 00000756            912      JSR CHECK_EA
+00000510                           913      
+Line 914 ERROR: Undefined symbol
+00000510  6000 B67C                914      BRA CHECK_PARSE_MEMORY
+00000514                           915  
+00000514                           916  
+00000514                           917  
+00000514                           918      
+00000514                           919  
+00000514                           920  
+00000514                           921  
+00000514                           922  
+00000514                           923  
+00000514                           924  
+00000514                           925  
+00000514                           926  
+00000514                           927  
+00000514                           928  
+00000514                           929  
+00000514                           930  
+00000514                           931  
+00000514                           932  
+00000514                           933  -------------------- end include --------------------
+00000514                           934          INCLUDE     'CHECK_GROUP_0100_CODE.X68'
+00000514                           935  CHECK_GROUP_0100_CODE          *at this point we know the first 4 bits are 0100 -> NOP, RTS, JSR,  MOVEM, CLR
+00000514                           936  
+00000514  4280                     937                   CLR.L D0                *clear D0
+00000516                           938                   
+00000516  4281                     939                   CLR.L D1                *clear D1
+00000518                           940                   
+00000518  3015                     941                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+0000051A                           942  
+0000051A  123C 0004                943                   MOVE.B  #4,D1           *4 bits is the number of times to shift to the left to remove opcode
+0000051E                           944  
+0000051E  E368                     945                   LSL.W   D1,D0           *Shift the bits 4 times -> D0 now removes the opcode
+00000520                           946                   
+00000520  123C 0004                947                   MOVE.B  #4,D1           *4 bits is the number of times to shift to hold everything except the opcode
+00000524                           948  
+00000524  E268                     949                   LSR.W   D1,D0           *Shift the bits 4 times -> D0 now holds everything except opcode
+00000526                           950                   
+00000526                           951                                              
+00000526  B07C 0E71                952                   CMP.W    #$E71, D0      *if D0 holds E71, the opcode is NOP
+0000052A                           953                   
+0000052A  6700 FEBC                954                   BEQ      CHECK_NOP_OPCODE       *Branch to NOP_CODE if the opcode is NOP
+0000052E                           955                   
+0000052E                           956                   
+0000052E  B07C 0E75                957                   CMP.W    #$E75, D0      *if D0 holds E75, the opcode is RTS
+00000532                           958                   
+00000532  6700 FEB8                959                   BEQ      CHECK_RTS_OPCODE       *Branch to RTS_CODE if the opcode is RTS
+00000536                           960                   
+00000536                           961                   
+00000536  4280                     962                   CLR.L D0                *clear D0
+00000538                           963                   
+00000538                           964                   
+00000538  4281                     965                   CLR.L D1                *clear D1
+0000053A                           966                   
+0000053A                           967                   
+0000053A  3015                     968                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+0000053C                           969  
+0000053C                           970  
+0000053C  123C 0004                971                   MOVE.B  #4,D1           *4 bits is the number of times to shift to the left to remove opcode
+00000540                           972  
+00000540                           973  
+00000540  E368                     974                   LSL.W   D1,D0           *Shift the bits 4 times -> D0 now removes the opcode
+00000542                           975                   
+00000542  123C 000C                976                   MOVE.B  #12,D1           *12 bits is the number of times to shift to hold the 4th-8th bits (counting left to right, non-inclusive)
+00000546                           977  
+00000546  E268                     978                   LSR.W   D1,D0           *Shift the bits 4 times -> D0 now holds 4th-8th bits (counting left to right, non-inclusive)
+00000548                           979                   
+00000548  B07C 0002                980                   CMP.W    #$2, D0        *if D0 holds #2, the opcode is CLR
+0000054C                           981                   
+0000054C  6700 FECC                982                   BEQ      CHECK_CLR_OPCODE       *Branch to NOP_CODE if the opcode is CLR
+00000550                           983                   
+00000550                           984          
+00000550  B07C 000E                985                   CMP.W    #$E, D0        *if D0 holds $E = 14, the opcode is JSR
+00000554                           986                   
+00000554  6700 FE9A                987                   BEQ      CHECK_JSR_OPCODE       *Branch to NOP_CODE if the opcode is CLR
+00000558                           988                   
+00000558  4280                     989                   CLR.L D0                *clear D0
+0000055A                           990                   
+0000055A  4281                     991                   CLR.L D1                *clear D1
+0000055C                           992                   
+0000055C  3015                     993                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+0000055E                           994  
+0000055E  123C 0007                995                   MOVE.B  #7,D1 
+00000562                           996  
+00000562  E368                     997                   LSL.W   D1,D0 
+00000564                           998                   
+00000564  123C 000D                999                   MOVE.B  #13,D1 
+00000568                          1000  
+00000568  E268                    1001                   LSR.W   D1,D0     
+0000056A                          1002                   
+0000056A  B07C 0007               1003                   CMP.W    #%111, D0  
+0000056E                          1004                   
+0000056E  6700 FE34               1005                   BEQ CHECK_LEA_OPCODE
+00000572                          1006                   
+00000572  3015                    1007                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000574                          1008  
+00000574  123C 0006               1009                   MOVE.B  #6,D1 
+00000578                          1010  
+00000578  E368                    1011                   LSL.W   D1,D0 
+0000057A                          1012                   
+0000057A  123C 000F               1013                   MOVE.B  #15,D1 
+0000057E                          1014  
+0000057E  E268                    1015                   LSR.W   D1,D0     
+00000580                          1016                   
+00000580                          1017  
+00000580  6000 FB3A               1018                   BRA      ERROR_HANDLE
+00000584                          1019      
+00000584                          1020  
+00000584                          1021  
+00000584                          1022  
+00000584                          1023  
+00000584                          1024  
+00000584                          1025  
+00000584                          1026  
+00000584                          1027  -------------------- end include --------------------
+00000584                          1028          INCLUDE     'SUB_CHECK.X68'
+00000584                          1029  
+00000584                          1030  CHECK_SUB
+00000584                          1031                   * ADD message
+00000584                          1032                   
+00000584  4EB9 000008E6           1033                   JSR    CHECK_GET_SIZE_PURPLE
+0000058A                          1034                   
+0000058A                          1035             *      JSR     PRINTOUT_SIZE_PURPLE
+0000058A                          1036                   
+0000058A                          1037                   
+0000058A  4280                    1038                   CLR.L D0                *clear D0
+0000058C                          1039                   
+0000058C  4281                    1040                   CLR.L D1                *clear D1
+0000058E                          1041                   
+0000058E  3015                    1042                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000590                          1043                   
+00000590                          1044                   * check the bit at 7
+00000590  123C 0007               1045                   MOVE.B  #7,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+00000594                          1046  
+00000594  E368                    1047                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000596                          1048                   
+00000596  123C 000F               1049                   MOVE.B  #15,D1          *14 bits is the number of times to shift to hold the mode number
+0000059A                          1050  
+0000059A  E268                    1051                   LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+0000059C                          1052                   
+0000059C  B03C 0000               1053                   CMP.B   #0, D0
+000005A0                          1054                   
+000005A0                          1055                *   BTST    #8, D0
+000005A0                          1056                   
+Line 1057 ERROR: Undefined symbol
+000005A0  6700 B5EC               1057                   BEQ     SUB_FIRST_EA
+000005A4                          1058                   
+000005A4                          1059                   * for the first Dn 
+000005A4  4EB9 000008FE           1060                   JSR     CHECK_GET_Data_Register
+000005AA                          1061                   
+000005AA  4286                    1062                   CLR.L   D6
+000005AC                          1063                   
+000005AC  1C3C 0000               1064                   MOVE.B  #%000, D6 * for mode
+000005B0                          1065                   
+000005B0  4EB9 00000756           1066                   JSR     CHECK_EA *by using jmp table
+000005B6                          1067                   
+000005B6                          1068              *     JSR     PRINT_COMMA
+000005B6                          1069                   
+000005B6  4EB9 00000910           1070                   JSR     CHECK_Set_Ea
+000005BC                          1071                   
+000005BC  4EB9 00000756           1072                   JSR     CHECK_EA *by using jmp table
+000005C2                          1073                   
+Line 1074 ERROR: Undefined symbol
+000005C2  4EF9 004DBB8E           1074                   JMP     CHECK_PARSE_MEMORY
+000005C8                          1075                   
+000005C8                          1076  CHECK_SUB_FIRST_EA
+000005C8  4EB9 00000910           1077                   JSR     CHECK_Set_Ea
+000005CE                          1078                   
+000005CE  4EB9 00000756           1079                   JSR     CHECK_EA *by using jmp table
+000005D4                          1080                   
+000005D4                          1081         *          JSR     PRINT_COMMA
+000005D4                          1082                   
+000005D4                          1083                    * for the first Dn 
+000005D4  4EB9 000008FE           1084                   JSR     CHECK_GET_Data_Register
+000005DA                          1085                   
+000005DA  4286                    1086                   CLR.L   D6
+000005DC                          1087                   
+000005DC  1C3C 0000               1088                   MOVE.B  #%000, D6 * for mode
+000005E0                          1089  
+000005E0  4EB9 00000756           1090                   JSR     CHECK_EA *by using jmp table
+000005E6                          1091                   
+Line 1092 ERROR: Undefined symbol
+000005E6  4EF9 004DBB8E           1092                   JMP     CHECK_PARSE_MEMORY
+000005EC                          1093  
+000005EC                          1094  
+000005EC                          1095  
+000005EC                          1096  
+000005EC                          1097  
+000005EC                          1098  
+000005EC                          1099  -------------------- end include --------------------
+000005EC                          1100          INCLUDE     'DIVU_OR_CHECK.X68'
+000005EC                          1101      
+000005EC  4EB9 000008E6           1102  CHECK_DIVU_OR          JSR      CHECK_GET_SIZE_PURPLE  
+000005F2                          1103                                            
+000005F2  BA3C 0003               1104                   CMP.B    #$3, D5        *if D0 holds 3, the opcode is DIVU
+000005F6                          1105                   
+000005F6  6700 0008               1106                   BEQ      CHECK_DIVU_CODE
+000005FA                          1107                   
+000005FA  4EF9 0000062C           1108                   JMP      CHECK_OR_CODE
+00000600                          1109                   
+00000600                          1110  CHECK_DIVU_CODE  
+00000600                          1111                   * OP_CODE message
+00000600                          1112  
+00000600  3A3C 0001               1113                   MOVE    #%01, D5          
+00000604                          1114                   
+00000604                          1115              *     LEA      SIZE_W_PRINT,    A1
+00000604                          1116                   
+00000604                          1117              *     MOVE.B   #14,             D0
+00000604                          1118          
+00000604                          1119              *     TRAP #15
+00000604                          1120                   
+00000604  4EB9 00000910           1121                   JSR     CHECK_Set_Ea
+0000060A                          1122                   
+0000060A  1A3C 0001               1123                   MOVE.B  #%01, D5
+0000060E                          1124                   
+0000060E  4EB9 00000756           1125                   JSR     CHECK_EA *by using jmp table
+00000614                          1126                   
+00000614                          1127             *      JSR     PRINT_COMMA
+00000614                          1128                   
+00000614                          1129                    * for the first Dn 
+00000614  4EB9 000008FE           1130                   JSR     CHECK_GET_Data_Register
+0000061A                          1131                   
+0000061A  4286                    1132                   CLR.L   D6
+0000061C                          1133                   
+0000061C  1C3C 0000               1134                   MOVE.B  #%000, D6 * for mode
+00000620                          1135  
+00000620  4EB9 00000756           1136                   JSR     CHECK_EA *by using jmp table
+00000626                          1137  
+Line 1138 ERROR: Undefined symbol
+00000626  4EF9 004DBB8E           1138                   JMP     CHECK_PARSE_MEMORY
+0000062C                          1139  
+0000062C                          1140  CHECK_OR_CODE    
+0000062C                          1141                   * OP_CODE message
+0000062C                          1142  
+0000062C                          1143         *          JSR PRINTOUT_SIZE_PURPLE
+0000062C                          1144                   
+0000062C                          1145                     * check for dn and ea
+0000062C  4280                    1146                   CLR.L D0                *clear D0
+0000062E                          1147                   
+0000062E  4281                    1148                   CLR.L D1                *clear D1
+00000630                          1149                   
+00000630  3015                    1150                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000632                          1151                   
+00000632                          1152                   * check the bit at 7
+00000632  123C 0007               1153                   MOVE.B  #7,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+00000636                          1154  
+00000636  E368                    1155                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000638                          1156                   
+00000638  123C 000F               1157                   MOVE.B  #15,D1          *14 bits is the number of times to shift to hold the mode number
+0000063C                          1158  
+0000063C  E268                    1159                   LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+0000063E                          1160                   
+0000063E  B03C 0000               1161                   CMP.B   #0, D0
+00000642                          1162                   
+00000642                          1163                  * BTST    #7, D0
+00000642                          1164                   
+00000642  6700 0026               1165                   BEQ     CHECK_OR_FIRST_EA
+00000646                          1166                   
+00000646                          1167                   * for the first Dn 
+00000646  4EB9 000008FE           1168                   JSR     CHECK_GET_Data_Register
+0000064C                          1169                   
+0000064C  4286                    1170                   CLR.L   D6
+0000064E                          1171                   
+0000064E  1C3C 0000               1172                   MOVE.B  #%000, D6 * for mode
+00000652                          1173                   
+00000652  4EB9 00000756           1174                   JSR     CHECK_EA *by using jmp table
+00000658                          1175                   
+00000658                          1176          *         JSR     PRINT_COMMA
+00000658                          1177                   
+00000658  4EB9 00000910           1178                   JSR     CHECK_Set_Ea
+0000065E                          1179                   
+0000065E  4EB9 00000756           1180                   JSR     CHECK_EA *by using jmp table
+00000664                          1181                   
+Line 1182 ERROR: Undefined symbol
+00000664  4EF9 004DBB8E           1182                   JMP     CHECK_PARSE_MEMORY
+0000066A                          1183                   
+0000066A                          1184  CHECK_OR_FIRST_EA
+0000066A  4EB9 00000910           1185                   JSR     CHECK_Set_Ea
+00000670                          1186                   
+00000670  4EB9 00000756           1187                   JSR     CHECK_EA *by using jmp table
+00000676                          1188                   
+00000676                          1189          *         JSR     PRINT_COMMA
+00000676                          1190                   
+00000676                          1191                    * for the first Dn 
+00000676  4EB9 000008FE           1192                   JSR     CHECK_GET_Data_Register
+0000067C                          1193                   
+0000067C  4286                    1194                   CLR.L   D6
+0000067E                          1195                   
+0000067E  1C3C 0000               1196                   MOVE.B  #%000, D6 * for mode
+00000682                          1197  
+00000682  4EB9 00000756           1198                   JSR     CHECK_EA *by using jmp table
+00000688                          1199                   
+Line 1200 ERROR: Undefined symbol
+00000688  4EF9 004DBB8E           1200                   JMP     CHECK_PARSE_MEMORY
+0000068E                          1201  
+0000068E                          1202  
+0000068E                          1203  
+0000068E                          1204  
+0000068E                          1205  
+0000068E                          1206  
+0000068E                          1207  
+0000068E                          1208  
+0000068E                          1209  
+0000068E                          1210  
+0000068E                          1211  
+0000068E                          1212  
+0000068E                          1213  
+0000068E                          1214  
+0000068E                          1215  -------------------- end include --------------------
+0000068E                          1216          INCLUDE     'CMP_CHECK.X68'
+0000068E                          1217     
+0000068E                          1218  CHECK_CMP
+0000068E                          1219                   * ADD message
+0000068E                          1220                   
+Line 1221 ERROR: Undefined symbol
+0000068E  4EB9 004DBB8E           1221                   JSR GET_SIZE_PURPLE
+00000694                          1222                   
+00000694                          1223          *         JSR     PRINTOUT_SIZE_PURPLE
+00000694                          1224                   
+00000694                          1225                   
+00000694  4EB9 00000910           1226                   JSR     CHECK_Set_Ea
+0000069A                          1227                   
+0000069A  4EB9 00000756           1228                   JSR     CHECK_EA *by using jmp table
+000006A0                          1229                   
+000006A0                          1230              *     JSR     PRINT_COMMA
+000006A0                          1231                   
+000006A0                          1232                    * for the first Dn 
+000006A0  4EB9 000008FE           1233                   JSR     CHECK_GET_Data_Register
+000006A6                          1234                   
+000006A6  4286                    1235                   CLR.L   D6
+000006A8                          1236                   
+000006A8  1C3C 0000               1237                   MOVE.B  #%000, D6 * for mode
+000006AC                          1238  
+000006AC  4EB9 00000756           1239                   JSR     CHECK_EA *by using jmp table
+000006B2                          1240                   
+Line 1241 ERROR: Undefined symbol
+000006B2  4EF9 004DBB8E           1241                   JMP     CHECK_PARSE_MEMORY
+000006B8                          1242  
+000006B8                          1243                   
+000006B8                          1244   *                JMP     NEXT
+000006B8                          1245  
+000006B8                          1246  
+000006B8                          1247  
+000006B8                          1248  
+000006B8                          1249  
+000006B8                          1250  
+000006B8                          1251  -------------------- end include --------------------
+000006B8                          1252          INCLUDE     'MULS_AND_CHECK.X68'
+000006B8                          1253   
+000006B8  4EB9 000008E6           1254  CHECK_MULS_AND   JSR      CHECK_GET_SIZE_PURPLE
+000006BE                          1255                                              
+000006BE  BA3C 0003               1256                   CMP.B    #$3, D5        *if D0 holds 3, the opcode is DIVU
+000006C2                          1257                   
+000006C2  6700 0008               1258                   BEQ      CHECK_MULS_CODE
+000006C6                          1259                   
+000006C6  4EF9 000006F4           1260                   JMP      CHECK_AND_CODE
+000006CC                          1261                   
+000006CC                          1262  CHECK_MULS_CODE
+000006CC                          1263                   * OP_CODE message
+000006CC                          1264  
+000006CC                          1265             *      LEA      SIZE_W_PRINT,    A1
+000006CC                          1266                   
+000006CC                          1267             *      MOVE.B   #14,             D0
+000006CC                          1268          
+000006CC                          1269             *      TRAP #15
+000006CC                          1270                   
+000006CC  4EB9 00000910           1271                   JSR     CHECK_Set_Ea
+000006D2                          1272                   
+000006D2  1A3C 0001               1273                   MOVE.B  #%01, D5
+000006D6                          1274                   
+000006D6  4EB9 00000756           1275                   JSR     CHECK_EA *by using jmp table
+000006DC                          1276                   
+000006DC                          1277             *      JSR     PRINT_COMMA
+000006DC                          1278                   
+000006DC                          1279                    * for the first Dn 
+000006DC  4EB9 000008FE           1280                   JSR     CHECK_GET_Data_Register
+000006E2                          1281                   
+000006E2  4286                    1282                   CLR.L   D6
+000006E4                          1283                   
+000006E4  1C3C 0000               1284                   MOVE.B  #%000, D6 * for mode
+000006E8                          1285  
+000006E8  4EB9 00000756           1286                   JSR     CHECK_EA *by using jmp table
+000006EE                          1287  
+Line 1288 ERROR: Undefined symbol
+000006EE  4EF9 004DBB8E           1288                   JMP     CHECK_PARSE_MEMORY
+000006F4                          1289  
+000006F4                          1290  CHECK_AND_CODE
+000006F4                          1291                   * OP_CODE message
+000006F4                          1292                   
+000006F4                          1293                     * check for dn and ea
+000006F4  4280                    1294                   CLR.L D0                *clear D0
+000006F6                          1295                   
+000006F6  4281                    1296                   CLR.L D1                *clear D1
+000006F8                          1297                   
+000006F8  3015                    1298                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+000006FA                          1299                   
+000006FA                          1300                   * check the bit at 7
+000006FA  123C 0007               1301                   MOVE.B  #7,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+000006FE                          1302  
+000006FE  E368                    1303                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000700                          1304                   
+00000700  123C 000F               1305                   MOVE.B  #15,D1          *14 bits is the number of times to shift to hold the mode number
+00000704                          1306  
+00000704  E268                    1307                   LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+00000706                          1308                   
+00000706  B03C 0000               1309                   CMP.B   #0, D0
+0000070A                          1310  
+0000070A                          1311                *   BTST    #8, D0
+0000070A                          1312                   
+0000070A  6700 0026               1313                   BEQ     CHECK_AND_FIRST_EA
+0000070E                          1314                   
+0000070E                          1315                   * for the first Dn 
+0000070E  4EB9 000008FE           1316                   JSR     CHECK_GET_Data_Register
+00000714                          1317                   
+00000714  4286                    1318                   CLR.L   D6
+00000716                          1319                   
+00000716  1C3C 0000               1320                   MOVE.B  #%000, D6 * for mode
+0000071A                          1321                   
+0000071A  4EB9 00000756           1322                   JSR     CHECK_EA *by using jmp table
+00000720                          1323                   
+00000720                          1324           *        JSR     PRINT_COMMA
+00000720                          1325                   
+00000720  4EB9 00000910           1326                   JSR      CHECK_Set_Ea
+00000726                          1327                   
+00000726  4EB9 00000756           1328                   JSR      CHECK_EA *by using jmp table
+0000072C                          1329                   
+Line 1330 ERROR: Undefined symbol
+0000072C  4EF9 004DBB8E           1330                   JMP      CHECK_PARSE_MEMORY
+00000732                          1331                   
+00000732                          1332  CHECK_AND_FIRST_EA
+00000732  4EB9 00000910           1333                   JSR     CHECK_Set_Ea
+00000738                          1334                   
+00000738  4EB9 00000756           1335                   JSR     CHECK_EA *by using jmp table
+0000073E                          1336                   
+0000073E                          1337         *          JSR     PRINT_COMMA
+0000073E                          1338                   
+0000073E                          1339                    * for the first Dn 
+0000073E  4EB9 000008FE           1340                   JSR     CHECK_GET_Data_Register
+00000744                          1341                   
+00000744  4286                    1342                   CLR.L   D6
+00000746                          1343                   
+00000746  1C3C 0000               1344                   MOVE.B  #%000, D6 * for mode
+0000074A                          1345  
+0000074A  4EB9 00000756           1346                   JSR     CHECK_EA *by using jmp table
+00000750                          1347                   
+Line 1348 ERROR: Undefined symbol
+00000750  4EF9 004DBB8E           1348                   JMP     CHECK_PARSE_MEMORY
+00000756                          1349  
+00000756                          1350  
+00000756                          1351  
+00000756                          1352  
+00000756                          1353  
+00000756                          1354  
+00000756                          1355  
+00000756                          1356  
+00000756                          1357  
+00000756                          1358  
+00000756                          1359  
+00000756                          1360  
+00000756                          1361  
+00000756                          1362  
+00000756                          1363  -------------------- end include --------------------
+00000756                          1364          INCLUDE     'CHECK_EA.X68'
+00000756                          1365   *ORG     $400
+00000756                          1366  
+00000756                          1367  
+00000756                          1368  
+00000756                          1369  
+00000756                          1370  
+00000756                          1371                 *MOVE.B       #%00, D5         *SIZE
+00000756                          1372                
+00000756                          1373                 *MOVE.B       #%111,D6         *MODE
+00000756                          1374                 
+00000756                          1375                 *MOVE.B       #%100,D7         *REGISTER
+00000756                          1376                 
+00000756                          1377                 *MOVE.L       #$4000, A5
+00000756                          1378  
+00000756                          1379                 *MOVE.B       #$0040, (A5)  
+00000756                          1380  CHECK_EA 
+00000756                          1381                 
+00000756  41F9 00000764           1382                 LEA     CHECK_jmp_table_ea,A0      *Index into the table
+0000075C                          1383  
+0000075C  CCFC 0006               1384                 MULU        #6,D6            *Form offset     
+00000760                          1385  
+00000760  4EF0 6000               1386                 JMP         0(A0,D6)         *Jump indirect with index
+00000764                          1387   
+00000764  4EF9 00000794           1388  CHECK_jmp_table_ea   JMP         CHECK_code000
+0000076A                          1389  
+0000076A  4EF9 00000798           1390                 JMP         CHECK_code001
+00000770                          1391  
+00000770  4EF9 0000079C           1392                 JMP         CHECK_code010
+00000776                          1393  
+00000776  4EF9 000007A0           1394                 JMP         CHECK_code011
+0000077C                          1395  
+0000077C  4EF9 000007A4           1396                 JMP         CHECK_code100
+00000782                          1397  
+00000782  4EF9 000007A8           1398                 JMP         CHECK_code101
+00000788                          1399  
+00000788  4EF9 000007AC           1400                 JMP         CHECK_code110
+0000078E                          1401  
+0000078E  4EF9 000007B0           1402                 JMP         CHECK_code111
+00000794                          1403          
+00000794                          1404  
+00000794                          1405   
+00000794                          1406  
+00000794                          1407  
+00000794                          1408   
+00000794                          1409  
+00000794                          1410   
+00000794                          1411  
+00000794  6000 001E               1412  CHECK_code000       BRA         CHECK_DATA_REGISTER
+00000798                          1413  
+00000798  6000 001E               1414  CHECK_code001       BRA         CHECK_ADDRESS_REGISTER
+0000079C                          1415  
+0000079C  6000 001E               1416  CHECK_code010       BRA         CHECK_INDIRECT_ADDRESS
+000007A0                          1417  
+000007A0  6000 001E               1418  CHECK_code011       BRA         CHECK_ADDRESS_PI    * post increment
+000007A4                          1419  
+000007A4  6000 001E               1420  CHECK_code100       BRA         CHECK_ADDRESS_PD    * pre decrement
+000007A8                          1421  
+000007A8  6000 001E               1422  CHECK_code101       BRA         CHECK_ADDRESS_W_DISPLACEMENT
+000007AC                          1423  
+000007AC  6000 001E               1424  CHECK_code110       BRA         CHECK_ADDRESS_W_INDEX
+000007B0                          1425  
+000007B0  6000 001E               1426  CHECK_code111       BRA         CHECK_GROUP_111
+000007B4                          1427  
+000007B4                          1428   
+000007B4                          1429  CHECK_DATA_REGISTER
+000007B4                          1430              
+Line 1431 ERROR: Undefined symbol
+000007B4  6000 B3D8               1431              BRA DONE
+000007B8                          1432              
+000007B8                          1433  
+000007B8                          1434  CHECK_ADDRESS_REGISTER
+000007B8                          1435  
+Line 1436 ERROR: Undefined symbol
+000007B8  6000 B3D4               1436              BRA DONE
+000007BC                          1437              
+000007BC                          1438  CHECK_INDIRECT_ADDRESS
+000007BC                          1439              
+Line 1440 ERROR: Undefined symbol
+000007BC  6000 B3D0               1440              BRA DONE
+000007C0                          1441  
+000007C0                          1442  CHECK_ADDRESS_PI  
+Line 1443 ERROR: Undefined symbol
+000007C0  6000 B3CC               1443              BRA DONE  
+000007C4                          1444         
+000007C4                          1445  CHECK_ADDRESS_PD  
+Line 1446 ERROR: Undefined symbol
+000007C4  6000 B3C8               1446              BRA DONE
+000007C8                          1447              
+000007C8                          1448  CHECK_ADDRESS_W_DISPLACEMENT
+000007C8  6000 F8F2               1449              BRA ERROR_HANDLE
+000007CC                          1450  
+000007CC                          1451  CHECK_ADDRESS_W_INDEX
+000007CC  6000 F8EE               1452              BRA ERROR_HANDLE
+000007D0                          1453  
+000007D0                          1454  CHECK_GROUP_111
+000007D0                          1455  
+000007D0  41F9 000007DE           1456                 LEA         CHECK_jmp_table_ea_111,A0    *Index into the table
+000007D6                          1457  
+000007D6  CEFC 0006               1458                 MULU        #6,D7       *Form offset     
+000007DA                          1459  
+000007DA  4EF0 7000               1460                 JMP         0(A0,D7)   *Jump indirect with index
+000007DE                          1461                 
+000007DE                          1462  CHECK_jmp_table_ea_111   
+000007DE  4EF9 00000804           1463                 JMP         CHECK_reg000
+000007E4                          1464  
+000007E4  4EF9 00000808           1465                 JMP         CHECK_reg001
+000007EA                          1466  
+000007EA  4EF9 000007FC           1467                 JMP         CHECK_reg010
+000007F0                          1468  
+000007F0  4EF9 00000800           1469                 JMP         CHECK_reg011
+000007F6                          1470  
+000007F6  4EF9 0000080C           1471                 JMP         CHECK_reg100
+000007FC                          1472          
+000007FC                          1473  
+000007FC  6000 0012               1474  CHECK_reg010       BRA         CHECK_PC_W_DISPLACEMENT
+00000800                          1475  
+00000800  6000 0012               1476  CHECK_reg011       BRA         CHECK_PC_W_INDEX
+00000804                          1477  
+00000804  6000 0012               1478  CHECK_reg000       BRA         CHECK_ABSOLUTE_SHORT
+00000808                          1479  
+00000808  6000 0012               1480  CHECK_reg001       BRA         CHECK_ABSOLUTE_LONG
+0000080C                          1481  
+0000080C  6000 0012               1482  CHECK_reg100       BRA         CHECK_IMMEDIATE
+00000810                          1483  
+00000810                          1484  
+00000810                          1485  CHECK_PC_W_DISPLACEMENT
+00000810  6000 F8AA               1486              BRA ERROR_HANDLE
+00000814                          1487  
+00000814                          1488  CHECK_PC_W_INDEX
+00000814  6000 F8A6               1489              BRA ERROR_HANDLE
+00000818                          1490  
+00000818                          1491  CHECK_ABSOLUTE_SHORT
+Line 1492 ERROR: Undefined symbol
+00000818  6000 B374               1492              BRA DONE  
+0000081C                          1493  
+0000081C                          1494  
+0000081C                          1495  CHECK_ABSOLUTE_LONG           
+Line 1496 ERROR: Undefined symbol
+0000081C  6000 B370               1496              BRA DONE  
+00000820                          1497  
+00000820                          1498  
+00000820                          1499  CHECK_IMMEDIATE   
+Line 1500 ERROR: Undefined symbol
+00000820  6000 B36C               1500              BRA DONE
+00000824                          1501              
+00000824                          1502      
+00000824                          1503   * INCLUDE 'MESSAGE_Data.X68'
+00000824                          1504   * INCLUDE 'HEX_TO_ASCII_V1.X68'
+00000824                          1505       
+00000824                          1506          
+00000824                          1507  
+00000824                          1508  
+00000824                          1509  
+00000824                          1510  
+00000824                          1511  
+00000824                          1512  
+00000824                          1513  
+00000824                          1514  
+00000824                          1515  
+00000824                          1516                   
+00000824                          1517  
+00000824                          1518  -------------------- end include --------------------
+00000824                          1519          INCLUDE     'ADD_ADDA_CHECK.X68'
+00000824                          1520    
+00000824                          1521  CHECK_ADD_ADDA  *at this point we know the first 4 bits are 1101 -> ADD or ADDA -> compare the destination opmode
+00000824                          1522                   
+00000824  4EB9 000008E6           1523                   JSR      CHECK_GET_SIZE_PURPLE
+0000082A                          1524                                              
+0000082A  BA3C 0003               1525                   CMP.B    #$3, D5        *if D0 holds 3, the opcode is ADDA
+0000082E                          1526                   
+0000082E  6700 0008               1527                   BEQ      CHECK_ADDA_CODE * checks %11
+00000832                          1528                   
+00000832  4EF9 00000886           1529                   JMP      CHECK_ADD_CODE * checks %00, %01, %10
+00000838                          1530                   
+00000838                          1531  CHECK_ADDA_CODE 
+00000838                          1532                   * ADDA opcode message
+00000838                          1533                   
+00000838                          1534                   
+00000838                          1535                   
+00000838  4285                    1536                   CLR.L D5         * clear for the size since this is not for the size purple
+0000083A                          1537                   
+0000083A  4280                    1538                   CLR.L D0                *clear D0
+0000083C                          1539                   
+0000083C  4281                    1540                   CLR.L D1                *clear D1
+0000083E                          1541                   
+0000083E  3015                    1542                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000840                          1543                   
+00000840  EF48                    1544                   LSL.W   #7, D0
+00000842                          1545  
+00000842  123C 000D               1546                   MOVE.B  #13,D1           *8 bits is the number of times to shift to the
+00000846                          1547  
+00000846  E268                    1548                   LSR.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000848                          1549                   
+00000848  B03C 0003               1550                   CMP.B   #%011, D0  *Compare them for SIZE_W
+0000084C                          1551                   
+0000084C  6700 002C               1552                   BEQ     CHECK_PRINTOUT_SIZE_W
+00000850                          1553                   
+00000850  B03C 0007               1554                   CMP.B   #%111, D0
+00000854                          1555    
+00000854  6700 002A               1556                   BEQ     CHECK_PRINTOUT_SIZE_L
+00000858                          1557                   
+00000858  4EF8 00BC               1558                   JMP     ERROR_HANDLE    
+0000085C                          1559                   
+0000085C                          1560  CHECK_FINISH_PRINTING_SIZE
+0000085C                          1561  
+0000085C  4EB9 00000910           1562                   JSR     CHECK_Set_Ea
+00000862                          1563                   
+00000862                          1564           *        JSR     PRINT_EA *by using jmp table
+00000862                          1565           
+00000862  4EB8 0756               1566                   JSR     CHECK_EA *by using jmp table
+00000866                          1567                   
+00000866                          1568           *       JSR     PRINT_COMMA
+00000866                          1569                   
+00000866                          1570                    * for the first Dn 
+00000866  4EB9 000008FE           1571                   JSR     CHECK_GET_Data_Register
+0000086C                          1572                   
+0000086C  1C3C 0001               1573                   MOVE.B  #%001, D6 * for mode
+00000870                          1574  
+00000870                          1575           *        JSR     PRINT_EA *by using jmp table
+00000870                          1576           
+00000870  4EB8 0756               1577                   JSR     CHECK_EA *by using jmp table
+00000874                          1578  
+Line 1579 ERROR: Undefined symbol
+00000874  4EF9 004DBB8E           1579                   JMP     CHECK_PARSE_MEMORY
+0000087A                          1580                   
+0000087A                          1581  CHECK_PRINTOUT_SIZE_W
+0000087A                          1582                   
+0000087A  3A3C 0001               1583                   MOVE    #%01, D5          
+0000087E                          1584                   
+0000087E                          1585                   
+0000087E  60DC                    1586                   BRA     CHECK_FINISH_PRINTING_SIZE
+00000880                          1587                   
+00000880                          1588  CHECK_PRINTOUT_SIZE_L                           
+00000880  3A3C 0002               1589                   MOVE    #%10, D5          
+00000884                          1590                   
+00000884                          1591                   
+00000884  60D6                    1592                   BRA     CHECK_FINISH_PRINTING_SIZE
+00000886                          1593  
+00000886                          1594  CHECK_ADD_CODE
+00000886                          1595                   * ADD message
+00000886                          1596                   
+Line 1597 ERROR: Undefined symbol
+00000886  4EB9 004DBB8E           1597                   JSR     GET_SIZE_PURPLE
+0000088C                          1598                   
+0000088C                          1599                   * check for dn and ea
+0000088C  4280                    1600                   CLR.L D0                *clear D0
+0000088E                          1601                   
+0000088E  4281                    1602                   CLR.L D1                *clear D1
+00000890                          1603                   
+00000890  3015                    1604                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000892                          1605                   
+00000892                          1606                   * check the bit at 7
+00000892  123C 0007               1607                   MOVE.B  #7,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+00000896                          1608  
+00000896  E368                    1609                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000898                          1610                   
+00000898  123C 000F               1611                   MOVE.B  #15,D1          *14 bits is the number of times to shift to hold the mode number
+0000089C                          1612  
+0000089C  E268                    1613                   LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+0000089E                          1614                   
+0000089E  B03C 0000               1615                   CMP.B   #0, D0
+000008A2                          1616                   
+000008A2                          1617                 *  BTST    #8, D0 * if the bit at 8 is 1, the ccr of z is set to 0
+000008A2                          1618                   
+000008A2  6700 0022               1619                   BEQ     CHECK_ADD_FIRST_EA
+000008A6                          1620                   
+000008A6                          1621                   * for the first Dn 
+000008A6  4EB9 000008FE           1622                   JSR     CHECK_GET_Data_Register
+000008AC                          1623                   
+000008AC  4286                    1624                   CLR.L   D6
+000008AE                          1625                   
+000008AE  1C3C 0000               1626                   MOVE.B  #%000, D6 * for mode
+000008B2                          1627                   
+000008B2  4EB8 0756               1628                   JSR     CHECK_EA *by using jmp table
+000008B6                          1629                   
+000008B6                          1630              *     JSR     PRINT_COMMA
+000008B6                          1631                   
+000008B6  4EB9 00000910           1632                   JSR     CHECK_Set_Ea
+000008BC                          1633                   
+000008BC  4EB8 0756               1634                   JSR     CHECK_EA *by using jmp table
+000008C0                          1635                   
+Line 1636 ERROR: Undefined symbol
+000008C0  4EF9 004DBB8E           1636                   JMP     CHECK_PARSE_MEMORY
+000008C6                          1637                   
+000008C6                          1638  CHECK_ADD_FIRST_EA
+000008C6  4EB9 00000910           1639                   JSR     CHECK_Set_Ea
+000008CC                          1640                   
+000008CC  4EB8 0756               1641                   JSR     CHECK_EA *by using jmp table
+000008D0                          1642                   
+000008D0                          1643               *    JSR     PRINT_COMMA
+000008D0                          1644                   
+000008D0                          1645                    * for the first Dn 
+000008D0  4EB9 000008FE           1646                   JSR     CHECK_GET_Data_Register
+000008D6                          1647                   
+000008D6  4286                    1648                   CLR.L   D6
+000008D8                          1649                   
+000008D8  1C3C 0000               1650                   MOVE.B  #%000, D6 * for mode
+000008DC                          1651  
+000008DC  4EB8 0756               1652                   JSR     CHECK_EA *by using jmp table
+000008E0                          1653                   
+Line 1654 ERROR: Undefined symbol
+000008E0  4EF9 004DBB8E           1654                   JMP     CHECK_PARSE_MEMORY
+000008E6                          1655                   
+000008E6                          1656  CHECK_GET_SIZE_PURPLE * get the op-code 
+000008E6                          1657  
+000008E6  4280                    1658                   CLR.L D0                *clear D0
+000008E8                          1659                   
+000008E8  4281                    1660                   CLR.L D1                *clear D1
+000008EA                          1661                   
+000008EA  3015                    1662                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+000008EC                          1663  
+000008EC  123C 0008               1664                   MOVE.B  #8,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+000008F0                          1665  
+000008F0  E368                    1666                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+000008F2                          1667                   
+000008F2  123C 000E               1668                   MOVE.B  #14,D1          *14 bits is the number of times to shift to hold the mode number
+000008F6                          1669  
+000008F6  E268                    1670                   LSR.W   D1,D0           *Shift the bits 14 times -> D0 now holds the mode number
+000008F8                          1671                   
+000008F8  4285                    1672                   CLR.L   D5
+000008FA                          1673                   
+000008FA  1A00                    1674                   MOVE.B  D0, D5          *push the size to the Data register 5 for the future use
+000008FC                          1675                   
+000008FC  4E75                    1676                   RTS 
+000008FE                          1677  
+000008FE                          1678                   
+000008FE                          1679                   
+000008FE                          1680                   
+000008FE                          1681  CHECK_GET_Data_Register
+000008FE  4280                    1682                   CLR.L D0                *clear D0
+00000900                          1683                   
+00000900  4281                    1684                   CLR.L D1                *clear D1
+00000902                          1685                   
+00000902  3015                    1686                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000904                          1687  
+00000904  E948                    1688                   LSL.W   #4,D0           *Shift the bits 4 times -> D0 now removes the opcode & reg#
+00000906                          1689                   
+00000906  123C 000D               1690                   MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
+0000090A                          1691  
+0000090A  E268                    1692                   LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+0000090C                          1693  
+0000090C  1E00                    1694                   MOVE.B  D0, D7          *put D0 to data register into D7 for future printing
+0000090E                          1695                   
+0000090E  4E75                    1696                   RTS
+00000910                          1697                   
+00000910                          1698  CHECK_Set_Ea
+00000910                          1699  
+00000910                          1700                   * set register
+00000910  4280                    1701                   CLR.L D0                *clear D0
+00000912                          1702                   
+00000912  4281                    1703                   CLR.L D1                *clear D1
+00000914                          1704                   
+00000914  3015                    1705                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000916                          1706                 
+00000916  123C 000D               1707                   MOVE.B  #13,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+0000091A                          1708  
+0000091A  E368                    1709                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+0000091C                          1710  
+0000091C  E268                    1711                   LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+0000091E                          1712                   
+0000091E  4287                    1713                   CLR.L D7                *clear D7 
+00000920                          1714  
+00000920  1E00                    1715                   MOVE.B  D0, D7          *put D0 to data register into D7 for future printing
+00000922                          1716                   
+00000922                          1717                   * set mode
+00000922  4280                    1718                   CLR.L D0                *clear D0
+00000924                          1719                   
+00000924  4281                    1720                   CLR.L D1                *clear D1
+00000926                          1721                   
+00000926  3015                    1722                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000928                          1723                 
+00000928  123C 000A               1724                   MOVE.B  #10,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+0000092C                          1725  
+0000092C  E368                    1726                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+0000092E                          1727  
+0000092E  123C 000D               1728                   MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
+00000932                          1729  
+00000932  E268                    1730                   LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+00000934                          1731                   
+00000934  4286                    1732                   CLR.L D6                *clear D6
+00000936                          1733  
+00000936  1C00                    1734                   MOVE.B  D0, D6          *put D0 to data register into D7 for future printing
+00000938                          1735                   
+00000938  4E75                    1736                   RTS
+0000093A                          1737                   
+0000093A                          1738                  
+0000093A                          1739  
+0000093A                          1740  
+0000093A                          1741  
+0000093A                          1742  
+0000093A                          1743  
+0000093A                          1744  
+0000093A                          1745  
+0000093A                          1746  
+0000093A                          1747  
+0000093A                          1748  
+0000093A                          1749  
+0000093A                          1750  
+0000093A                          1751  
+0000093A                          1752  
+0000093A                          1753  
+0000093A                          1754  
+0000093A                          1755  
+0000093A                          1756  
+0000093A                          1757  
+0000093A                          1758  
+0000093A                          1759  
+0000093A                          1760  
+0000093A                          1761  
+0000093A                          1762  
+0000093A                          1763  
+0000093A                          1764  
+0000093A                          1765  
+0000093A                          1766  
+0000093A                          1767  
+0000093A                          1768  
+0000093A                          1769  
+0000093A                          1770  
+0000093A                          1771  
+0000093A                          1772  
+0000093A                          1773  
+0000093A                          1774  -------------------- end include --------------------
+0000093A                          1775          INCLUDE     'BCC_CHECK.X68'
+0000093A                          1776  
+0000093A                          1777  
+0000093A                          1778  CHECK_BCC           
+0000093A  4240                    1779                 CLR       D0              *Zero it
+0000093C                          1780  
+0000093C  3015                    1781                 MOVE.W      (A5),D0     *We'll play with it here
+0000093E                          1782                 
+0000093E  4241                    1783                 CLR       D1
+00000940                          1784  
+00000940                          1785  
+00000940                          1786                 
+00000940  123C 0004               1787                 MOVE.B      #4, D1
+00000944                          1788                 
+00000944  E368                    1789                 LSL.W       D1, D0
+00000946                          1790  
+00000946  123C 000C               1791                 MOVE.B      #12,D1       *Shift 12 bits to the right  
+0000094A                          1792  
+0000094A  E268                    1793                 LSR.W       D1,D0           *Move the bi
+0000094C                          1794                 
+0000094C  B03C 0004               1795                 CMP.B       #%0100, D0
+00000950                          1796                 
+00000950  6700 001A               1797                 BEQ         CHECK_CC
+00000954                          1798                 
+00000954  B03C 000E               1799                 CMP.B       #%1110, D0
+00000958                          1800                 
+00000958  6700 003A               1801                 BEQ         CHECK_GT
+0000095C                          1802                 
+0000095C  B03C 000F               1803                 CMP.B       #%1111, D0
+00000960                          1804                 
+00000960  6700 0036               1805                 BEQ         CHECK_LE
+00000964                          1806                 
+00000964                          1807  
+00000964                          1808                      
+00000964                          1809  
+00000964  6000 F756               1810  CHECK_HI             BRA         ERROR_HANDLE * PRINT_BHI 
+00000968                          1811  
+00000968  6000 F752               1812  CHECK_LS             BRA         ERROR_HANDLE * PRINT_BLS  
+0000096C                          1813  
+Line 1814 ERROR: Undefined symbol
+0000096C  6000 B220               1814  CHECK_CC             BRA         PRINT_BCC
+00000970                          1815  
+00000970  6000 F74A               1816  CHECK_CS             BRA         ERROR_HANDLE * PRINT_BCS 
+00000974                          1817  
+00000974  6000 F746               1818  CHECK_NE             BRA         ERROR_HANDLE * PRINT_BNE 
+00000978                          1819  
+00000978  6000 F742               1820  CHECK_EQ             BRA         ERROR_HANDLE  *PRINT_BEQ
+0000097C                          1821  
+0000097C  6000 F73E               1822  CHECK_VC             BRA         ERROR_HANDLE  *PRINT_BVC
+00000980                          1823  
+00000980  6000 F73A               1824  CHECK_VS             BRA         ERROR_HANDLE  *PRINT_BVS
+00000984                          1825  
+00000984  6000 F736               1826  CHECK_PL             BRA         ERROR_HANDLE  *PRINT_BPL
+00000988                          1827  
+00000988  6000 F732               1828  CHECK_MI             BRA         ERROR_HANDLE  *PRINT_BMI 
+0000098C                          1829  
+0000098C  6000 F72E               1830  CHECK_GE             BRA         ERROR_HANDLE  *PRINT_BGE 
+00000990                          1831  
+00000990  6000 F72A               1832  CHECK_LT             BRA         ERROR_HANDLE  *PRINT_BLT
+00000994                          1833  
+Line 1834 ERROR: Undefined symbol
+00000994  6000 B1F8               1834  CHECK_GT             BRA         PRINT_BGT      
+00000998                          1835  
+Line 1836 ERROR: Undefined symbol
+00000998  6000 B1F4               1836  CHECK_LE             BRA         PRINT_BLE 
+0000099C                          1837  
+0000099C                          1838  
+0000099C                          1839                 
+0000099C                          1840                 *BRA DISPLACEMENT
+0000099C                          1841                 
+0000099C                          1842                 
+0000099C                          1843                 
+0000099C                          1844  CHECK_DISPLACEMENT   
+0000099C                          1845  
+0000099C                          1846  
+0000099C                          1847  
+0000099C  4280                    1848                 CLR.L       D0              *Zero it
+0000099E                          1849  
+0000099E  3015                    1850                 MOVE.W      (A5),D0     *We'll play with it here
+000009A0                          1851                 
+000009A0  123C 0008               1852                 MOVE.B      #8, D1
+000009A4                          1853                 
+000009A4  E368                    1854                 LSL.W       D1, D0
+000009A6                          1855  
+000009A6  123C 0008               1856                 MOVE.B      #8,D1       *Shift 12 bits to the right  
+000009AA                          1857  
+000009AA  E268                    1858                 LSR.W       D1,D0           *Move the bits
+000009AC                          1859                 
+000009AC                          1860                 *chk the D0 for 8, 16, or 32 but displacement
+000009AC                          1861                  
+000009AC  B03C 0000               1862                 CMP.B  #$00, D0
+000009B0                          1863  
+Line 1864 ERROR: Undefined symbol
+000009B0  6700 B1DC               1864                 BEQ  a_16_BIT 
+000009B4                          1865  
+000009B4  B03C 00FF               1866                 CMP.B #$FF, D0   
+000009B8                          1867  
+Line 1868 ERROR: Undefined symbol
+000009B8  6700 B1D4               1868                 BEQ  a_32_BIT
+000009BC                          1869                  
+000009BC                          1870                  *else 
+000009BC                          1871                  
+000009BC  4285                    1872                 CLR.L D5
+000009BE                          1873                 
+000009BE  3A00                    1874                 MOVE.W D0, D5      
+000009C0                          1875          
+Line 1876 ERROR: Undefined symbol
+000009C0  4EB9 004DBB8E           1876                 JSR  HEX_TO_ASCII
+000009C6                          1877                 
+Line 1878 ERROR: Undefined symbol
+000009C6  4EF9 004DBB8E           1878                 JMP CHECK_PARSE_MEMORY
+000009CC                          1879                            
+000009CC                          1880  CHECK_a_16_BIT
+000009CC  4285                    1881          CLR.L  D5
+000009CE                          1882          
+000009CE  3A1E                    1883          MOVE.W (A6)+, D5
+000009D0                          1884          
+000009D0                          1885       *   JSR  HEX_TO_ASCII
+000009D0                          1886          
+Line 1887 ERROR: Undefined symbol
+000009D0  4EF9 004DBB8E           1887          JMP CHECK_PARSE_MEMORY
+000009D6                          1888  CHECK_a_32_BIT
+000009D6                          1889  
+000009D6  4285                    1890          CLR.L  D5
+000009D8                          1891          
+000009D8  2A1E                    1892          MOVE.L (A6)+, D5
+000009DA                          1893          
+000009DA                          1894        *  JSR  HEX_TO_ASCII
+000009DA                          1895          
+Line 1896 ERROR: Undefined symbol
+000009DA  4EF9 004DBB8E           1896          JMP CHECK_PARSE_MEMORY
+000009E0                          1897            
+000009E0                          1898  
+000009E0                          1899  
+000009E0                          1900  
+000009E0                          1901  
+000009E0                          1902  
+000009E0                          1903  
+000009E0                          1904  
+000009E0                          1905  
+000009E0                          1906  
+000009E0                          1907  
+000009E0                          1908  
+000009E0                          1909  
+000009E0                          1910  
+000009E0                          1911  
+000009E0                          1912  
+000009E0                          1913  -------------------- end include --------------------
+000009E0                          1914          INCLUDE     'MOVEQ_CHECK.X68'
+000009E0                          1915  
+000009E0                          1916  CHECK_MOVEQ 
+000009E0                          1917  
+000009E0                          1918                   * ADD message
+000009E0                          1919                   
+000009E0                          1920                   * print out size L
+000009E0                          1921                   
+000009E0                          1922                   * print out immediate Data
+000009E0                          1923                   
+000009E0                          1924              
+000009E0                          1925                  
+000009E0  4280                    1926                  CLR.L       D0              *Zero it
+000009E2                          1927  
+000009E2  3015                    1928                  MOVE.W      (A5),D0     *We'll play with it here
+000009E4                          1929                 
+000009E4  123C 0008               1930                  MOVE.B      #8, D1
+000009E8                          1931                 
+000009E8  E368                    1932                  LSL.W       D1, D0
+000009EA                          1933  
+000009EA  123C 0008               1934                  MOVE.B      #8,D1       *Shift 12 bits to the right  
+000009EE                          1935  
+000009EE  E268                    1936                  LSR.W       D1,D0           *Move the bits -> D0 holds DATA
+000009F0                          1937                      
+000009F0  4285                    1938                  CLR.L D5
+000009F2                          1939                 
+000009F2  3A00                    1940                  MOVE.W D0, D5      
+000009F4                          1941          
+Line 1942 ERROR: Undefined symbol
+000009F4  4EB9 004DBB8E           1942                  JSR         HEX_TO_ASCII
+000009FA                          1943                  
+Line 1944 ERROR: Undefined symbol
+000009FA  43F9 004DBB8E           1944                  LEA      COMMA,    A1
+00000A00  103C 000E               1945                  MOVE.B   #14,            D0
+00000A04  4E4F                    1946                  TRAP #15
+00000A06                          1947                   
+00000A06                          1948                  * for the first Dn 
+00000A06  4286                    1949                  CLR.L D6
+00000A08                          1950                  
+00000A08  4EB8 08FE               1951                  JSR     CHECK_GET_Data_Register
+00000A0C                          1952                  
+00000A0C  1C3C 0000               1953                  MOVE.B  #%000, D6 * for mode
+00000A10                          1954                   
+00000A10  4EB8 0756               1955                  JSR     CHECK_EA *by using jmp table
+00000A14                          1956                   
+Line 1957 ERROR: Undefined symbol
+00000A14  6000 B178               1957                  BRA CHECK_PARSE_MEMORY
+00000A18                          1958          
+00000A18                          1959  
+00000A18                          1960  
+00000A18                          1961  
+00000A18                          1962  
+00000A18                          1963  
+00000A18                          1964  
+00000A18                          1965  
+00000A18                          1966  
+00000A18                          1967  
+00000A18                          1968  
+00000A18                          1969  
+00000A18                          1970  
+00000A18                          1971  
+00000A18                          1972  -------------------- end include --------------------
+00000A18                          1973          INCLUDE     'ADDI_CHECK.X68'
+00000A18                          1974    
+00000A18                          1975  CHECK_ADDI           * first check the first 4 bits after the op-code
+00000A18  4280                    1976                 CLR.L       D0
+00000A1A                          1977  
+00000A1A  4281                    1978                 CLR.L       D1
+00000A1C                          1979                 
+00000A1C  3015                    1980                 MOVE.W      (A5),D0
+00000A1E                          1981                 
+00000A1E  123C 0008               1982                 MOVE.B      #8, D1 * for shifting to the right by 8 bits
+00000A22                          1983                 
+00000A22  E268                    1984                 LSR.W       D1, D0 
+00000A24                          1985                 
+00000A24  B07C 0006               1986                 CMP.W       #6, D0 * checking the first 4 bits 
+00000A28                          1987                 
+00000A28  6600 F692               1988                 BNE         ERROR_HANDLE * go to error 
+00000A2C                          1989                 
+00000A2C                          1990                 * print the op-code 
+00000A2C  4280                    1991                 CLR.L       D0
+00000A2E                          1992  
+00000A2E  4281                    1993                 CLR.L       D1
+00000A30                          1994                 
+00000A30                          1995                                
+00000A30                          1996                 * print the size
+00000A30  4280                    1997                 CLR.L       D0
+00000A32                          1998  
+00000A32  4281                    1999                 CLR.L       D1
+00000A34                          2000                 
+00000A34  3015                    2001                 MOVE.W      (A5),D0
+00000A36                          2002                
+00000A36  E148                    2003                 LSL.W       #8, D0
+00000A38                          2004  
+00000A38  123C 000E               2005                 MOVE.B      #14, D1 * for shifting to the right by 8 bits
+00000A3C                          2006                 
+00000A3C  E268                    2007                 LSR.W       D1, D0
+00000A3E                          2008                 
+00000A3E                          2009                 * D1 holds the size
+00000A3E                          2010    *             CLR.L       D1
+00000A3E                          2011                 
+00000A3E                          2012    *             MOVE.B      D0, D1
+00000A3E                          2013                   
+00000A3E  B03C 0000               2014                 CMP.B       #%00, D0
+00000A42                          2015                 
+Line 2016 ERROR: Undefined symbol
+00000A42  6700 B14A               2016                 BEQ         ADDI_B_SIZE
+00000A46                          2017                 
+00000A46  B03C 0001               2018                 CMP.B       #%01, D0
+00000A4A                          2019                 
+Line 2020 ERROR: Undefined symbol
+00000A4A  6700 B142               2020                 BEQ         ADDI_W_SIZE
+00000A4E                          2021                 
+00000A4E                          2022                 *print size L
+00000A4E                          2023                 
+00000A4E                          2024                * print out pound sign and hex sign
+00000A4E                          2025                 
+00000A4E  4285                    2026                 CLR.L  D5
+00000A50                          2027          
+00000A50  2A1E                    2028                 MOVE.L (A6)+, D5 * we mimght change it later
+00000A52                          2029          
+00000A52                          2030                 
+Line 2031 ERROR: Undefined symbol
+00000A52  6000 B13A               2031                 BRA         ADDI_EA   
+00000A56                          2032                      
+00000A56                          2033  CHECK_ADDI_B_SIZE
+00000A56                          2034                 
+00000A56  4280                    2035                 CLR.L D0
+00000A58                          2036  
+00000A58  301E                    2037                 MOVE.W (A6)+, D0 * we mimght change it later
+00000A5A                          2038                 
+00000A5A  1A00                    2039                 MOVE.B D0, D5
+00000A5C                          2040     
+00000A5C                          2041            *     JSR  HEX_TO_ASCII
+00000A5C                          2042                 
+Line 2043 ERROR: Undefined symbol
+00000A5C  6000 B130               2043                 BRA         ADDI_EA 
+00000A60                          2044                  
+00000A60                          2045  
+00000A60                          2046  CHECK_ADDI_W_SIZE
+00000A60                          2047  
+00000A60  4285                    2048                 CLR.L  D5
+00000A62                          2049          
+00000A62  3A1E                    2050                 MOVE.W (A6)+, D5
+00000A64                          2051          
+00000A64                          2052          
+00000A64  4EF9 00000A6A           2053                 JMP  CHECK_ADDI_EA
+00000A6A                          2054  
+00000A6A                          2055  
+00000A6A                          2056  CHECK_ADDI_EA      
+00000A6A                          2057            *      JSR     PRINT_COMMA
+00000A6A                          2058                  
+00000A6A  4280                    2059                  CLR.L   D0
+00000A6C                          2060                  
+00000A6C  4281                    2061                  CLR.L   D1
+00000A6E                          2062                  
+00000A6E                          2063                  * set register
+00000A6E                          2064                   
+00000A6E  3015                    2065                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000A70                          2066                 
+00000A70  123C 000D               2067                   MOVE.B  #13,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+00000A74                          2068  
+00000A74  E368                    2069                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000A76                          2070  
+00000A76  123C 000D               2071                   MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
+00000A7A                          2072  
+00000A7A  E268                    2073                   LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+00000A7C                          2074  
+00000A7C  1E00                    2075                   MOVE.B  D0, D7          *put D0 to data register into D7 for future printing
+00000A7E                          2076                   
+00000A7E                          2077                   * set mode
+00000A7E  4280                    2078                   CLR.L D0                *clear D0
+00000A80                          2079                   
+00000A80  4281                    2080                   CLR.L D1                *clear D1
+00000A82                          2081                   
+00000A82  3015                    2082                   MOVE.W  (A5),D0     *D0 is the binary value to decode
+00000A84                          2083                 
+00000A84  123C 000A               2084                   MOVE.B  #10,D1           *8 bits is the number of times to shift to the left to remove opcode & register #
+00000A88                          2085  
+00000A88  E368                    2086                   LSL.W   D1,D0           *Shift the bits 8 times -> D0 now removes the opcode & reg#
+00000A8A                          2087  
+00000A8A  123C 000D               2088                   MOVE.B  #13,D1          *14 bits is the number of times to shift to hold the mode number
+00000A8E                          2089  
+00000A8E  E268                    2090                   LSR.W   D1,D0           *Shift the bits 13 times -> D0 now holds the size number
+00000A90                          2091  
+00000A90  1C00                    2092                   MOVE.B  D0, D6          *put D0 to data register into D7 for future printing
+00000A92                          2093  
+00000A92                          2094   
+00000A92                          2095                 * JSR     Set_Ea
+00000A92                          2096                   
+00000A92  4EB8 0756               2097                  JSR     CHECK_EA *by using jmp table
+00000A96                          2098                  
+Line 2099 ERROR: Undefined symbol
+00000A96  4EF9 004DBB8E           2099                  JMP     CHECK_PARSE_MEMORY
+00000A9C                          2100                  
+00000A9C                          2101                  
+00000A9C                          2102                   
+00000A9C                          2103                   
+00000A9C                          2104  
+00000A9C                          2105  
+00000A9C                          2106                 
+00000A9C                          2107  
+00000A9C                          2108  
+00000A9C                          2109  
+00000A9C                          2110  
+00000A9C                          2111  
+00000A9C                          2112  
+00000A9C                          2113  
+00000A9C                          2114  
+00000A9C                          2115  
+00000A9C                          2116  
+00000A9C                          2117  
+00000A9C                          2118  
+00000A9C                          2119  
+00000A9C                          2120  
+00000A9C                          2121  
+00000A9C                          2122  
+00000A9C                          2123  
+00000A9C                          2124  
+00000A9C                          2125  
+00000A9C                          2126  
+00000A9C                          2127  
+00000A9C                          2128  
+00000A9C                          2129  
+00000A9C                          2130  
+00000A9C                          2131  
+00000A9C                          2132  
+00000A9C                          2133  
+00000A9C                          2134  
+00000A9C                          2135  
+00000A9C                          2136  -------------------- end include --------------------
+00000A9C                          2137          
+00000A9C                          2138                      
+00000A9C                          2139              
+00000A9C                          2140  
+00000A9C                          2141  *            *INCLUDE 'MESSAGE_Data.X68'
+00000A9C                          2142  *            INCLUDE 'JUMPTABLE EA.X68'
+00000A9C                          2143  *               END   $400 
+00000A9C                          2144  
+00000A9C                          2145  
+00000A9C                          2146  
+00000A9C                          2147  
+00000A9C                          2148  
+00000A9C                          2149  
+00000A9C                          2150  
+00000A9C                          2151  
+00000A9C                          2152  
+00000A9C                          2153  
+00000A9C                          2154  
+00000A9C                          2155  
+00000A9C                          2156  
+00000A9C                          2157  
+00000A9C                          2158  
+00000A9C                          2159  
+00000A9C                          2160  
+00000A9C                          2161  
+00000A9C                          2162  
+00000A9C                          2163  
+00000A9C                          2164  
+00000A9C                          2165  
+00000A9C                          2166  
+00000A9C                          2167  
+00000A9C                          2168  
+00000A9C                          2169  
+00000A9C                          2170  
+00000A9C                          2171  
+00000A9C                          2172  
+00000A9C                          2173  
+00000A9C                          2174  
+00000A9C                          2175  
+00000A9C                          2176  
+00000A9C                          2177  
+00000A9C                          2178  
+00000A9C                          2179  
+00000A9C                          2180  
+Line 2181 WARNING: END directive missing, starting address not set
+
+62 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CHECK_ABSOLUTE_LONG  81C
+CHECK_ABSOLUTE_SHORT  818
+CHECK_ADDA_CODE     838
+CHECK_ADDI          A18
+CHECK_ADDI_B_SIZE   A56
+CHECK_ADDI_EA       A6A
+CHECK_ADDI_W_SIZE   A60
+CHECK_ADDQ          488
+CHECK_ADDQB         4B2
+CHECK_ADDQL         4C6
+CHECK_ADDQW         4BC
+CHECK_ADDRESS_PD    7C4
+CHECK_ADDRESS_PI    7C0
+CHECK_ADDRESS_REGISTER  7B8
+CHECK_ADDRESS_W_DISPLACEMENT  7C8
+CHECK_ADDRESS_W_INDEX  7CC
+CHECK_ADD_ADDA      824
+CHECK_ADD_CODE      886
+CHECK_ADD_FIRST_EA  8C6
+CHECK_AND_CODE      6F4
+CHECK_AND_FIRST_EA  732
+CHECK_ASD           222
+CHECK_ASD_MEMORY    264
+CHECK_ASL           238
+CHECK_ASR           24E
+CHECK_A_16_BIT      9CC
+CHECK_A_32_BIT      9D6
+CHECK_BCC           93A
+CHECK_CC            96C
+CHECK_CLR_OPCODE    41A
+CHECK_CMP           68E
+CHECK_CODE000       794
+CHECK_CODE0000      7A
+CHECK_CODE0001      7E
+CHECK_CODE001       798
+CHECK_CODE0010      82
+CHECK_CODE0011      86
+CHECK_CODE010       79C
+CHECK_CODE0100      8A
+CHECK_CODE0101      8E
+CHECK_CODE011       7A0
+CHECK_CODE0110      92
+CHECK_CODE0111      98
+CHECK_CODE100       7A4
+CHECK_CODE1000      9C
+CHECK_CODE1001      A0
+CHECK_CODE101       7A8
+CHECK_CODE1010      A4
+CHECK_CODE1011      A8
+CHECK_CODE110       7AC
+CHECK_CODE1100      AC
+CHECK_CODE1101      B0
+CHECK_CODE111       7B0
+CHECK_CODE1110      B4
+CHECK_CODE1111      B8
+CHECK_COUNT         296
+CHECK_CS            970
+CHECK_DATA_REGISTER  7B4
+CHECK_DISPLACEMENT  99C
+CHECK_DIVU_CODE     600
+CHECK_DIVU_OR       5EC
+CHECK_EA            756
+CHECK_EQ            978
+CHECK_FINISH_PRINTING_SIZE  85C
+CHECK_GE            98C
+CHECK_GET_DATA_REGISTER  8FE
+CHECK_GET_SIZE_PURPLE  8E6
+CHECK_GROUP_0100_CODE  514
+CHECK_GROUP_111     7D0
+CHECK_GT            994
+CHECK_HI            964
+CHECK_IMMEDIATE     820
+CHECK_INDIRECT_ADDRESS  7BC
+CHECK_JMP_TABLE     1A
+CHECK_JMP_TABLE_EA  764
+CHECK_JMP_TABLE_EA_111  7DE
+CHECK_JSR_OPCODE    3F0
+CHECK_LE            998
+CHECK_LEA_OPCODE    3A4
+CHECK_LS            968
+CHECK_LSD           17A
+CHECK_LSD_MEMORY    1C8
+CHECK_LSL           19C
+CHECK_LSR           1B2
+CHECK_LT            990
+CHECK_MEMORY_SHIFTS  14A
+CHECK_MEMORY_SHIFTS_EA  2E4
+CHECK_MI            988
+CHECK_MOVEAL        354
+CHECK_MOVEAW        34C
+CHECK_MOVEB         308
+CHECK_MOVEL         32E
+CHECK_MOVEQ         9E0
+CHECK_MOVEW         310
+CHECK_MOVE_EA       35C
+CHECK_MULS_AND      6B8
+CHECK_MULS_CODE     6CC
+CHECK_NE            974
+CHECK_NOP_OPCODE    3E8
+CHECK_OR_CODE       62C
+CHECK_OR_FIRST_EA   66A
+CHECK_PC_W_DISPLACEMENT  810
+CHECK_PC_W_INDEX    814
+CHECK_PL            984
+CHECK_PRINTADDQ     4D0
+CHECK_PRINTOUT_SIZE_L  880
+CHECK_PRINTOUT_SIZE_W  87A
+CHECK_PRINT_SIZE    44A
+CHECK_REG000        804
+CHECK_REG001        808
+CHECK_REG010        7FC
+CHECK_REG011        800
+CHECK_REG100        80C
+CHECK_REGISTER      2B8
+CHECK_REGISTER_SHIFTS_EA  26E
+CHECK_ROD           1D2
+CHECK_ROD_MEMORY    218
+CHECK_ROL           1EC
+CHECK_ROR           202
+CHECK_RTS_OPCODE    3EC
+CHECK_SET_EA        910
+CHECK_SHIFTS        108
+CHECK_SIZE_B        47C
+CHECK_SIZE_L        484
+CHECK_SIZE_W        480
+CHECK_SUB           584
+CHECK_SUB_FIRST_EA  5C8
+CHECK_VC            97C
+CHECK_VS            980
+ERROR_HANDLE        BC
+ERROR_HANDLING      0

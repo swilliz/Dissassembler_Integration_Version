@@ -17,14 +17,17 @@ START:                  ; first instruction of program
 
     INCLUDE 'DS_Data.X68' * STARTING_ADDR ** ENDING_ADDR
     INCLUDE 'MESSAGE_Data.X68' 
-    *MOVE.B    #3, D2
-    *MOVE.B    #0, D5
-    MOVEA.W   #$400, A0
-    
-    
+        
     
 
     END    START        ; last line of source
+
+
+
+
+
+
+
 
 
 

@@ -12401,7 +12401,7 @@ START:                  ; first instruction of program
 *		
 *		DIVU.W $A204,D0
 *		DIVU.W $FFFF5000,D2
-*	
+*	f
 *		DIVU.W #$50,D0
 *		DIVU.W #$700,D2
 *
@@ -13095,6 +13095,7 @@ CLEAR_REGISTER
 		RTS
 GOTOEND
     END    START        ; last line of source
+
 
 
 
